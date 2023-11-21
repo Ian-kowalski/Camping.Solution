@@ -7,6 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Button Margin="0,0,608,377" Content="Reserveren" HorizontalAlignment="Right" Width="168" Height="34" VerticalAlignment="Bottom"/>
+        <Button Margin="232,0,400,377" Content="Reservering" Height="34" VerticalAlignment="Bottom"/>
+        <ListBox Margin="0,88,23,26" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Width="753">
+            <ListBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.094"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="0.58"/>
+                </TransformGroup>
+            </ListBox.RenderTransform>
+        </ListBox>
     </Grid>
 </Window>
