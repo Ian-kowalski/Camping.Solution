@@ -16,7 +16,6 @@ namespace camping.Database
 
         public List<string> GetSites(string sitedetail)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(); builder.DataSource = "127.0.0.1"; builder.UserID = "sa"; builder.Password = "r2Njj8#4"; builder.InitialCatalog = "TestDB"; builder.TrustServerCertificate = false;
             string sql = $"SELECT {sitedetail} FROM campSite";
 
             using(var connection = new SqlConnection(connectionString))
