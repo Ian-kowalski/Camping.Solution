@@ -7,17 +7,33 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Margin="24,23,0,377" Content="Reserveren" HorizontalAlignment="Left" Width="168" Click="Reserveren_click"/>
-        <Button Margin="232,23,0,377" Content="Reserveringen" HorizontalAlignment="Left" Width="168" Click="Reserveringen_click"/>
-        <ListBox x:Name="CampingList" Margin="0,0,0,26" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Width="752" Height="320" VerticalAlignment="Bottom">
-            <ListBox.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleY="0.094"/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="0.58"/>
-                </TransformGroup>
-            </ListBox.RenderTransform>
-        </ListBox>
+        <Button Margin="0,0,608,377" Content="Reserveren" HorizontalAlignment="Right" Width="168" Height="34" VerticalAlignment="Bottom"/>
+        <Button Margin="232,0,400,377" Content="Reservering" Height="34" VerticalAlignment="Bottom"/>
+        <ScrollViewer Margin="24,116,66,10">
+            <Grid Name ="grid" ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+
+            </Grid>
+        </ScrollViewer>
+        <Grid Margin="24,62,66,346">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Pleknummer" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Beschikbaar" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="Meer info" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+
+
     </Grid>
 </Window>
