@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camping.Core", "Camping.Core\Camping.Core.csproj", "{941354C5-58C6-4E12-8316-17654DBE3196}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Core", "Camping.Core\camping.Core.csproj", "{941354C5-58C6-4E12-8316-17654DBE3196}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camping.Test", "Camping.Test\Camping.Test.csproj", "{27D81080-945F-478F-A5B2-FC39D93B00CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Test", "Camping.Test\camping.Test.csproj", "{27D81080-945F-478F-A5B2-FC39D93B00CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Database", "camping.Database\camping.Database.csproj", "{71EB1CBB-D04E-4F54-9F6D-4FF7FD5C1823}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camping.WPF", "Camping.WPF\Camping.WPF.csproj", "{D365C956-0117-4E35-B5E9-9BE7846CBEE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.WPF", "Camping.WPF\camping.WPF.csproj", "{D365C956-0117-4E35-B5E9-9BE7846CBEE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{BA972005-6874-4BDE-9800-34CEA3DE8930}"
 EndProject

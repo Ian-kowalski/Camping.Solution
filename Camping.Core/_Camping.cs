@@ -1,7 +1,7 @@
-﻿ public class Camping
+﻿ public class _Camping
     {
         public string Name { get; }
-        public Camping(string name)
+        public _Camping(string name)
         {
             Name = name;
         }

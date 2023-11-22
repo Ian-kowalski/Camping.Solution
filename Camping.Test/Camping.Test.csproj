@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Camping.Core\Camping.Core.csproj" />
+    <ProjectReference Include="..\Camping.Core\camping.Core.csproj" />
   </ItemGroup>
 
 </Project>

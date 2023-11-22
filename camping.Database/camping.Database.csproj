@@ -8,10 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Camping.Core\Camping.Core.csproj" />
+    <ProjectReference Include="..\Camping.Core\camping.Core.csproj" />
   </ItemGroup>
 
 </Project>
