@@ -23,6 +23,20 @@ namespace Camping.WPF
         public MainWindow()
         {
             InitializeComponent();
+            
         }
+
+
+        private void Reserveren_click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Reserveringen_click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        
     }
 }
