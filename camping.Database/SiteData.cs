@@ -16,11 +16,7 @@ namespace camping.Database
 
         public List<Site> GetSiteInfo()
         {
-<<<<<<< HEAD
-            string sql = $"SELECT {sitedetail} FROM campSite";
-=======
             string sql = $"SELECT * FROM campSite ORDER BY campSiteID ASC";
->>>>>>> new query
 
             using(var connection = new SqlConnection(connectionString))
             {
