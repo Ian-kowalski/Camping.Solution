@@ -1,4 +1,4 @@
-﻿internal class Visitor
+﻿public class Visitor
 {
     public string Name { get; set; }
     public string Adress { get; set; }
