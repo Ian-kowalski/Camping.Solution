@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,8 +62,15 @@ namespace camping.Database
         }
 
         // adds a new reservation to the database
-        public void addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
+
+            if (!GetAvailableReservation(campSiteID, startDate, endDate)) {
+                Console.WriteLine("Spot is already reserved during these dates!");
+                return false;
+            }
+
+            int linesInserted;
 
             VisitorRepository visitor = new();
 
@@ -88,7 +96,7 @@ namespace camping.Database
                     command.Parameters.AddWithValue("startDate", startDate);
                     command.Parameters.AddWithValue("endDate", endDate);
 
-                    command.ExecuteNonQuery();
+                    linesInserted = command.ExecuteNonQuery();
                 }
 
                 connection.Close();
@@ -97,6 +105,8 @@ namespace camping.Database
             int reservationID = getReservationID(visitorID, startDate, endDate);
 
             addReservationLine(campSiteID, reservationID);
+
+            return (linesInserted > 0);
 
         }
 
@@ -151,6 +161,34 @@ namespace camping.Database
 
                     connection.Close();
                     return ID;
+
+                }
+            }
+        }
+
+        public bool GetAvailableReservation(int campSite, string startDate, string endDate) {
+            string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
+                                "WHERE reservationLines.campSiteID = @campSite AND " +
+                                "((@startDate >= startDate AND @startDate <= endDate) OR " +
+                                "(@endDate >= startDate AND @endDate <= endDate) OR " +
+                                "(@startDate <= startDate AND @endDate >= endDate)) AND " +
+                                "(startDate <= endDate);";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("campSite", campSite);
+                    command.Parameters.AddWithValue("startDate", startDate);
+                    command.Parameters.AddWithValue("endDate", endDate);
+
+
+                    int result = (int) command.ExecuteScalar();
+
+                    connection.Close();
+                    return (result == 0);
 
                 }
             }

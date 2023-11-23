@@ -91,19 +91,76 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, false)] // bestaat al, dus false
-        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", 51, 12345678, false)] // bestaat al, dus false
-        public void Reservation_AddVisitor(
+        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678)] // bestaat al, dus false
+        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", 51, 12345678)] // bestaat al, dus false
+        public void Reservation_AddVisitor_AlreadyExists(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
-            int houseNumber, int phoneNumber,
-            bool result)
+            int houseNumber, int phoneNumber)
         {
             VisitorRepository visiterRepo = new();
 
-            
+            if (!visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber))
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail("Visitor added even though not unique");
+            }
 
-            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber) == result)
+        }
+        [Test]
+        [TestCase("T", "e", "s", "t", "Unique Visitor", "1234AB")] // unieke visitor
+        public void Reservation_AddVisitor_DoesNotExist(
+            string firstName, string lastName, string preposition,
+            string adress, string city, string postalcode)
+        {
+            VisitorRepository visiterRepo = new();
+
+            Random random = new Random();
+
+
+            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, random.Next(1,99), random.Next(10000000, 99999999)))
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail("Returned false Expected true");
+            }
+
+        }
+
+        [Test]
+        [TestCase(1, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, "12-02-2023", "12-06-2023")]
+        public void Reservation_AddReservation_Unavailable(
+            int campSite,
+            string firstName, string lastName, string preposition,
+            string adress, string city, string postalcode,
+            int houseNumber, int phoneNumber,
+            string startDate, string endDate)
+        {
+            ReservationData reservationRepo = new();
+
+            if (!reservationRepo.addReservation(campSite, startDate, endDate, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber))
+            {
+                Assert.Pass();
+            }
+            else {
+                Assert.Fail("Reservation added even though unavailable");
+            }
+
+        }
+
+        [Test]
+        [TestCase(1, "12-03-2023", "12-06-2023", false)]
+        [TestCase(1, "12-05-2023", "12-06-2023", true)]
+        public void Reservation_GetAvailableReservation(int campSite, string startDate, string endDate, bool available)
+        {
+            ReservationData reservationRepo = new();
+
+            if (reservationRepo.GetAvailableReservation(campSite, startDate, endDate) == available)
             {
                 Assert.Pass();
             }
@@ -111,27 +168,8 @@ namespace Camping.Test
             {
                 Assert.Fail();
             }
-
         }
 
-        [Test]
-        [TestCase()]
-        public void Reservation_AddReservationLine()
-        {
-            ReservationData reservationRepo = new();
-            VisitorRepository visiterRepo = new();
-
-            if (reservationRepo.addReservationLine(1, 1) == 1)
-            {
-                Assert.Pass();
-            }
-            else {
-                Assert.Fail();
-            }
-           
-            
-
-        }
 
 
     }
