@@ -1,16 +1,21 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using camping.Core;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace camping.Database
 {
-    public class ReservationData
+    public class ReservationData : IReservationData
     {
         private string connectionString = "Data Source=127.0.0.1;Initial Catalog=Camping;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public List<Reservation> GetReservationInfo()
         {
@@ -19,7 +24,7 @@ namespace camping.Database
 
             using (var connection = new SqlConnection(connectionString))
             {
-                connection.Open();
+                connection.Open();  
 
                 SqlDataReader reader;
                 List<Reservation> result = new List<Reservation>();
@@ -38,37 +43,23 @@ namespace camping.Database
             }
         }
 
-        public int GetCampSiteID(int reservationID)
-        {
-            string sql = $"SELECT campSiteID FROM reservationLines WHERE reservationID = {reservationID}";
 
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                SqlDataReader reader;
-                int result;
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    reader = command.ExecuteReader();
-
-                    result = reader.GetInt32(0);
-                }
-                connection.Close();
-                return result;
-            }
-        }
 
         // adds a new reservation to the database
-        public void addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
+            // cancels the reservation if the spot is unavailable
+            if (!GetAvailableReservation(campSiteID, startDate, endDate)) {
+                Console.WriteLine("Spot is already reserved during these dates!");
+                return false;
+            }
 
+            int linesInserted;
             VisitorRepository visitor = new();
 
             // adds a new visitor to the database
+            // will use existing visitor if already present
             visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
-
 
 
             // gets the visitorID of the recently added visitor
@@ -88,20 +79,26 @@ namespace camping.Database
                     command.Parameters.AddWithValue("startDate", startDate);
                     command.Parameters.AddWithValue("endDate", endDate);
 
-                    command.ExecuteNonQuery();
+                    linesInserted = command.ExecuteNonQuery();
                 }
 
                 connection.Close();
             }
 
+            // gets the reservation ID of the recently added reservation using the requested visitorID
             int reservationID = getReservationID(visitorID, startDate, endDate);
 
+            // adds a reservation line using the requested reservationID
             addReservationLine(campSiteID, reservationID);
+
+            // will return true if both the reservation and reservation line gets added
+            return (linesInserted > 0 && addReservationLine(campSiteID, reservationID));
 
         }
 
-        public void addReservationLine(int campSiteID, int reservationID)
+        public bool addReservationLine(int campSiteID, int reservationID)
         {
+            int linesInserted;
             string sql = "INSERT INTO reservationLines (campSiteID, reservationID) VALUES (@campSiteID, @reservationID);";
             using (var connection = new SqlConnection(connectionString))
             {
@@ -112,10 +109,13 @@ namespace camping.Database
                     command.Parameters.AddWithValue("campSiteID", campSiteID);
                     command.Parameters.AddWithValue("reservationID", reservationID);
 
-                    command.ExecuteNonQuery();
+                    linesInserted = command.ExecuteNonQuery();
                 }
 
                 connection.Close();
+
+                // will return true if the reservation line has been added
+                return (linesInserted > 0);
             }
         }
 
@@ -149,6 +149,34 @@ namespace camping.Database
 
                     connection.Close();
                     return ID;
+
+                }
+            }
+        }
+
+        public bool GetAvailableReservation(int campSite, string startDate, string endDate) {
+            string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
+                                "WHERE reservationLines.campSiteID = @campSite AND " +
+                                "((@startDate >= startDate AND @startDate <= endDate) OR " +
+                                "(@endDate >= startDate AND @endDate <= endDate) OR " +
+                                "(@startDate <= startDate AND @endDate >= endDate)) AND " +
+                                "(startDate <= endDate);";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("campSite", campSite);
+                    command.Parameters.AddWithValue("startDate", startDate);
+                    command.Parameters.AddWithValue("endDate", endDate);
+
+
+                    int result = (int) command.ExecuteScalar();
+
+                    connection.Close();
+                    return (result == 0);
 
                 }
             }

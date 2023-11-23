@@ -25,16 +25,20 @@ namespace Camping.WPF
     {
         private RetrieveData retrieveData;
         private SiteData siteData;
+        private ReservationData reservationData;
         public MainWindow()
         {
             InitializeComponent();
             siteData = new();
-            retrieveData = new(siteData);
+            reservationData = new();
+            retrieveData = new(siteData, reservationData);
+
             initiateGrid();
         }
 
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
+        TextBlock campSiteAvailabilityText;
         Button moreInfoButton;
         private void initiateGrid()
         {
@@ -52,7 +56,13 @@ namespace Camping.WPF
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
 
-                //beschikbaarheid
+                campSiteAvailabilityText = new TextBlock();
+              
+                campSiteAvailabilityText.Text = $"{retrieveData.GetCurrentAvailability(retrieveData.CheckDate()).ElementAt(i)}";
+                Grid.SetColumn(campSiteAvailabilityText, 1);
+                Grid.SetRow(campSiteAvailabilityText, i);
+                campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
+                campSiteAvailabilityText.VerticalAlignment = VerticalAlignment.Center;
 
                 moreInfoButton = new Button();
                 moreInfoButton.Content = "Meer informatie";
@@ -63,7 +73,7 @@ namespace Camping.WPF
                 moreInfoButton.Click += (sender, e) => MoreInfoButton_Click(campSiteIDText);
 
                 grid.Children.Add(campSiteIDText);
-                //beschikbaarheid
+                grid.Children.Add(campSiteAvailabilityText);
                 grid.Children.Add(moreInfoButton);
 
             }
