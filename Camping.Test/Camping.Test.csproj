@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Camping.Core\Camping.Core.csproj" />
+    <ProjectReference Include="..\camping.Database\camping.Database.csproj" />
   </ItemGroup>
 
 </Project>
