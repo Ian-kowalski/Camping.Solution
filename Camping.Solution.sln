@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Test", "Camping.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Database", "camping.Database\camping.Database.csproj", "{71EB1CBB-D04E-4F54-9F6D-4FF7FD5C1823}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Camping.WPF", "Camping.WPF\Camping.WPF.csproj", "{D365C956-0117-4E35-B5E9-9BE7846CBEE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.WPF", "Camping.WPF\camping.WPF.csproj", "{D365C956-0117-4E35-B5E9-9BE7846CBEE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{BA972005-6874-4BDE-9800-34CEA3DE8930}"
 EndProject

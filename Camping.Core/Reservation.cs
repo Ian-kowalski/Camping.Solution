@@ -7,12 +7,12 @@
         Guest = visitor;
         EndDate = endDate;
     }
-    public int ReservationID { get; set; } = 0;
-    public DateTime StartDate { get; set; } = DateTime.MinValue;
-    public DateTime EndDate { get; set; }=DateTime.MinValue;
+    public int ReservationID { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
     public Visitor Guest { get; set; }
-    public int AmountPeople { get; set; } = 0;
-    public Site Site { get; set; } 
+    public int AmountPeople { get; set; }
+    public Site Site { get; set; }
 
 }
 

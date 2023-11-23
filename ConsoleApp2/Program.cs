@@ -2,13 +2,15 @@
 
 SiteData siteData = new SiteData();
 
+/*
 foreach (var s in siteData.GetSiteInfo())
 {
     Console.WriteLine($"{s.Number} {s.HasShawdow} {s.HasWaterSupply}");
 }
 */
 
-ReservationReposetori reservationData = new ReservationReposetori();
+
+ReservationData reservationData = new ReservationData();
 
 foreach (var r in reservationData.GetReservationInfo())
 {
