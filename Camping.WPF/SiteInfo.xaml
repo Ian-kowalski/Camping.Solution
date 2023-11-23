@@ -1,0 +1,125 @@
+﻿<Window x:Class="Camping.WPF.SiteInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Camping.WPF"
+        mc:Ignorable="d"
+        Title="Plaats Informatie" Height="450" Width="800">
+    <Grid x:Name="YourGrid">
+        <Label Content="Plek Nr." HorizontalAlignment="Right" Margin="0,90,475,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="campsiteIDLabel" Content="1" Tag="0" HorizontalAlignment="Left" Margin="320,90,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="Beschikbaar" HorizontalAlignment="Right" Margin="0,120,475,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="✔" HorizontalAlignment="Left" Margin="320,120,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="Grootte" HorizontalAlignment="Right" Margin="0,150,475,0" VerticalAlignment="Top"  FontSize="16"/>
+        <Label x:Name="surfaceAreaLabel" Content="5000" Tag="6" HorizontalAlignment="Left" Margin="320,150,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="Faciliteiten" HorizontalAlignment="Right" Margin="0,250,575,0" VerticalAlignment="Top" FontSize="36"/>
+        <Label Content="Overige" HorizontalAlignment="Right" Margin="0,320,575,0" VerticalAlignment="Top" FontSize="36"/>
+            <CheckBox x:Name="CraneCheckbox" Content="Kraan" Tag="5" Height="60" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="250,245,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60">
+              <CheckBox.Template>
+                  <ControlTemplate TargetType="CheckBox">
+                      <Border x:Name="border"
+                              CornerRadius="25" 
+                              Background="LightGray"
+                              BorderBrush="DarkGray"
+                              BorderThickness="2">
+                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                          <Trigger Property="IsChecked" Value="True">
+                              <Setter TargetName="border" Property="Background" Value="Green"/>
+                          </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </CheckBox.Template>
+          </CheckBox>
+            <CheckBox x:Name="PowerCheckbox" Content="Stroom" Tag="1" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="325,245,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60">
+              <CheckBox.Template>
+                  <ControlTemplate TargetType="CheckBox">
+                      <Border x:Name="border"
+                              CornerRadius="25" 
+                              Background="LightGray"
+                              BorderBrush="DarkGray"
+                              BorderThickness="2">
+                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="Green"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </CheckBox.Template>
+          </CheckBox>
+            <CheckBox x:Name="AnimalCheckbox" Content="Dier" Tag="3" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="250,320,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60">
+              <CheckBox.Template>
+                  <ControlTemplate TargetType="CheckBox">
+                      <Border x:Name="border"
+                              CornerRadius="25" 
+                              Background="LightGray"
+                              BorderBrush="DarkGray"
+                              BorderThickness="2">
+                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="Green"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </CheckBox.Template>
+          </CheckBox>
+            <CheckBox x:Name="ShadowCheckbox" Content="Schaduw" Tag="4" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="325,320,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60">
+              <CheckBox.Template>
+                  <ControlTemplate TargetType="CheckBox">
+                      <Border x:Name="border"
+                              CornerRadius="25" 
+                              Background="LightGray"
+                              BorderBrush="DarkGray"
+                              BorderThickness="2">
+                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="Green"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </CheckBox.Template>
+          </CheckBox>
+            <CheckBox x:Name="WaterCheckbox" Content="Water" Tag="2" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" Margin="400,320,0,0" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60">
+              <CheckBox.Template>
+                  <ControlTemplate TargetType="CheckBox">
+                      <Border x:Name="border"
+                              CornerRadius="25" 
+                              Background="LightGray"
+                              BorderBrush="DarkGray"
+                              BorderThickness="2">
+                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                      </Border>
+                      <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="Green"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                  </ControlTemplate>
+              </CheckBox.Template>
+          </CheckBox>
+        <Button Name="EditFacilityButton" Content="Aaanpassen Faciliteiten" HorizontalAlignment="Left" Margin="575,300,0,0" VerticalAlignment="Top" Height="75" Width="175" Grid.IsSharedSizeScope="True" Click="EditFacilityButton_Click"/>
+    </Grid>
+</Window>
