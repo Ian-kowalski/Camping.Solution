@@ -47,7 +47,7 @@ namespace Camping.Test
             string startDate, string endDate, int visitorID,
             int result)
         {
-            ReservationRepository reservationRepo = new();
+            ReservationData reservationRepo = new();
 
             int ID = reservationRepo.getReservationID(visitorID, startDate, endDate);
 
@@ -72,7 +72,7 @@ namespace Camping.Test
             string startDate, string endDate,
             int result)
         {
-            ReservationRepository reservationRepo = new();
+            ReservationData reservationRepo = new();
             VisitorRepository visiterRepo = new();
 
             int visitorID = visiterRepo.getVisitorID(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
@@ -91,8 +91,8 @@ namespace Camping.Test
         }
 
         [Test]
-        //[TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, false)] // bestaat al, dus false
-        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", 51, 12345678, true)] // bestaat niet, dus true
+        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, false)] // bestaat al, dus false
+        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", 51, 12345678, false)] // bestaat al, dus false
         public void Reservation_AddVisitor(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
