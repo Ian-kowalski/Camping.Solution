@@ -64,19 +64,18 @@ namespace camping.Database
         // adds a new reservation to the database
         public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
-
+            // cancels the reservation if the spot is unavailable
             if (!GetAvailableReservation(campSiteID, startDate, endDate)) {
                 Console.WriteLine("Spot is already reserved during these dates!");
                 return false;
             }
 
             int linesInserted;
-
             VisitorRepository visitor = new();
 
             // adds a new visitor to the database
+            // will use existing visitor if already present
             visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
-
 
 
             // gets the visitorID of the recently added visitor
@@ -102,15 +101,18 @@ namespace camping.Database
                 connection.Close();
             }
 
+            // gets the reservation ID of the recently added reservation using the requested visitorID
             int reservationID = getReservationID(visitorID, startDate, endDate);
 
+            // adds a reservation line using the requested reservationID
             addReservationLine(campSiteID, reservationID);
 
-            return (linesInserted > 0);
+            // will return true if both the reservation and reservation line gets added
+            return (linesInserted > 0 && addReservationLine(campSiteID, reservationID));
 
         }
 
-        public int addReservationLine(int campSiteID, int reservationID)
+        public bool addReservationLine(int campSiteID, int reservationID)
         {
             int linesInserted;
             string sql = "INSERT INTO reservationLines (campSiteID, reservationID) VALUES (@campSiteID, @reservationID);";
@@ -127,7 +129,9 @@ namespace camping.Database
                 }
 
                 connection.Close();
-                return linesInserted;
+
+                // will return true if the reservation line has been added
+                return (linesInserted > 0);
             }
         }
 
