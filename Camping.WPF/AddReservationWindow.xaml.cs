@@ -17,16 +17,15 @@ namespace camping.WPF
     /// <summary>
     /// Interaction logic for AddReservation.xaml
     /// </summary>
-    public partial class AddReservation : Window
+    public partial class AddReservationWindow : Window
     {
 
         public int campSiteID;
         public int startDate;
         public int endDate;
 
-        public AddReservation() {
+        public AddReservationWindow() {
             InitializeComponent();
-
         }
     }
 }

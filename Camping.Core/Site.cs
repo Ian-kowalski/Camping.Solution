@@ -1,26 +1,24 @@
 ﻿public class Site
 {
-    public Site(int number, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply, int surfaceArea)
+    public Site(int campSiteID, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply, int size)
     {
-        Number = number;
+        CampSiteID = campSiteID;
         OutletPresent = outletPresent;
         AtWater = atWater;
         PetsAllowed = petsAllowed;
         HasShawdow = hasShadow;
         HasWaterSupply = hasWaterSupply;
-        SurfaceArea = surfaceArea;
+        Size = size;
     }
 
-    public int Number { get; set; }
-    public int SurfaceArea { get; set; }
+    public int CampSiteID { get; set; }
+    public int Size { get; set; }
     public bool HasResevation { get; set; }
     public bool AtWater {  get; set; }
     public bool HasShawdow { get; set; }
     public bool HasWaterSupply { get; set; }
 
-    //TODO: add facities
 
     public bool OutletPresent { get; set; }
     public bool PetsAllowed { get; set; }
-    //TODO: aad rest of info
 }

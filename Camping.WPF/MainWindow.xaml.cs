@@ -25,21 +25,19 @@ namespace Camping.WPF
     public partial class MainWindow : Window
     {
         private RetrieveData retrieveData;
+        private ReservationData resData;
         private SiteData siteData;
-        private ReservationData reservationData;
         public MainWindow()
         {
             InitializeComponent();
-            siteData = new();
-            reservationData = new();
-            retrieveData = new(siteData, reservationData);
-
+            siteData = new SiteData();
+            resData = new ReservationData();
+            retrieveData = new(siteData, resData);
             initiateGrid();
         }
 
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
-        TextBlock campSiteAvailabilityText;
         Button moreInfoButton;
         private void initiateGrid()
         {
@@ -57,13 +55,7 @@ namespace Camping.WPF
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
 
-                campSiteAvailabilityText = new TextBlock();
-              
-                campSiteAvailabilityText.Text = $"{retrieveData.GetCurrentAvailability(retrieveData.CheckDate()).ElementAt(i)}";
-                Grid.SetColumn(campSiteAvailabilityText, 1);
-                Grid.SetRow(campSiteAvailabilityText, i);
-                campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
-                campSiteAvailabilityText.VerticalAlignment = VerticalAlignment.Center;
+                //beschikbaarheid
 
                 moreInfoButton = new Button();
                 moreInfoButton.Content = "Meer informatie";
@@ -73,7 +65,7 @@ namespace Camping.WPF
                 moreInfoButton.VerticalAlignment = VerticalAlignment.Center;
 
                 grid.Children.Add(campSiteIDText);
-                grid.Children.Add(campSiteAvailabilityText);
+                //beschikbaarheid
                 grid.Children.Add(moreInfoButton);
 
             }
@@ -95,7 +87,6 @@ namespace Camping.WPF
         private void AddReservationButton_Click(object sender, RoutedEventArgs e)
         {
             ReservationDatesWindow rdw = new ReservationDatesWindow();
-
 
             rdw.ShowDialog();
         }

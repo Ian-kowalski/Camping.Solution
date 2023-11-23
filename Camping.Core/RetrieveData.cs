@@ -23,7 +23,7 @@ namespace camping.Core
             List<int> list = new();
             foreach(Site s in siteData.GetSiteInfo())
             {
-                list.Add(s.Number);
+                list.Add(s.CampSiteID);
             }
             return list;
         }
@@ -33,7 +33,7 @@ namespace camping.Core
             List<int> list = new();
             foreach (Site s in siteData.GetSiteInfo())
             {
-                list.Add(s.SurfaceArea);
+                list.Add(s.Size);
             }
             return list;
         }

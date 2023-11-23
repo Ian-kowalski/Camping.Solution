@@ -9,12 +9,12 @@
     <Grid>
 
         <Label Content="Begindatum" Margin="25,22,0,0" HorizontalAlignment="Left" Width="74" Height="24" VerticalAlignment="Top"/>
-        <DatePicker Margin="115,22,0,0" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top"/>
+        <DatePicker x:Name="StartDateButton" Margin="115,22,0,0" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top"/>
 
         <Label Content="Einddatum" Margin="32,0,0,22" HorizontalAlignment="Left" Width="67" Height="24" VerticalAlignment="Bottom"/>
-        <DatePicker Margin="115,0,0,22" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="102"/>
+        <DatePicker x:Name="EndDateButton" Margin="115,0,0,22" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="102"/>
 
-        <Button Content="Zoek" FontSize="24"  Background="#99FF99" Margin="0,0,28,0" Height="65" VerticalAlignment="Center" HorizontalAlignment="Right" Width="108"/>
+        <Button x:Name="SearchButton" Content="Zoek" FontSize="24"  Background="#99FF99" Margin="0,0,28,0" Height="65" VerticalAlignment="Center" HorizontalAlignment="Right" Width="108" Click="SearchButton_Click"/>
 
 
 

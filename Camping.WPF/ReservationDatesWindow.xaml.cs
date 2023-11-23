@@ -23,5 +23,11 @@ namespace camping.WPF
         {
             InitializeComponent();
         }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewAvailableReservations var = new(StartDateButton.DisplayDate.Date, EndDateButton.DisplayDate.Date);
+            var.ShowDialog();
+        }
     }
 }
