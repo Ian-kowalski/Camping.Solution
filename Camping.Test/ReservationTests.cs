@@ -114,6 +114,25 @@ namespace Camping.Test
 
         }
 
+        [Test]
+        [TestCase()]
+        public void Reservation_AddReservationLine()
+        {
+            ReservationData reservationRepo = new();
+            VisitorRepository visiterRepo = new();
+
+            if (reservationRepo.addReservationLine(1, 1) == 1)
+            {
+                Assert.Pass();
+            }
+            else {
+                Assert.Fail();
+            }
+           
+            
+
+        }
+
 
     }
 }

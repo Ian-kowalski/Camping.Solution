@@ -100,8 +100,9 @@ namespace camping.Database
 
         }
 
-        public void addReservationLine(int campSiteID, int reservationID)
+        public int addReservationLine(int campSiteID, int reservationID)
         {
+            int linesInserted;
             string sql = "INSERT INTO reservationLines (campSiteID, reservationID) VALUES (@campSiteID, @reservationID);";
             using (var connection = new SqlConnection(connectionString))
             {
@@ -112,10 +113,11 @@ namespace camping.Database
                     command.Parameters.AddWithValue("campSiteID", campSiteID);
                     command.Parameters.AddWithValue("reservationID", reservationID);
 
-                    command.ExecuteNonQuery();
+                    linesInserted = command.ExecuteNonQuery();
                 }
 
                 connection.Close();
+                return linesInserted;
             }
         }
 
