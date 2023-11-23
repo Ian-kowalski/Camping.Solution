@@ -10,11 +10,12 @@ namespace camping.Core
     public class RetrieveData
     {
         private ISiteData siteData;
+        private IReservationData reservationData;
 
-
-        public RetrieveData(ISiteData siteData)
+        public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
+            this.reservationData = reservationData;
         }
 
         public List<int> GetCampSiteID()
@@ -35,6 +36,37 @@ namespace camping.Core
                 list.Add(s.SurfaceArea);
             }
             return list;
+        }
+
+        public List<int> CheckDate()
+        {
+            List<int> list = new();
+            foreach (var r in reservationData.GetReservationInfo())
+            {
+                if (r.StartDate < DateTime.Today && DateTime.Today < r.EndDate)
+                {
+                    foreach (int i in siteData.GetCampSiteID(r.ReservationID))
+                        list.Add(i);
+                }
+            }
+            return list;
+        }
+
+        public List<bool> GetCurrentAvailability(List<int> unavailableList)
+        {
+            List<bool> list = new();
+
+            foreach(int i in GetCampSiteID())
+            {
+                list.Add(true);
+            }
+            foreach(int i in unavailableList)
+            {
+                list[i - 1] = false;
+            }
+
+            return list;
+
         }
     }
 }
