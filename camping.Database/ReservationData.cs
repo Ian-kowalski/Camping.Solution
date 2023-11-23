@@ -1,6 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using camping.Core;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -8,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace camping.Database
 {
-    public class ReservationData
+    public class ReservationData : IReservationData
     {
         private string connectionString = "Data Source=127.0.0.1;Initial Catalog=Camping;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
+
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public List<Reservation> GetReservationInfo()
         {
@@ -19,7 +23,7 @@ namespace camping.Database
 
             using (var connection = new SqlConnection(connectionString))
             {
-                connection.Open();
+                connection.Open();  
 
                 SqlDataReader reader;
                 List<Reservation> result = new List<Reservation>();
@@ -38,27 +42,7 @@ namespace camping.Database
             }
         }
 
-        public int GetCampSiteID(int reservationID)
-        {
-            string sql = $"SELECT campSiteID FROM reservationLines WHERE reservationID = {reservationID}";
 
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                SqlDataReader reader;
-                int result;
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    reader = command.ExecuteReader();
-
-                    result = reader.GetInt32(0);
-                }
-                connection.Close();
-                return result;
-            }
-        }
 
         // adds a new reservation to the database
         public void addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
