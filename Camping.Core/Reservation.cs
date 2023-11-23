@@ -1,10 +1,18 @@
-﻿internal class Reservation
+﻿public class Reservation
 {
-    public DateTime startDate { get; set; }
-    public int StayDuration { get; set; }
-    public Visitor Visitor { get; set; }
-    public int AmountPeople { get; set; }
-    public Site Site { get; set; }
+    public Reservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+    {
+        ReservationID = reservationID;
+        StartDate = startDate;
+        Guest = visitor;
+        EndDate = endDate;
+    }
+    public int ReservationID { get; set; } = 0;
+    public DateTime StartDate { get; set; } = DateTime.MinValue;
+    public DateTime EndDate { get; set; }=DateTime.MinValue;
+    public Visitor Guest { get; set; }
+    public int AmountPeople { get; set; } = 0;
+    public Site Site { get; set; } 
 
 }
 
