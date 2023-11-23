@@ -1,6 +1,7 @@
 ﻿
 using camping.Core;
 using camping.Database;
+using camping.WPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,16 +80,14 @@ namespace Camping.WPF
             grid.RowDefinitions.Clear();
         }
 
-        private void Reserveren_click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Reserveringen_click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         
+
+        private void AddReservationButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReservationDatesWindow rdw = new ReservationDatesWindow();
+
+
+            rdw.ShowDialog();
+        }
     }
 }
