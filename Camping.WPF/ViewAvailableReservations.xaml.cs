@@ -21,7 +21,6 @@ namespace camping.WPF
     /// </summary>
     public partial class ViewAvailableReservations : Window
     {
-        private RetrieveData retrieveData;
         private ReservationData resData;
         private SiteData siteData;
         public ViewAvailableReservations(DateTime startDate, DateTime endDate)
@@ -29,7 +28,6 @@ namespace camping.WPF
             InitializeComponent();
             siteData = new SiteData();
             resData = new ReservationData();
-            retrieveData = new(siteData, resData);
             initiateGrid(startDate, endDate);
         }
 
@@ -43,7 +41,8 @@ namespace camping.WPF
             int rowNumber = 0;
             foreach (Site site in siteData.GetSiteInfo()) {
 
-                if (!resData.GetAvailableReservation(rowNumber + 1, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
+                // if a spot isnt available on those selected dates, prevent it from showing up
+                if (!resData.GetAvailableReservation(site.CampSiteID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
 
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
@@ -65,6 +64,14 @@ namespace camping.WPF
                 campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSizeText.VerticalAlignment = VerticalAlignment.Center;
 
+                // grootte
+                campSizeText = new TextBlock();
+                campSizeText.Text = $"{startDate}"; // grootte
+                Grid.SetColumn(campSizeText, 1);
+                Grid.SetRow(campSizeText, rowNumber);
+                campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
+                campSizeText.VerticalAlignment = VerticalAlignment.Center;
+
 
                 // grootte
                 campFacilityText = new TextBlock();
@@ -80,6 +87,7 @@ namespace camping.WPF
                 reserveButton.Content = "Reserveren";
                 Grid.SetColumn(reserveButton, 4);
                 Grid.SetRow(reserveButton, rowNumber);
+                reserveButton.Click += (sender, RoutedEventArgs) => { ReserveButton_Click(sender, RoutedEventArgs, site.CampSiteID, startDate, endDate); };
                 reserveButton.HorizontalAlignment = HorizontalAlignment.Center;
                 reserveButton.VerticalAlignment = VerticalAlignment.Center;
 
@@ -93,6 +101,8 @@ namespace camping.WPF
             
         }
 
+        
+
         private void addRow(object sender, RoutedEventArgs e)
         {
             rowDef1 = new RowDefinition();
@@ -102,6 +112,14 @@ namespace camping.WPF
         private void clearRow(object sender, RoutedEventArgs e)
         {
             grid.RowDefinitions.Clear();
+        }
+
+        private void ReserveButton_Click(object sender, RoutedEventArgs e, int campSiteID, DateTime startDate, DateTime endDate)
+        {
+            AddReservationWindow ars = new(campSiteID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"));
+            Close();
+            ars.ShowDialog();
+
         }
     }
 }
