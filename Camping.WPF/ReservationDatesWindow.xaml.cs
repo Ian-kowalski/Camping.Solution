@@ -22,6 +22,10 @@ namespace camping.WPF
         public ReservationDatesWindow()
         {
             InitializeComponent();
+
+            StartDateButton.DisplayDateStart = DateTime.Now;
+            EndDateButton.DisplayDateStart = DateTime.Now;
+
         }
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
@@ -31,6 +35,16 @@ namespace camping.WPF
             Close();
             var.ShowDialog();
             
+        }
+
+        private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
+        }
+
+        private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
         }
     }
 }
