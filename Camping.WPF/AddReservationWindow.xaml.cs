@@ -52,10 +52,11 @@ namespace camping.WPF
                 AdressBox.Text, CityBox.Text, PostalcodeBox.Text,
                 houseNumber, phoneNumber))
             {
-                MessageBox.Show("Reservation successfully added!");
+                MessageBox.Show("Reservering is toegevoegd!");
+                Close();
             }
             else {
-                MessageBox.Show("Failed to add reservation. Invalid field?");
+                MessageBox.Show("Reservering kon niet worden toegevoegd. Incorrecte veldwaarde?");
             }
         }
     }
