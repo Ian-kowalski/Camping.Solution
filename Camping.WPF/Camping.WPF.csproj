@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DevExpress.Data" Version="23.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Camping.Core\camping.Core.csproj" />
     <ProjectReference Include="..\camping.Database\camping.Database.csproj" />
   </ItemGroup>

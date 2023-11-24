@@ -48,36 +48,66 @@ namespace Camping.WPF
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
                 grid.RowDefinitions.Add(rowDef1);
-
+        
                 campSiteIDText = new TextBlock();
                 campSiteIDText.Text = $"{retrieveData.GetCampSiteID().ElementAt(i)}";
                 Grid.SetColumn(campSiteIDText, 0);
                 Grid.SetRow(campSiteIDText, i);
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
+<<<<<<< HEAD
 
                 campSiteAvailabilityText = new TextBlock();
 
+=======
+        
+                campSiteAvailabilityText = new TextBlock();
+        
+>>>>>>> 294760b44e5b990f8a4b7ef764a2bea7e4b74d0c
                 campSiteAvailabilityText.Text = $"{retrieveData.GetCurrentAvailability(retrieveData.CheckDate()).ElementAt(i)}";
                 Grid.SetColumn(campSiteAvailabilityText, 1);
                 Grid.SetRow(campSiteAvailabilityText, i);
                 campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteAvailabilityText.VerticalAlignment = VerticalAlignment.Center;
                 //beschikbaarheid
-
+        
                 moreInfoButton = new Button();
                 moreInfoButton.Content = "Meer informatie";
                 Grid.SetColumn(moreInfoButton, 2);
                 Grid.SetRow(moreInfoButton, i);
                 moreInfoButton.HorizontalAlignment = HorizontalAlignment.Center;
                 moreInfoButton.VerticalAlignment = VerticalAlignment.Center;
-
+                moreInfoButton.Click += (sender, e) => MoreInfoButton_Click(campSiteIDText);
+        
                 grid.Children.Add(campSiteIDText);
                 grid.Children.Add(campSiteAvailabilityText);
                 //beschikbaarheid
                 grid.Children.Add(moreInfoButton);
-
+        
             }
+        }
+
+        private void MoreInfoButton_Click(TextBlock campSiteIDText)
+        {
+            string campsiteID = campSiteIDText.Text;
+
+            int surfaceArea = GetSurfaceAreaForCampsiteID(campsiteID);
+
+            SiteInfo siteInfoWindow = new SiteInfo(campsiteID);
+
+            siteInfoWindow.SetCampsiteInfo(campsiteID, surfaceArea);
+
+            siteInfoWindow.Show();
+        }
+
+        private int GetSurfaceAreaForCampsiteID(string campsiteID)
+        {
+           
+            List<int> surfaceAreas = retrieveData.GetSurfaceArea();
+
+            int index = retrieveData.GetCampSiteID().IndexOf(Convert.ToInt32(campsiteID));
+
+            return surfaceAreas[index];
         }
 
         private void addRow(object sender, RoutedEventArgs e)

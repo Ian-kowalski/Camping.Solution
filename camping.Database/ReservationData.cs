@@ -181,5 +181,53 @@ namespace camping.Database
                 }
             }
         }
+        public bool UpdateReservation(int reservationID, DateTime startDate, int visitorID, DateTime endDate)
+        {
+            string sql = $"UPDATE reservation SET startDate = @startDate, visitorID = @visitorID, endDate = @endDate WHERE reservationID = @reservationID";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                int result;
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("startDate", startDate);
+                    command.Parameters.AddWithValue("visitorID", visitorID);
+                    command.Parameters.AddWithValue("endDate", endDate);
+                    command.Parameters.AddWithValue("reservationID", reservationID);
+
+                    result = command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return (result != 0);
+            }
+        }
+        public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        {
+            string sql = $"UPDATE visitor SET firstName = @firstName, lastName = @lastName, preposition = @preposition, adress = @adress, city = @city, postalcode = @Postalcode, houseNumber = @houseNumber, phoneNumber = @phoneNumber WHERE visitorID = @visitorID";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                int result;
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("firstName", firstName);
+                    command.Parameters.AddWithValue("lastName", lastName);
+                    command.Parameters.AddWithValue("preposition", preposition);
+                    command.Parameters.AddWithValue("adress", adress);
+                    command.Parameters.AddWithValue("city", city);
+                    command.Parameters.AddWithValue("postalcode", postalcode);
+                    command.Parameters.AddWithValue("houseNumber", houseNumber);
+                    command.Parameters.AddWithValue("phoneNumber", phoneNumber);
+                    command.Parameters.AddWithValue("visitorID", visitorID);
+
+                    result = command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return (result != 0);
+            }
+        }
     }
 }
