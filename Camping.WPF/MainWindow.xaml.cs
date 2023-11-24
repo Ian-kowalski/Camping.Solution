@@ -71,6 +71,7 @@ namespace Camping.WPF
                 Grid.SetRow(moreInfoButton, i);
                 moreInfoButton.HorizontalAlignment = HorizontalAlignment.Center;
                 moreInfoButton.VerticalAlignment = VerticalAlignment.Center;
+                moreInfoButton.Click += (sender, e) => MoreInfoButton_Click(campSiteIDText);
         
                 grid.Children.Add(campSiteIDText);
                 grid.Children.Add(campSiteAvailabilityText);
