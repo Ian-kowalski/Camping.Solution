@@ -54,7 +54,7 @@ namespace camping.Core
             List<int> list = new();
             foreach (var r in reservations)
             {
-                if (r.StartDate < DateTime.Today && DateTime.Today < r.EndDate)
+                if (r.StartDate <= DateTime.Today && DateTime.Today <= r.EndDate)
                 {
                     foreach (int i in siteData.GetCampSiteID(r.ReservationID))
                         list.Add(i);

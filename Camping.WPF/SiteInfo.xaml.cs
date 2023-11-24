@@ -47,9 +47,9 @@ namespace Camping.WPF
             foreach (Site site in sites)
             {
                 // Check if the site.Number matches the campsiteID
-                if (site.Number.ToString() == campsiteID)
+                if (site.CampSiteID.ToString() == campsiteID)
                 {
-                    SetCheckboxState(site.Number, site);
+                    SetCheckboxState(site.CampSiteID, site);
                 }
             }
         }
