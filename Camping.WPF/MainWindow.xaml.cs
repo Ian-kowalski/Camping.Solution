@@ -63,12 +63,36 @@ namespace Camping.WPF
                 Grid.SetRow(moreInfoButton, i);
                 moreInfoButton.HorizontalAlignment = HorizontalAlignment.Center;
                 moreInfoButton.VerticalAlignment = VerticalAlignment.Center;
+                moreInfoButton.Click += (sender, e) => MoreInfoButton_Click(campSiteIDText);
 
                 grid.Children.Add(campSiteIDText);
                 //beschikbaarheid
                 grid.Children.Add(moreInfoButton);
 
             }
+        }
+
+        private void MoreInfoButton_Click(TextBlock campSiteIDText)
+        {
+            string campsiteID = campSiteIDText.Text;
+
+            int surfaceArea = GetSurfaceAreaForCampsiteID(campsiteID);
+
+            SiteInfo siteInfoWindow = new SiteInfo(campsiteID);
+
+            siteInfoWindow.SetCampsiteInfo(campsiteID, surfaceArea);
+
+            siteInfoWindow.Show();
+        }
+
+        private int GetSurfaceAreaForCampsiteID(string campsiteID)
+        {
+           
+            List<int> surfaceAreas = retrieveData.GetSurfaceArea();
+
+            int index = retrieveData.GetCampSiteID().IndexOf(Convert.ToInt32(campsiteID));
+
+            return surfaceAreas[index];
         }
 
         private void addRow(object sender, RoutedEventArgs e)
