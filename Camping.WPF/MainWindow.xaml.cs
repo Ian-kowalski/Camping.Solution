@@ -39,6 +39,7 @@ namespace Camping.WPF
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
         Button moreInfoButton;
+        TextBlock campSiteAvailabilityText;
         private void initiateGrid()
         {
             int numberOfRows = retrieveData.GetCampSiteID().Count();
@@ -47,28 +48,35 @@ namespace Camping.WPF
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
                 grid.RowDefinitions.Add(rowDef1);
-
+        
                 campSiteIDText = new TextBlock();
                 campSiteIDText.Text = $"{retrieveData.GetCampSiteID().ElementAt(i)}";
                 Grid.SetColumn(campSiteIDText, 0);
                 Grid.SetRow(campSiteIDText, i);
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
-
+        
+                campSiteAvailabilityText = new TextBlock();
+        
+                campSiteAvailabilityText.Text = $"{retrieveData.GetCurrentAvailability(retrieveData.CheckDate()).ElementAt(i)}";
+                Grid.SetColumn(campSiteAvailabilityText, 1);
+                Grid.SetRow(campSiteAvailabilityText, i);
+                campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
+                campSiteAvailabilityText.VerticalAlignment = VerticalAlignment.Center;
                 //beschikbaarheid
-
+        
                 moreInfoButton = new Button();
                 moreInfoButton.Content = "Meer informatie";
                 Grid.SetColumn(moreInfoButton, 2);
                 Grid.SetRow(moreInfoButton, i);
                 moreInfoButton.HorizontalAlignment = HorizontalAlignment.Center;
                 moreInfoButton.VerticalAlignment = VerticalAlignment.Center;
-                moreInfoButton.Click += (sender, e) => MoreInfoButton_Click(campSiteIDText);
-
+        
                 grid.Children.Add(campSiteIDText);
+                grid.Children.Add(campSiteAvailabilityText);
                 //beschikbaarheid
                 grid.Children.Add(moreInfoButton);
-
+        
             }
         }
 
