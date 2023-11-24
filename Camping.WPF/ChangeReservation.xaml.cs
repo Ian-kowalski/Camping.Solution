@@ -55,6 +55,8 @@ namespace camping.WPF
 
         private void Aanpassen_Click(object sender, RoutedEventArgs e)
         {
+            ///Als de messageBox niet werkt zorg er dan voor dat de 'DevExpress.Data' nuGet package is geinstalleerd 
+        
             var result = MessageBox.Show("weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)
