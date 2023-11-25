@@ -56,8 +56,10 @@ namespace Camping.WPF
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
 
+
                 campSiteAvailabilityText = new TextBlock();
                 campSiteAvailabilityText.Text = $"{retrieveData.GetDate(retrieveData.GetCampSiteID().ElementAt(i))}";
+
                 Grid.SetColumn(campSiteAvailabilityText, 1);
                 Grid.SetRow(campSiteAvailabilityText, i);
                 campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
