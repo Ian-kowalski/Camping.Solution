@@ -66,5 +66,31 @@ namespace camping.Database
                 return result;
             }
         }
+
+        public List<ReservationDates> GetAvailability(int siteID)
+        {
+            List<ReservationDates> result = new();
+            string sql = $"select startDate , endDate from reservation " +
+                $"right join reservationLines on reservationLines.reservationID = reservation.reservationID " +
+                $"WHERE campSiteID = {siteID}";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlDataReader reader;
+                
+
+                using ( var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(new ReservationDates(reader.GetDateTime(0), reader.GetDateTime(1)));
+                    }
+                }
+            }
+            return result;
+
+        }
     }
 }

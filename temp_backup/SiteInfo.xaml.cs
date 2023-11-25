@@ -47,9 +47,9 @@ namespace Camping.WPF
             foreach (Site site in sites)
             {
                 // Check if the site.Number matches the campsiteID
-                if (site.CampSiteID.ToString() == campsiteID)
+                if (site.Number.ToString() == campsiteID)
                 {
-                    SetCheckboxState(site.CampSiteID, site);
+                    SetCheckboxState(site.Number, site);
                 }
             }
         }
@@ -75,9 +75,9 @@ namespace Camping.WPF
             {
                 animalCheckbox.IsChecked = site.PetsAllowed;
             }
-            if (site.HasShadow)
+            if (site.HasShawdow)
             {
-                shadowCheckbox.IsChecked = site.HasShadow;
+                shadowCheckbox.IsChecked = site.HasShawdow;
             }
             if (site.AtWater)
             {

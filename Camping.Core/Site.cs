@@ -6,7 +6,7 @@
         OutletPresent = outletPresent;
         AtWater = atWater;
         PetsAllowed = petsAllowed;
-        HasShawdow = hasShadow;
+        HasShadow = hasShadow;
         HasWaterSupply = hasWaterSupply;
         Size = size;
     }
@@ -15,7 +15,7 @@
     public int Size { get; set; }
     public bool HasResevation { get; set; }
     public bool AtWater {  get; set; }
-    public bool HasShawdow { get; set; }
+    public bool HasShadow { get; set; }
     public bool HasWaterSupply { get; set; }
 
 

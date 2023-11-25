@@ -75,7 +75,7 @@ namespace camping.WPF
 
                 // grootte
                 campFacilityText = new TextBlock();
-                campFacilityText.Text = $"{site.HasShadow} {site.HasWaterSupply} {site.AtWater} {site.PetsAllowed}"; // faciliteiten
+                campFacilityText.Text = $"{site.HasShawdow} {site.HasWaterSupply} {site.AtWater} {site.PetsAllowed}"; // faciliteiten
                 Grid.SetColumn(campFacilityText, 3);
                 Grid.SetRow(campFacilityText, rowNumber);
                 campFacilityText.HorizontalAlignment = HorizontalAlignment.Center;
