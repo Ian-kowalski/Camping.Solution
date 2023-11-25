@@ -26,7 +26,7 @@ namespace camping.Core
         public List<int> GetCampSiteID()
         {
             List<int> list = new();
-            foreach(Site s in sites)
+            foreach (Site s in sites)
             {
                 list.Add(s.CampSiteID);
             }
@@ -49,33 +49,19 @@ namespace camping.Core
             reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber);
         }
 
-        public List<int> CheckDate()
+        public bool GetDate(int siteID)
         {
-            List<int> list = new();
-            foreach (var r in reservations)
+            List<ReservationDates> reservations = siteData.GetAvailability(siteID);
+            foreach(ReservationDates dates in reservations)
             {
-                if (r.StartDate < DateTime.Today && DateTime.Today < r.EndDate)
+                if(dates.startDate < DateTime.Today && dates.endDate > DateTime.Today)
                 {
-                    foreach (int i in siteData.GetCampSiteID(r.ReservationID))
-                        list.Add(i);
+                    return false;
                 }
             }
-            return list;
+            return true;
         }
 
-        public List<bool> GetCurrentAvailability(List<int> unavailableList)
-        {
-            List<bool> list = new();
 
-            foreach(int i in GetCampSiteID())
-            {
-                list.Add(true);
-            }
-            foreach(int i in unavailableList)
-            {
-                list[i - 1] = false;
-            }
-            return list;
-        }
     }
 }

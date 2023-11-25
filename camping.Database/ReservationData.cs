@@ -24,7 +24,7 @@ namespace camping.Database
 
             using (var connection = new SqlConnection(connectionString))
             {
-                connection.Open();  
+                connection.Open();
 
                 SqlDataReader reader;
                 List<Reservation> result = new List<Reservation>();
@@ -49,7 +49,8 @@ namespace camping.Database
         public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
             // cancels the reservation if the spot is unavailable
-            if (!GetAvailableReservation(campSiteID, startDate, endDate)) {
+            if (!GetAvailableReservation(campSiteID, startDate, endDate))
+            {
                 Console.WriteLine("Spot is already reserved during these dates!");
                 return false;
             }
@@ -154,7 +155,8 @@ namespace camping.Database
             }
         }
 
-        public bool GetAvailableReservation(int campSite, string startDate, string endDate) {
+        public bool GetAvailableReservation(int campSite, string startDate, string endDate)
+        {
             string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
                                 "WHERE reservationLines.campSiteID = @campSite AND " +
                                 "((@startDate >= startDate AND @startDate <= endDate) OR " +
@@ -173,7 +175,7 @@ namespace camping.Database
                     command.Parameters.AddWithValue("endDate", endDate);
 
 
-                    int result = (int) command.ExecuteScalar();
+                    int result = (int)command.ExecuteScalar();
 
                     connection.Close();
                     return (result == 0);
