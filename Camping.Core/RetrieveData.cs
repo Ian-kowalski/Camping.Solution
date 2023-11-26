@@ -10,7 +10,12 @@ namespace camping.Core
     public class RetrieveData
     {
         private ISiteData siteData;
+        private IReservationData reservationData;
 
+        public RetrieveData(IReservationData reservationData)
+        {
+            this.reservationData = reservationData;
+        }
 
         public RetrieveData(ISiteData siteData)
         {
@@ -35,6 +40,22 @@ namespace camping.Core
                 list.Add(s.SurfaceArea);
             }
             return list;
+        }
+
+        public List<Reservation> GetReservations() 
+        {
+            return reservationData.GetReservationInfo(); ;
+        }
+
+
+        public List<Reservation> GetReservations(DateTime dateTime)
+        {
+            return reservationData.GetReservationInfo(dateTime); ;
+        }
+
+        public int GetCampSiteID(int reservationID)
+        {
+            return reservationData.GetCampSiteID(reservationID);
         }
     }
 }

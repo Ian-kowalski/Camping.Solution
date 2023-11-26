@@ -1,6 +1,6 @@
 ﻿public class Reservation
 {
-    public Reservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+    public Reservation(int reservationID, DateTime startDate, DateTime endDate, Visitor visitor)
     {
         ReservationID = reservationID;
         StartDate = startDate;

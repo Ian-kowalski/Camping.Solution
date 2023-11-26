@@ -19,6 +19,8 @@ namespace Camping.WPF
     /// </summary>
     public partial class Filterdialog : Window
     {
+
+        public DateTime Date { get; set; }
         public Filterdialog()
         {
             InitializeComponent();
@@ -28,8 +30,7 @@ namespace Camping.WPF
 
         private void zoeken(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(this.Title);
-
+            this.Close();
         }
 
         private void DateChanged(object sender, SelectionChangedEventArgs e)
@@ -44,6 +45,7 @@ namespace Camping.WPF
             else
             {
                 this.Title = date.Value.ToShortDateString();
+                Date = (DateTime)date;
             }
         }
     }
