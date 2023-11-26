@@ -25,7 +25,6 @@ namespace camping.Test
             Assert.IsInstanceOf<List<int>>(campSiteIDs);
         }
 
-
         [Test]
         public void GetSurfaceArea_ReturnsListOfIntegers()
         {
@@ -40,7 +39,7 @@ namespace camping.Test
             Assert.IsInstanceOf<List<int>>(result);
         }
 
-        [TestCase(1, true)]
+        [TestCase(1, true)] // could fail due to changes in database
         [TestCase(5, false)]
         public void GetDate_ReturnsTrueWhenNoOverlappingReservations(int siteID, bool excpected)
         {
