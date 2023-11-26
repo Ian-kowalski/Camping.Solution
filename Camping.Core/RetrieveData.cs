@@ -55,6 +55,7 @@ namespace camping.Core
             foreach(ReservationDates dates in reservations)
             {
                 if(dates.startDate < DateTime.Today && dates.endDate > DateTime.Today)
+
                 {
                     return false;
                 }
