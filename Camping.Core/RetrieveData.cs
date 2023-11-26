@@ -12,22 +12,23 @@ namespace camping.Core
         private ISiteData siteData;
         private IReservationData reservationData;
 
-        public RetrieveData(IReservationData reservationData)
-        {
-            this.reservationData = reservationData;
-        }
+        private List<Site> sites;
+        private List<Reservation> reservations;
 
-        public RetrieveData(ISiteData siteData)
+        public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
+            this.reservationData = reservationData;
+            reservations = reservationData.GetReservationInfo();
+            sites = siteData.GetSiteInfo();
         }
 
         public List<int> GetCampSiteID()
         {
             List<int> list = new();
-            foreach(Site s in siteData.GetSiteInfo())
+            foreach (Site s in sites)
             {
-                list.Add(s.Number);
+                list.Add(s.CampSiteID);
             }
             return list;
         }
@@ -35,9 +36,9 @@ namespace camping.Core
         public List<int> GetSurfaceArea()
         {
             List<int> list = new();
-            foreach (Site s in siteData.GetSiteInfo())
+            foreach (Site s in sites)
             {
-                list.Add(s.SurfaceArea);
+                list.Add(s.Size);
             }
             return list;
         }
@@ -57,5 +58,27 @@ namespace camping.Core
         {
             return reservationData.GetCampSiteID(reservationID);
         }
+
+        public void UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+        {
+            reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate);
+            reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber);
+        }
+
+        public bool GetDate(int siteID)
+        {
+            List<ReservationDates> reservations = siteData.GetAvailability(siteID);
+            foreach(ReservationDates dates in reservations)
+            {
+                if(dates.startDate < DateTime.Today && dates.endDate > DateTime.Today)
+
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
     }
 }

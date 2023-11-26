@@ -1,4 +1,5 @@
-﻿using System;
+﻿using camping.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,5 +12,8 @@ namespace Camping.Core
     {
         public List<Site> GetSiteInfo();
 
+        public List<int> GetCampSiteID(int reservationID);
+
+        public List<ReservationDates> GetAvailability(int siteID);
     }
 }

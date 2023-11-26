@@ -7,6 +7,8 @@ using System.ComponentModel;
 using Microsoft;
 using Microsoft.Data.SqlClient;
 using Camping.Core;
+using System.Runtime.CompilerServices;
+using camping.Core;
 
 namespace camping.Database
 {
@@ -39,6 +41,56 @@ namespace camping.Database
                 connection.Close();
                 return result;
             }
+        }
+
+        public List<int> GetCampSiteID(int reservationID)
+        {
+            string sql = $"SELECT campSiteID FROM reservationLines WHERE reservationID = {reservationID}";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlDataReader reader;
+                List<int> result = new();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(Convert.ToInt32(reader.GetInt32(0)));
+                    }
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
+        public List<ReservationDates> GetAvailability(int siteID)
+        {
+            List<ReservationDates> result = new();
+            string sql = $"select startDate , endDate from reservation " +
+                $"right join reservationLines on reservationLines.reservationID = reservation.reservationID " +
+                $"WHERE campSiteID = {siteID}";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlDataReader reader;
+                
+
+                using ( var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result.Add(new ReservationDates(reader.GetDateTime(0), reader.GetDateTime(1)));
+                    }
+                }
+            }
+            return result;
+
         }
     }
 }

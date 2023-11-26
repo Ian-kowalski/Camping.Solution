@@ -1,0 +1,22 @@
+﻿<Window x:Class="camping.WPF.ReservationDatesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:camping.WPF"
+        mc:Ignorable="d"
+        Title="ReservationDatesWindow" Height="150" Width="400">
+    <Grid>
+
+        <Label Content="Begindatum" Margin="25,22,0,0" HorizontalAlignment="Left" Width="74" Height="24" VerticalAlignment="Top"/>
+        <DatePicker x:Name="StartDateButton" Margin="115,22,0,0" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top" SelectedDateChanged="StartDateButton_SelectedDateChanged"/>
+
+        <Label Content="Einddatum" Margin="32,0,0,22" HorizontalAlignment="Left" Width="67" Height="24" VerticalAlignment="Bottom"/>
+        <DatePicker x:Name="EndDateButton" Margin="115,0,0,22" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="102" SelectedDateChanged="EndDateButton_SelectedDateChanged"/>
+
+        <Button x:Name="SearchButton" Content="Zoek" FontSize="24"  Background="#99FF99" Margin="0,0,28,0" Height="65" VerticalAlignment="Center" HorizontalAlignment="Right" Width="108" Click="SearchButton_Click"/>
+
+
+
+    </Grid>
+</Window>
