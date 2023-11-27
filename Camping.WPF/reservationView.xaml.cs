@@ -90,7 +90,7 @@ namespace Camping.WPF
         private void AddSiteID(Grid grid, List<Reservation> reservations, int i)
         {
             TextBlock TB = new TextBlock();
-            TB.Text = reservations.ElementAt(i).SiteID.ToString();
+            TB.Text = reservations.ElementAt(i).Site.CampSiteID.ToString();
             Grid.SetColumn(TB, 2);
             Grid.SetRow(TB, i);
             TB.HorizontalAlignment = HorizontalAlignment.Center;
