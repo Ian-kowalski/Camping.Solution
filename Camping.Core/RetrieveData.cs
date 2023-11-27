@@ -43,6 +43,22 @@ namespace camping.Core
             return list;
         }
 
+        public List<Reservation> GetReservations() 
+        {
+            return reservationData.GetReservationInfo(); ;
+        }
+
+
+        public List<Reservation> GetReservations(DateTime dateTime)
+        {
+            return reservationData.GetReservationInfo(dateTime); ;
+        }
+
+/*        public int GetCampSiteID(int reservationID)
+        {
+            return reservationData.GetCampSiteID(reservationID);
+        }*/
+
         public void UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
         {
             reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate);

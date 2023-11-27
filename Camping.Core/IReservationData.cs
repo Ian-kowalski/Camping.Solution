@@ -10,6 +10,7 @@ namespace camping.Core
     public interface IReservationData : INotifyPropertyChanged
     {
         public List<Reservation> GetReservationInfo();
+        public List<Reservation> GetReservationInfo(DateTime dateTime);
         public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber);
         public bool addReservationLine(int campSiteID, int reservationID);
         public int getReservationID(int visitorID, string startDate, string endDate);
