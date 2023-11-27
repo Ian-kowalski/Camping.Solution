@@ -137,6 +137,8 @@ namespace Camping.WPF
         {
             reservationView resView = new reservationView(retrieveData);
             resView.ShowDialog();
+
+            UpdateGrid();
         }
     }
 }
