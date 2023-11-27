@@ -14,7 +14,15 @@ namespace camping.Database
         public SshConnection() {
             ssh.Connect();
             ssh.AddForwardedPort(port);
-            port.Start();
+            if (!port.IsStarted)
+            {
+                port.Start();
+            }
+        }
+
+        public void BreakConnection() { 
+            port.Stop();
+            ssh.Disconnect();
         }
     }
 }

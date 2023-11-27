@@ -87,13 +87,13 @@ namespace camping.Database
 
                 // adds a new visitor to the database
                 // will use existing visitor if already present
-                visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+                visitor.addVisitor(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
 
 
                 // gets the visitorID of the recently added visitor
-                int visitorID = visitor.getVisitorID(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+                int visitorID = visitor.getVisitorID(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
 
-
+                if (visitorID == -1) { return false; }
 
                 // adds a new reservation
                 string sql = "INSERT INTO reservation (visitorID, startDate, endDate) VALUES (@visitorID, @startDate, @endDate);";

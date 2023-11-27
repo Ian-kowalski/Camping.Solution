@@ -27,9 +27,11 @@ namespace Camping.WPF
         private RetrieveData retrieveData;
         private bool checkboxesEnabled = false;
         private int campsiteID;
+        private List<CheckBox> CheckboxList;
         public SiteInfo(int campsiteID)
         {
             InitializeComponent();
+            InitializeCheckBoxCollection();
             siteData = new SiteData();
             reservationData = new ReservationData();
             retrieveData = new RetrieveData(siteData, reservationData);
@@ -39,20 +41,17 @@ namespace Camping.WPF
         }
         public void SetCampsiteInfo(int campsiteID, int surfaceArea)
         {
-            // Assuming campsiteIDLabel is a Label in your SiteInfo window
             campsiteIDLabel.Content = campsiteID;
 
             TextBlock campSiteAvailabilityText = new TextBlock();
             if (retrieveData.GetDate(campsiteID))
             {
-                availability.Content = $"✓";
+                availabilityLabel.Content = $"✓";
             }
             else
             {
-                availability.Content = $"X";
+                availabilityLabel.Content = $"X";
             }
-
-            // Assuming surfaceAreaLabel is a Label with Tag="6" in your SiteInfo window
             surfaceAreaLabel.Content = surfaceArea.ToString();
         }
         private void LoadSiteInfo(int campsiteID)
@@ -61,14 +60,24 @@ namespace Camping.WPF
 
             foreach (Site site in sites)
             {
-                // Check if the site.Number matches the campsiteID
+
                 if (site.CampSiteID == campsiteID)
                 {
                     SetCheckboxState(site.CampSiteID, site);
                 }
             }
         }
-
+        private void InitializeCheckBoxCollection()
+        {
+            CheckboxList = new List<CheckBox>
+            {
+        CraneCheckbox,
+        PowerCheckbox,
+        AnimalCheckbox,
+        ShadowCheckbox,
+        WaterCheckbox
+             };
+        }
         private void SetCheckboxState(int number, Site site)
         {
             CheckBox craneCheckbox = FindCheckBoxByNumberAndFacility(number, "Crane");
@@ -106,7 +115,7 @@ namespace Camping.WPF
         }
         private CheckBox FindCheckBoxByNumberAndFacility(int number, string facility)
         {
-            foreach (var checkbox in YourGrid.Children.OfType<CheckBox>())
+            foreach (var checkbox in SiteInfoGrid.Children.OfType<CheckBox>())
             {
                 if (Convert.ToInt32(campsiteID) == number && checkbox.Name.Contains(facility))
                 {
@@ -127,14 +136,10 @@ namespace Camping.WPF
             }
         }
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {   
-            UpdateDatabase((CheckBox)sender, isChecked: true);
-        }
+        {}
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            UpdateDatabase((CheckBox)sender, isChecked: false);
-        }
+        {}
         private void UpdateDatabase(CheckBox checkbox, bool isChecked)
         {
             string columnName = GetColumnNameForCheckbox(checkbox.Name);
@@ -193,11 +198,16 @@ namespace Camping.WPF
         {
             if (checkboxesEnabled)
             {
+                foreach (CheckBox checkbox in CheckboxList)
+                {
+                    UpdateDatabase(checkbox, isChecked: checkbox.IsChecked.GetValueOrDefault());
+                }
                 DisableCheckboxes();
                 EditFacilityButton.Content = "Aanpassen Faciliteiten";
             }
             else
             {
+
                 EnableCheckboxes();
                 EditFacilityButton.Content = "Opslaan";
             }

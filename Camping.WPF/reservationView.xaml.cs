@@ -15,20 +15,16 @@ namespace Camping.WPF
     /// </summary>
     public partial class reservationView : Window
     {
-        private ReservationData rData;
-        private SiteData sData;
         RetrieveData retrieveData;
         FilterDialog filterDialog;
         ChangeReservation changeReservationDialog;
         List<int> toBeCancel = new List<int>();
 
         DateTime date = DateTime.Now;
-        public reservationView()
+        public reservationView(RetrieveData retrieveData)
         {
             InitializeComponent();
-            rData = new ReservationData();
-            sData = new SiteData();
-            retrieveData = new(sData,rData);
+            this.retrieveData = retrieveData;
             InitializeGrid();
 
         }
@@ -71,6 +67,7 @@ namespace Camping.WPF
         {
             CheckBox CB = new CheckBox();
             CB.Checked += CB_checkt;
+            CB.Unchecked += CB_checkt;
             CB.Name = "CB"+reservations.ElementAt(i).ReservationID.ToString();
             Grid.SetColumn(CB, 0);
             Grid.SetRow(CB, i);
@@ -169,9 +166,9 @@ namespace Camping.WPF
 
         private void bewerkenButtonClick(object sender, RoutedEventArgs e)
         {
-            Button c = sender as Button;
-            char last_char = c.Name[c.Name.Length - 1];
-            changeReservationDialog = new ChangeReservation(last_char-'0');
+            Button? c = sender as Button;
+            int last_part = int.Parse(c.Name.Remove(0, 12));
+            changeReservationDialog = new ChangeReservation(last_part);
             changeReservationDialog.ShowDialog();
             
         }
@@ -179,7 +176,7 @@ namespace Camping.WPF
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
             string combinedString = string.Join(", ", toBeCancel);
-            string messageBoxText = "Do you want to cansel these resevations: "+ combinedString;
+            string messageBoxText = "Do you want to cancel these reservation(s): "+ combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
@@ -193,6 +190,7 @@ namespace Camping.WPF
                     foreach (var reservationNr in toBeCancel)
                     {
                         // ...Delete out of database
+                        retrieveData.DeleteReservation(reservationNr);
                     }
                     toBeCancel.Clear();
                     break;
@@ -208,8 +206,15 @@ namespace Camping.WPF
         private void CB_checkt(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
-            char last_char = c.Name[c.Name.Length - 1];
-            toBeCancel.Add( last_char - '0');
+            int last_part = int.Parse(c.Name.Remove(0, 2));
+            if (c.IsChecked == true)
+            {
+                toBeCancel.Add(last_part);
+            }
+            else
+            {
+                toBeCancel.Remove(last_part);
+            }  
         }
     }
 }
