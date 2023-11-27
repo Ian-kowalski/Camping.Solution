@@ -11,7 +11,6 @@
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public Visitor Guest { get; set; }
-    public int AmountPeople { get; set; }
     public Site Site { get; set; }
 
 }
