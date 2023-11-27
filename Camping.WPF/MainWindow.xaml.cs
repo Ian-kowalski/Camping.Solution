@@ -122,8 +122,6 @@ namespace Camping.WPF
 
             UpdateGrid();
         }
-<<<<<<< HEAD
-=======
 
         public void UpdateWindow(object sender, RoutedEventArgs e)
         {
@@ -140,6 +138,5 @@ namespace Camping.WPF
             reservationView resView = new reservationView(retrieveData);
             resView.ShowDialog();
         }
->>>>>>> f947ad9b2e0221f7fb4a58ea2e1ef1ec3fe1d1fb
     }
 }
