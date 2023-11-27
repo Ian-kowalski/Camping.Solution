@@ -70,7 +70,7 @@ namespace camping.Core
             List<ReservationDates> reservations = siteData.GetAvailability(siteID);
             foreach(ReservationDates dates in reservations)
             {
-                if(dates.startDate < DateTime.Today && dates.endDate > DateTime.Today)
+                if(dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
 
                 {
                     return false;

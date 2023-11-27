@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Voeg reservering toe" Height="400" Width="500">
     <Grid Margin="0,0,0,0">
-        <Button x:Name="AddReservationButton" Content="Plaats Reservering" Margin="0,0,64,96" HorizontalAlignment="Right" Width="128" Height="64" VerticalAlignment="Bottom" Click="AddReservationButton_Click"/>
+        <Button x:Name="AddReservationButton" Background="#99FF99" Content="Plaats Reservering" Margin="0,0,64,96" HorizontalAlignment="Right" Width="128" Height="64" VerticalAlignment="Bottom" Click="AddReservationButton_Click"/>
 
         <Label Content="Voornaam" HorizontalAlignment="Left" Margin="32,32,0,0" VerticalAlignment="Top" Height="32"/>
         <TextBox x:Name="NameBox" HorizontalAlignment="Left" Margin="128,32,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Height="32"/>
