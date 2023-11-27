@@ -10,9 +10,14 @@ foreach (var s in siteData.GetSiteInfo())
 */
 
 
-ReservationData reservationData = new ReservationData();
+/*ReservationData reservationData = new ReservationData();
 
 foreach (var r in reservationData.GetReservationInfo())
 {
     Console.WriteLine($"{r.StartDate} {r.EndDate}");
 }
+*/
+
+DateTime d =  DateTime.Now;
+
+Console.WriteLine(d.ToString("MM-dd-yyyy"));

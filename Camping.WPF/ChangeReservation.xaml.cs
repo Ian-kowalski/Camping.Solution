@@ -27,9 +27,10 @@ namespace camping.WPF
         ReservationData reservationData;
         SiteData siteData;
         List<Reservation> res;
-        int index = 4; /// index van de gekozen reservering meegeven vanaf het reserveringen scherm
-        public ChangeReservation()
+        int index; /// index van de gekozen reservering meegeven vanaf het reserveringen scherm
+        public ChangeReservation(int i)
         {
+            this.index = i-1;
             InitializeComponent();
 
             reservationData = new();

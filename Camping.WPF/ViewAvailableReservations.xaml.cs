@@ -3,6 +3,7 @@ using camping.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -34,7 +35,11 @@ namespace camping.WPF
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
         TextBlock campSizeText;
-        TextBlock campFacilityText;
+        Rectangle campFacilityShadow;
+        Rectangle campFacilityWater;
+        Rectangle campFacilityAtWater;
+        Rectangle campFacilityPets;
+        Rectangle campFacilityOutlet;
         Button reserveButton;
         private void initiateGrid(DateTime startDate, DateTime endDate)
         {
@@ -64,28 +69,54 @@ namespace camping.WPF
                 campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSizeText.VerticalAlignment = VerticalAlignment.Center;
 
-                // grootte
-                campSizeText = new TextBlock();
-                campSizeText.Text = $"{startDate}"; // grootte
-                Grid.SetColumn(campSizeText, 1);
-                Grid.SetRow(campSizeText, rowNumber);
-                campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
-                campSizeText.VerticalAlignment = VerticalAlignment.Center;
+                // schaduw faliciteit
+                campFacilityShadow = new Rectangle();
+                createRectangle(site.HasShadow, campFacilityShadow);
+                Grid.SetColumn(campFacilityShadow, 2);
+                Grid.SetRow(campFacilityShadow, rowNumber);
+                campFacilityShadow.HorizontalAlignment = HorizontalAlignment.Center;
+                campFacilityShadow.VerticalAlignment = VerticalAlignment.Center;
+                // water faliciteit
+                campFacilityWater = new Rectangle();
+                createRectangle(site.HasWaterSupply, campFacilityWater);
+                Grid.SetColumn(campFacilityWater, 3);
+                Grid.SetRow(campFacilityWater, rowNumber);
+                campFacilityWater.HorizontalAlignment = HorizontalAlignment.Center;
+                campFacilityWater.VerticalAlignment = VerticalAlignment.Center;
+                // aan water faliciteit
+                campFacilityAtWater = new Rectangle();
+                createRectangle(site.AtWater, campFacilityAtWater);
+                Grid.SetColumn(campFacilityAtWater, 4);
+                Grid.SetRow(campFacilityAtWater, rowNumber);
+                campFacilityAtWater.HorizontalAlignment = HorizontalAlignment.Center;
+                campFacilityAtWater.VerticalAlignment = VerticalAlignment.Center;
+                // dieren faliciteit
+                campFacilityPets = new Rectangle();
+                createRectangle(site.PetsAllowed, campFacilityPets);
+                Grid.SetColumn(campFacilityPets, 5);
+                Grid.SetRow(campFacilityPets, rowNumber);
+                campFacilityPets.HorizontalAlignment = HorizontalAlignment.Center;
+                campFacilityPets.VerticalAlignment = VerticalAlignment.Center;
+                // stroom faliciteit
+                campFacilityOutlet = new Rectangle();
+                createRectangle(site.OutletPresent, campFacilityOutlet);
+                Grid.SetColumn(campFacilityOutlet, 6);
+                Grid.SetRow(campFacilityOutlet, rowNumber);
+                campFacilityOutlet.HorizontalAlignment = HorizontalAlignment.Center;
+                campFacilityOutlet.VerticalAlignment = VerticalAlignment.Center;
 
 
-                // grootte
-                campFacilityText = new TextBlock();
-                campFacilityText.Text = $"{site.HasShadow} {site.HasWaterSupply} {site.AtWater} {site.PetsAllowed}"; // faciliteiten
-                Grid.SetColumn(campFacilityText, 3);
-                Grid.SetRow(campFacilityText, rowNumber);
-                campFacilityText.HorizontalAlignment = HorizontalAlignment.Center;
-                campFacilityText.VerticalAlignment = VerticalAlignment.Center;
+
 
 
                 //reserveren
                 reserveButton = new Button();
+                reserveButton.Height = 100;
+                reserveButton.Width = 300;
+                reserveButton.Background = new SolidColorBrush(Color.FromRgb(153, 153, 153));
+                reserveButton.FontSize = 24;
                 reserveButton.Content = "Reserveren";
-                Grid.SetColumn(reserveButton, 4);
+                Grid.SetColumn(reserveButton, 7);
                 Grid.SetRow(reserveButton, rowNumber);
                 reserveButton.Click += (sender, RoutedEventArgs) => { ReserveButton_Click(sender, RoutedEventArgs, site.CampSiteID, startDate, endDate); };
                 reserveButton.HorizontalAlignment = HorizontalAlignment.Center;
@@ -93,7 +124,11 @@ namespace camping.WPF
 
                 grid.Children.Add(campSiteIDText);
                 grid.Children.Add(campSizeText);
-                grid.Children.Add(campFacilityText);
+                grid.Children.Add(campFacilityShadow);
+                grid.Children.Add(campFacilityWater);
+                grid.Children.Add(campFacilityAtWater);
+                grid.Children.Add(campFacilityPets);
+                grid.Children.Add(campFacilityOutlet);
                 grid.Children.Add(reserveButton);
 
                 rowNumber++;
@@ -112,6 +147,21 @@ namespace camping.WPF
         private void clearRow(object sender, RoutedEventArgs e)
         {
             grid.RowDefinitions.Clear();
+        }
+
+        private Rectangle createRectangle(bool color, Rectangle rect) {
+            rect.Height = 100;
+            rect.Width = 100;
+            if (color)
+            {
+                rect.Fill = new SolidColorBrush(Color.FromRgb(100, 255, 100));
+            }
+            else
+            {
+                rect.Fill = new SolidColorBrush(Color.FromRgb(255, 100, 100));
+            }
+
+            return rect;
         }
 
         private void ReserveButton_Click(object sender, RoutedEventArgs e, int campSiteID, DateTime startDate, DateTime endDate)

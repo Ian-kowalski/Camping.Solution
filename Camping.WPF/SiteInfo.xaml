@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:Camping.WPF"
         mc:Ignorable="d"
         Title="Plaats Informatie" Height="450" Width="800">
-    <Grid x:Name="YourGrid">
+    <Grid x:Name="SiteInfoGrid">
         <Label Content="Plek Nr." HorizontalAlignment="Right" Margin="0,90,475,0" VerticalAlignment="Top" FontSize="16"/>
         <Label x:Name="campsiteIDLabel" Content="1" Tag="0" HorizontalAlignment="Left" Margin="320,90,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label Content="Beschikbaar" HorizontalAlignment="Right" Margin="0,120,475,0" VerticalAlignment="Top" FontSize="16"/>
-        <Label x:Name="availability" Content="✔" HorizontalAlignment="Left" Margin="320,120,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="availabilityLabel" Content="✔" HorizontalAlignment="Left" Margin="320,120,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label Content="Grootte" HorizontalAlignment="Right" Margin="0,150,475,0" VerticalAlignment="Top"  FontSize="16"/>
         <Label x:Name="surfaceAreaLabel" Content="5000" Tag="6" HorizontalAlignment="Left" Margin="320,150,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label Content="Faciliteiten" HorizontalAlignment="Right" Margin="0,250,575,0" VerticalAlignment="Top" FontSize="36"/>
