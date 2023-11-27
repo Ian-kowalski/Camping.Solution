@@ -8,7 +8,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button x:Name="AddReservationButton" Margin="0,0,608,377" Content="Reserveren" HorizontalAlignment="Right" Width="168" Height="34" VerticalAlignment="Bottom" Click="AddReservationButton_Click"/>
-        <Button x:Name="viewReservationsButton" Margin="232,0,400,377" Content="Reservering" Height="34" VerticalAlignment="Bottom"/>
+        <Button x:Name="viewReservationsButton" Margin="232,0,400,377" Content="Reservering" Height="34" VerticalAlignment="Bottom" Click="viewReservationsButton_Click"/>
         <ScrollViewer Margin="24,121,66,10">
             <Grid Name ="grid" ShowGridLines="True">
 

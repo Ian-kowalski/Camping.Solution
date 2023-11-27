@@ -141,5 +141,11 @@ namespace Camping.WPF
         {
             connection.BreakConnection();
         }
+
+        private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            reservationView resView = new reservationView();
+            resView.ShowDialog();
+        }
     }
 }
