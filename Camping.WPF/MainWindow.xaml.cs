@@ -4,6 +4,7 @@ using camping.Database;
 using camping.WPF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,8 @@ namespace Camping.WPF
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
             UpdateGrid();
+
+            Closing += OnWindowClosing;
         }
 
         RowDefinition rowDef1;
@@ -134,12 +137,15 @@ namespace Camping.WPF
             rdw.ShowDialog();
         }
 
-        private void viewReservationbuttonClick(object sender, RoutedEventArgs e)
+        public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            reservationView rdw = new reservationView(retrieveData);
+            connection.BreakConnection();
+        }
 
-            rdw.ShowDialog();
-
+        private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            reservationView resView = new reservationView();
+            resView.ShowDialog();
         }
     }
 }
