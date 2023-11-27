@@ -15,11 +15,13 @@ using System.Windows.Shapes;
 namespace Camping.WPF
 {
     /// <summary>
-    /// Interaction logic for Filterdialog.xaml
+    /// Interaction logic for FilterDialog.xaml
     /// </summary>
-    public partial class Filterdialog : Window
+    public partial class FilterDialog : Window
     {
-        public Filterdialog()
+
+        public DateTime Date { get; set; }
+        public FilterDialog()
         {
             InitializeComponent();
         }
@@ -28,8 +30,7 @@ namespace Camping.WPF
 
         private void zoeken(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(this.Title);
-
+            this.Close();
         }
 
         private void DateChanged(object sender, SelectionChangedEventArgs e)
@@ -44,6 +45,7 @@ namespace Camping.WPF
             else
             {
                 this.Title = date.Value.ToShortDateString();
+                Date = (DateTime)date;
             }
         }
     }

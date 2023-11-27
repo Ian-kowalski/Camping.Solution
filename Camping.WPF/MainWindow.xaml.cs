@@ -4,6 +4,7 @@ using camping.Database;
 using camping.WPF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace Camping.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SshConnection connection;
+
         private RetrieveData retrieveData;
         private ReservationData resData;
         private SiteData siteData;
@@ -31,11 +34,12 @@ namespace Camping.WPF
         public MainWindow()
         {
             InitializeComponent();
+            connection = new SshConnection();
             siteData = new SiteData();
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
             UpdateGrid();
-            
+            Closing += OnWindowClosing;
         }
 
         RowDefinition rowDef1;
@@ -138,6 +142,17 @@ namespace Camping.WPF
         public void UpdateWindow(object sender, RoutedEventArgs e)
         {
             UpdateGrid();
+        }
+
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            connection.BreakConnection();
+        }
+
+        private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            reservationView resView = new reservationView();
+            resView.ShowDialog();
         }
     }
 }
