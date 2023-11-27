@@ -64,16 +64,7 @@ namespace camping.WPF
                 campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSizeText.VerticalAlignment = VerticalAlignment.Center;
 
-                // grootte
-                campSizeText = new TextBlock();
-                campSizeText.Text = $"{startDate}"; // grootte
-                Grid.SetColumn(campSizeText, 1);
-                Grid.SetRow(campSizeText, rowNumber);
-                campSizeText.HorizontalAlignment = HorizontalAlignment.Center;
-                campSizeText.VerticalAlignment = VerticalAlignment.Center;
-
-
-                // grootte
+                // faciliteiten
                 campFacilityText = new TextBlock();
                 campFacilityText.Text = $"{site.HasShadow} {site.HasWaterSupply} {site.AtWater} {site.PetsAllowed}"; // faciliteiten
                 Grid.SetColumn(campFacilityText, 3);
