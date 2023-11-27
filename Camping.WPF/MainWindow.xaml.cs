@@ -33,39 +33,48 @@ namespace Camping.WPF
             siteData = new SiteData();
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
-            initiateGrid();
+            UpdateGrid();
         }
 
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
         Button moreInfoButton;
         TextBlock campSiteAvailabilityText;
-        private void initiateGrid()
+
+        public void UpdateGrid()
         {
+            // Removes all existing items in grid
+            grid.RowDefinitions.Clear();
+            grid.Children.Clear();
 
             for (int i = 0; i < retrieveData.GetCampSiteID().Count(); i++)
             {
-                rowDef1 = new RowDefinition();
-                rowDef1.Height = new GridLength(50);
-                grid.RowDefinitions.Add(rowDef1);
+                RowDefinition rowDef = new RowDefinition();
+                rowDef.Height = new GridLength(50);
+                grid.RowDefinitions.Add(rowDef);
 
-                campSiteIDText = new TextBlock();
+                TextBlock campSiteIDText = new TextBlock();
                 campSiteIDText.Text = $"{retrieveData.GetCampSiteID().ElementAt(i)}";
                 Grid.SetColumn(campSiteIDText, 0);
                 Grid.SetRow(campSiteIDText, i);
                 campSiteIDText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteIDText.VerticalAlignment = VerticalAlignment.Center;
 
-
-                campSiteAvailabilityText = new TextBlock();
-                campSiteAvailabilityText.Text = $"{retrieveData.GetDate(retrieveData.GetCampSiteID().ElementAt(i))}";
+                TextBlock campSiteAvailabilityText = new TextBlock();
+                if (retrieveData.GetDate(retrieveData.GetCampSiteID().ElementAt(i))){
+                    campSiteAvailabilityText.Text = $"✓";
+                }
+                else
+                {
+                    campSiteAvailabilityText.Text = $"X";
+                }
 
                 Grid.SetColumn(campSiteAvailabilityText, 1);
                 Grid.SetRow(campSiteAvailabilityText, i);
                 campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
                 campSiteAvailabilityText.VerticalAlignment = VerticalAlignment.Center;
 
-                moreInfoButton = new Button();
+                Button moreInfoButton = new Button();
                 moreInfoButton.Content = "Meer informatie";
                 Grid.SetColumn(moreInfoButton, 2);
                 Grid.SetRow(moreInfoButton, i);
@@ -76,13 +85,12 @@ namespace Camping.WPF
                 grid.Children.Add(campSiteIDText);
                 grid.Children.Add(campSiteAvailabilityText);
                 grid.Children.Add(moreInfoButton);
-
             }
         }
 
         private void MoreInfoButton_Click(TextBlock campSiteIDText)
         {
-            string campsiteID = campSiteIDText.Text;
+            int campsiteID = Convert.ToInt32( campSiteIDText.Text);
 
             int surfaceArea = GetSurfaceAreaForCampsiteID(campsiteID);
 
@@ -93,7 +101,7 @@ namespace Camping.WPF
             siteInfoWindow.Show();
         }
 
-        private int GetSurfaceAreaForCampsiteID(string campsiteID)
+        private int GetSurfaceAreaForCampsiteID(int campsiteID)
         {
 
             List<int> surfaceAreas = retrieveData.GetSurfaceArea();
