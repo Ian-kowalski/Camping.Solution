@@ -75,64 +75,58 @@ namespace camping.Database
                 return result;
             }
         }
-        public int GetCampSiteID(int reservationID)
-        {
-            string sql = $"SELECT campSiteID FROM reservationLines WHERE reservationID = {reservationID}";
-
 
         // adds a new reservation to the database
         public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
-            // cancels the reservation if the spot is unavailable
             if (!GetAvailableReservation(campSiteID, startDate, endDate))
             {
                 Console.WriteLine("Spot is already reserved during these dates!");
                 return false;
             }
-
-        // adds a new reservation to the database
-        public void addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
-        {
-
-            VisitorRepository visitor = new();
-
-            // adds a new visitor to the database
-            // will use existing visitor if already present
-            visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
-
-
-            // gets the visitorID of the recently added visitor
-            int visitorID = visitor.getVisitorID(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
-
-
-
-            // adds a new reservation
-            string sql = "INSERT INTO reservation (visitorID, startDate, endDate) VALUES (@visitorID, @startDate, @endDate);";
-            using (var connection = new SqlConnection(connectionString))
+            else
             {
-                connection.Open();
 
-                using (var command = new SqlCommand(sql, connection))
+                int linesInserted;
+                VisitorRepository visitor = new();
+
+                // adds a new visitor to the database
+                // will use existing visitor if already present
+                visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+
+
+                // gets the visitorID of the recently added visitor
+                int visitorID = visitor.getVisitorID(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+
+
+
+                // adds a new reservation
+                string sql = "INSERT INTO reservation (visitorID, startDate, endDate) VALUES (@visitorID, @startDate, @endDate);";
+                using (var connection = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("visitorID", visitorID);
-                    command.Parameters.AddWithValue("startDate", startDate);
-                    command.Parameters.AddWithValue("endDate", endDate);
+                    connection.Open();
 
-                    linesInserted = command.ExecuteNonQuery();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("visitorID", visitorID);
+                        command.Parameters.AddWithValue("startDate", startDate);
+                        command.Parameters.AddWithValue("endDate", endDate);
+
+                        linesInserted = command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
                 }
 
-                connection.Close();
+                // gets the reservation ID of the recently added reservation using the requested visitorID
+                int reservationID = getReservationID(visitorID, startDate, endDate);
+
+                // adds a reservation line using the requested reservationID
+                // addReservationLine(campSiteID, reservationID);
+
+                // will return true if both the reservation and reservation line gets added
+                return (linesInserted > 0 && addReservationLine(campSiteID, reservationID));
             }
-
-            // gets the reservation ID of the recently added reservation using the requested visitorID
-            int reservationID = getReservationID(visitorID, startDate, endDate);
-
-            // adds a reservation line using the requested reservationID
-            addReservationLine(campSiteID, reservationID);
-
-            // will return true if both the reservation and reservation line gets added
-            return (linesInserted > 0 && addReservationLine(campSiteID, reservationID));
-
         }
 
         public bool addReservationLine(int campSiteID, int reservationID)
@@ -221,6 +215,7 @@ namespace camping.Database
                 }
             }
         }
+
         public bool UpdateReservation(int reservationID, DateTime startDate, int visitorID, DateTime endDate)
         {
             string sql = $"UPDATE reservation SET startDate = @startDate, visitorID = @visitorID, endDate = @endDate WHERE reservationID = @reservationID";
@@ -242,6 +237,7 @@ namespace camping.Database
                 return (result != 0);
             }
         }
+        
         public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
             string sql = $"UPDATE visitor SET firstName = @firstName, lastName = @lastName, preposition = @preposition, adress = @adress, city = @city, postalcode = @Postalcode, houseNumber = @houseNumber, phoneNumber = @phoneNumber WHERE visitorID = @visitorID";

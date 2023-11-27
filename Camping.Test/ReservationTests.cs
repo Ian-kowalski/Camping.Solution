@@ -49,7 +49,7 @@ namespace Camping.Test
         {
             ReservationData reservationRepo = new();
 
-            int ID = reservationRepo.GetReservationID(visitorID, startDate, endDate);
+            int ID = reservationRepo.getReservationID(visitorID, startDate, endDate);
 
             if (ID == result)
             {
@@ -77,7 +77,7 @@ namespace Camping.Test
 
             int visitorID = visiterRepo.getVisitorID(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
 
-            int ID = reservationRepo.GetReservationID(visitorID, startDate, endDate);
+            int ID = reservationRepo.getReservationID(visitorID, startDate, endDate);
 
             if (ID == result)
             {

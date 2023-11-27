@@ -54,10 +54,10 @@ namespace camping.Core
             return reservationData.GetReservationInfo(dateTime); ;
         }
 
-        public int GetCampSiteID(int reservationID)
+/*        public int GetCampSiteID(int reservationID)
         {
             return reservationData.GetCampSiteID(reservationID);
-        }
+        }*/
 
         public void UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
         {

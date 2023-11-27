@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using camping.WPF;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,17 +15,20 @@ namespace Camping.WPF
     /// </summary>
     public partial class reservationView : Window
     {
-        private ReservationData data;
+        private ReservationData rData;
+        private SiteData sData;
         RetrieveData retrieveData;
-        Filterdialog dlg;
+        FilterDialog filterDialog;
+        ChangeReservation changeReservationDialog;
         List<int> toBeCancel = new List<int>();
 
         DateTime date = DateTime.Now;
         public reservationView()
         {
             InitializeComponent();
-            data = new ReservationData();
-            retrieveData = new(data);
+            rData = new ReservationData();
+            sData = new SiteData();
+            retrieveData = new(sData,rData);
             InitializeGrid();
 
         }
@@ -132,7 +136,8 @@ namespace Camping.WPF
         private void AddButton(Grid grid, List<Reservation> reservations, int i)
         {
             Button B = new Button();
-            B.Name = "BewerkButon" + reservations.ElementAt(i).ReservationID.ToString();
+            B.Click += bewerkenButtonClick;
+            B.Name = "BewerkButton" + reservations.ElementAt(i).ReservationID.ToString();
             B.Content = "bewerken";
             Grid.SetColumn(B, 6);
             Grid.SetRow(B, i);
@@ -144,13 +149,22 @@ namespace Camping.WPF
 
         private void FilterClick(object sender, RoutedEventArgs e)
         {
-            dlg = new Filterdialog();
-            dlg.ShowDialog();
-            date = dlg.Date;
+            filterDialog = new FilterDialog();
+            filterDialog.ShowDialog();
+            date = filterDialog.Date;
             InitializeGrid();
         }
 
-        private void Cancel(object sender, RoutedEventArgs e)
+        private void bewerkenButtonClick(object sender, RoutedEventArgs e)
+        {
+            Button c = sender as Button;
+            char last_char = c.Name[c.Name.Length - 1];
+            changeReservationDialog = new ChangeReservation(last_char-'0');
+            changeReservationDialog.ShowDialog();
+            
+        }
+
+        private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
             string combinedString = string.Join(", ", toBeCancel);
             string messageBoxText = "Do you want to cansel these resevations: "+ combinedString;

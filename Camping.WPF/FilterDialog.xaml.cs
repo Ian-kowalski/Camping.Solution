@@ -15,13 +15,13 @@ using System.Windows.Shapes;
 namespace Camping.WPF
 {
     /// <summary>
-    /// Interaction logic for Filterdialog.xaml
+    /// Interaction logic for FilterDialog.xaml
     /// </summary>
-    public partial class Filterdialog : Window
+    public partial class FilterDialog : Window
     {
 
         public DateTime Date { get; set; }
-        public Filterdialog()
+        public FilterDialog()
         {
             InitializeComponent();
         }
