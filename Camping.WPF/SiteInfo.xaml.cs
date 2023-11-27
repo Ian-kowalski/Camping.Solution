@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Data.SqlClient;
+using camping.Core;
 
 namespace Camping.WPF
 {
@@ -22,32 +23,46 @@ namespace Camping.WPF
     public partial class SiteInfo : Window
     {
         private SiteData siteData;
+        private ReservationData reservationData;
+        private RetrieveData retrieveData;
         private bool checkboxesEnabled = false;
-        private string campsiteID;
-        public SiteInfo(string campsiteID)
+        private int campsiteID;
+        public SiteInfo(int campsiteID)
         {
             InitializeComponent();
             siteData = new SiteData();
+            reservationData = new ReservationData();
+            retrieveData = new RetrieveData(siteData, reservationData);
             this.campsiteID = campsiteID;
             DisableCheckboxes();
             LoadSiteInfo(campsiteID);
         }
-        public void SetCampsiteInfo(string campsiteID, int surfaceArea)
+        public void SetCampsiteInfo(int campsiteID, int surfaceArea)
         {
             // Assuming campsiteIDLabel is a Label in your SiteInfo window
             campsiteIDLabel.Content = campsiteID;
 
+            TextBlock campSiteAvailabilityText = new TextBlock();
+            if (retrieveData.GetDate(campsiteID))
+            {
+                availability.Content = $"✓";
+            }
+            else
+            {
+                availability.Content = $"X";
+            }
+
             // Assuming surfaceAreaLabel is a Label with Tag="6" in your SiteInfo window
             surfaceAreaLabel.Content = surfaceArea.ToString();
         }
-        private void LoadSiteInfo(string campsiteID)
+        private void LoadSiteInfo(int campsiteID)
         {
             List<Site> sites = siteData.GetSiteInfo();
 
             foreach (Site site in sites)
             {
                 // Check if the site.Number matches the campsiteID
-                if (site.CampSiteID.ToString() == campsiteID)
+                if (site.CampSiteID == campsiteID)
                 {
                     SetCheckboxState(site.CampSiteID, site);
                 }

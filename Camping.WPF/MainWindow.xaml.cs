@@ -90,7 +90,7 @@ namespace Camping.WPF
 
         private void MoreInfoButton_Click(TextBlock campSiteIDText)
         {
-            string campsiteID = campSiteIDText.Text;
+            int campsiteID = Convert.ToInt32( campSiteIDText.Text);
 
             int surfaceArea = GetSurfaceAreaForCampsiteID(campsiteID);
 
@@ -101,7 +101,7 @@ namespace Camping.WPF
             siteInfoWindow.Show();
         }
 
-        private int GetSurfaceAreaForCampsiteID(string campsiteID)
+        private int GetSurfaceAreaForCampsiteID(int campsiteID)
         {
 
             List<int> surfaceAreas = retrieveData.GetSurfaceArea();
