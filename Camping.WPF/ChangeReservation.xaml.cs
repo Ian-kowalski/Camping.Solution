@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -61,17 +62,45 @@ namespace camping.WPF
 
             if (result == MessageBoxResult.Yes)
             {
+                try
+                {
+                    res.ElementAt(index).Guest.PhoneNumber = Int32.Parse(Phonenumber.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn");
+                    return;
+                }
+                try
+                {
+                    res.ElementAt(index).Guest.PhoneNumber = Int32.Parse(HouseNumber.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn");
+                    return;
+                }
+
+                Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
+                if (regex.IsMatch(PostalCode.Text) && PostalCode.Text.Length <= 6)
+                {
+                    res.ElementAt(index).Guest.PostalCode = PostalCode.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Onjuiste formaat. Moet vier getallen en twee letters zijn, bijv: '1234AB'");
+                    return;
+                }
+
                 res.ElementAt(index).Guest.FirstName = FirstName.Text;
                 res.ElementAt(index).Guest.Preposition = Preposition.Text;
                 res.ElementAt(index).Guest.LastName = LastName.Text;
                 res.ElementAt(index).Guest.City = City.Text;
                 res.ElementAt(index).Guest.Adress = Adress.Text;
-                res.ElementAt(index).Guest.PhoneNumber = Int32.Parse(Phonenumber.Text);
-                res.ElementAt(index).Guest.HouseNumber = Int32.Parse(HouseNumber.Text);
-                res.ElementAt(index).Guest.PostalCode = PostalCode.Text;
 
-                res.ElementAt(index).StartDate = Convert.ToDateTime(StartDate.Text);
-                res.ElementAt(index).EndDate = Convert.ToDateTime(EndDate.Text);
+                res.ElementAt(index).StartDate = StartDate.DisplayDate;
+                res.ElementAt(index).EndDate = EndDate.DisplayDate;
+
 
                 retrieveData.UpdateReservation(res.ElementAt(index).ReservationID, res.ElementAt(index).StartDate, res.ElementAt(index).Guest, res.ElementAt(index).EndDate);
             }
