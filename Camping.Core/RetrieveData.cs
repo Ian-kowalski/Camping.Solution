@@ -13,13 +13,12 @@ namespace camping.Core
         private IReservationData reservationData;
 
         private List<Site> sites;
-        private List<Reservation> reservations;
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
             this.reservationData = reservationData;
-            reservations = reservationData.GetReservationInfo();
+
             sites = siteData.GetSiteInfo();
         }
 
@@ -54,7 +53,7 @@ namespace camping.Core
             List<ReservationDates> reservations = siteData.GetAvailability(siteID);
             foreach(ReservationDates dates in reservations)
             {
-                if(dates.startDate < DateTime.Today && dates.endDate > DateTime.Today)
+                if(dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
 
                 {
                     return false;

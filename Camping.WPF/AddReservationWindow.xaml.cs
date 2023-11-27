@@ -53,11 +53,14 @@ namespace camping.WPF
                 houseNumber, phoneNumber))
             {
                 MessageBox.Show("Reservering is toegevoegd!");
+                ReservationAdded?.Invoke(this, new EventArgs());
                 Close();
             }
             else {
                 MessageBox.Show("Reservering kon niet worden toegevoegd. Incorrecte veldwaarde?");
             }
         }
+
+        public event EventHandler<EventArgs> ReservationAdded;
     }
 }

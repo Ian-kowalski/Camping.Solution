@@ -27,6 +27,7 @@ namespace Camping.WPF
         private RetrieveData retrieveData;
         private ReservationData resData;
         private SiteData siteData;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +35,7 @@ namespace Camping.WPF
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
             UpdateGrid();
+            
         }
 
         RowDefinition rowDef1;
@@ -129,6 +131,13 @@ namespace Camping.WPF
             ReservationDatesWindow rdw = new ReservationDatesWindow();
 
             rdw.ShowDialog();
+
+            UpdateGrid();
+        }
+
+        public void UpdateWindow(object sender, RoutedEventArgs e)
+        {
+            UpdateGrid();
         }
     }
 }
