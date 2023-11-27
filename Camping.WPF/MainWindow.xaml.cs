@@ -34,7 +34,7 @@ namespace Camping.WPF
         public MainWindow()
         {
             InitializeComponent();
-            //connection = new SshConnection();
+            connection = new SshConnection();
             siteData = new SiteData();
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
