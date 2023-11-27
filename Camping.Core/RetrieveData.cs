@@ -13,13 +13,12 @@ namespace camping.Core
         private IReservationData reservationData;
 
         private List<Site> sites;
-        private List<Reservation> reservations;
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
             this.reservationData = reservationData;
-            reservations = reservationData.GetReservationInfo();
+
             sites = siteData.GetSiteInfo();
         }
 
