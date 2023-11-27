@@ -69,9 +69,9 @@ namespace camping.WPF
             }
 
             string preposition = PrepositionBox.Text;
-            if (postalCode.Length > 6)
+            if (preposition.Length > 10)
             {
-                MessageBox.Show("De postcode mag niet langer zijn dan 6 tekens!");
+                MessageBox.Show("De tussenvoegsel mag niet langer zijn dan 10 tekens!");
                 return;
             }
 
