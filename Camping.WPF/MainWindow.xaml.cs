@@ -133,5 +133,13 @@ namespace Camping.WPF
 
             rdw.ShowDialog();
         }
+
+        private void viewReservationbuttonClick(object sender, RoutedEventArgs e)
+        {
+            reservationView rdw = new reservationView(retrieveData);
+
+            rdw.ShowDialog();
+
+        }
     }
 }

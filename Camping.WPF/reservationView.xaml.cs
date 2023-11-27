@@ -15,20 +15,16 @@ namespace Camping.WPF
     /// </summary>
     public partial class reservationView : Window
     {
-        private ReservationData rData;
-        private SiteData sData;
         RetrieveData retrieveData;
         FilterDialog filterDialog;
         ChangeReservation changeReservationDialog;
         List<int> toBeCancel = new List<int>();
 
         DateTime date = DateTime.Now;
-        public reservationView()
+        public reservationView(RetrieveData retrieveData)
         {
             InitializeComponent();
-            rData = new ReservationData();
-            sData = new SiteData();
-            retrieveData = new(sData,rData);
+            this.retrieveData = retrieveData;
             InitializeGrid();
 
         }
