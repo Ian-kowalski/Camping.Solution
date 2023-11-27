@@ -48,7 +48,7 @@ namespace camping.Database
         {
             string sql = "SELECT reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber " +
                 "FROM reservation LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID " +
-                "WHERE startDate > @startDate;";
+                "WHERE startDate >= @startDate;";
 
 
             using (var connection = new SqlConnection(connectionString))
@@ -92,7 +92,7 @@ namespace camping.Database
 
                 // adds a new visitor to the database
                 // will use existing visitor if already present
-                visitor.addVisitor(firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+                visitor.addVisitor(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
 
 
                 // gets the visitorID of the recently added visitor

@@ -23,8 +23,8 @@ namespace camping.WPF
         {
             InitializeComponent();
 
-            StartDateButton.DisplayDateStart = DateTime.Now;
-            EndDateButton.DisplayDateStart = DateTime.Now;
+            StartDateButton.DisplayDateStart = DateTime.Today;
+            EndDateButton.DisplayDateStart = DateTime.Today;
 
         }
 
