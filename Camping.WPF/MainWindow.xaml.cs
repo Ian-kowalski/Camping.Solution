@@ -68,6 +68,7 @@ namespace Camping.WPF
                 {
                     campSiteAvailabilityText.Text = $"X";
                 }
+
                 Grid.SetColumn(campSiteAvailabilityText, 1);
                 Grid.SetRow(campSiteAvailabilityText, i);
                 campSiteAvailabilityText.HorizontalAlignment = HorizontalAlignment.Center;
