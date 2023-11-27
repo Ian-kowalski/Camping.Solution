@@ -33,7 +33,7 @@ namespace Camping.WPF
         private void InitializeGrid()
         {
             Grid grid = new Grid();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < ; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
                 if (i != 0)

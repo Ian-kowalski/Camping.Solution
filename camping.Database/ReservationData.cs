@@ -20,9 +20,10 @@ namespace camping.Database
 
         public List<Reservation> GetReservationInfo()
         {
-            string sql = "SELECT reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber FROM reservation LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID";
-
-
+            string sql = "SELECT reservation.reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
+            + "FROM reservation "
+            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID"
+            + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID;";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -36,7 +37,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 reservationID, 1 startDate, 3 endDate, visitor(2 visitorID, 5 firstName, 6 lastName, 7 preposition, 8 adress, 9 city, 10 postalcode, 11 houseNumber, 12 phoneNumber)
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty :reader.GetString(6)) , reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11))));
+                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty :reader.GetString(6)) , reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11)), reader.GetInt32(11)));
                     }
                 }
                 connection.Close();
@@ -46,9 +47,11 @@ namespace camping.Database
 
         public List<Reservation> GetReservationInfo(DateTime date)
         {
-            string sql = "SELECT reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber " +
-                "FROM reservation LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID " +
-                "WHERE startDate >= @startDate;";
+            string sql = "SELECT reservation.reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
+            + "FROM reservation "
+            +"LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID"
+            +"LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID"
+            +"WHERE startDate > @startDate;";
 
 
             using (var connection = new SqlConnection(connectionString))
@@ -68,7 +71,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 reservationID, 1 startDate, 3 endDate, visitor(2 visitorID, 5 firstName, 6 lastName, 7 preposition, 8 adress, 9 city, 10 postalcode, 11 houseNumber, 12 phoneNumber)
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11))));
+                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11)), reader.GetInt32(12)));
                     }
                 }
                 connection.Close();
