@@ -24,12 +24,15 @@ namespace Camping.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SshConnection connection;
+
         private RetrieveData retrieveData;
         private ReservationData resData;
         private SiteData siteData;
         public MainWindow()
         {
             InitializeComponent();
+            connection = new SshConnection();
             siteData = new SiteData();
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
