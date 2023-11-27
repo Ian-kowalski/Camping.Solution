@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Camping.Core;
 using System.Runtime.CompilerServices;
 using camping.Core;
+using Renci.SshNet;
 
 namespace camping.Database
 {
@@ -20,6 +21,7 @@ namespace camping.Database
 
         public List<Site> GetSiteInfo()
         {
+
             string sql = $"SELECT * FROM campSite ORDER BY campSiteID ASC";
 
             using (var connection = new SqlConnection(connectionString))
