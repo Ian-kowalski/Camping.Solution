@@ -113,7 +113,7 @@ namespace camping.WPF
                 reserveButton = new Button();
                 reserveButton.Height = 100;
                 reserveButton.Width = 300;
-                reserveButton.Background = new SolidColorBrush(Color.FromRgb(153, 153, 153));
+                reserveButton.Background = new SolidColorBrush(Color.FromRgb(200, 200, 200));
                 reserveButton.FontSize = 24;
                 reserveButton.Content = "Reserveren";
                 Grid.SetColumn(reserveButton, 7);
