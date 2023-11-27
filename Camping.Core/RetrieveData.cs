@@ -79,6 +79,10 @@ namespace camping.Core
             return true;
         }
 
+        public bool DeleteReservation(int reservationID)
+        {
+            return reservationData.DeleteReservation(reservationID);
+        }
 
     }
 }

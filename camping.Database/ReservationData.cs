@@ -265,5 +265,30 @@ namespace camping.Database
                 return (result != 0);
             }
         }
+    
+        public bool DeleteReservation(int reservationID)
+        {
+            int result;
+            string sql = "DELETE " +
+                "FROM reservation " +
+                "WHERE reservationID = @reservationID;";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+
+                    command.Parameters.AddWithValue("reservationID", reservationID);
+
+                   result = command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+
+                // will return true if the reservation line has been added
+                return (result > 0);
+            }
+        }
     }
 }

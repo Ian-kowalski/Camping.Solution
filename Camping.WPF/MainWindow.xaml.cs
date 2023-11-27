@@ -33,7 +33,7 @@ namespace Camping.WPF
         public MainWindow()
         {
             InitializeComponent();
-            connection = new SshConnection();
+           connection = new SshConnection();
             siteData = new SiteData();
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
@@ -144,7 +144,7 @@ namespace Camping.WPF
 
         private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
         {
-            reservationView resView = new reservationView();
+            reservationView resView = new reservationView(retrieveData);
             resView.ShowDialog();
         }
     }

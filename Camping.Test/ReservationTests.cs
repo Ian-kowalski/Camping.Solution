@@ -202,5 +202,22 @@ namespace Camping.Test
             }
         }
 
+
+        [Test]
+        [TestCase(5)]
+        public void Reservation_DeleteReservation_delete(int resID)
+        {
+            ReservationData reservationRepo = new();
+
+            if (reservationRepo.DeleteReservation(resID))
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
     }
 }
