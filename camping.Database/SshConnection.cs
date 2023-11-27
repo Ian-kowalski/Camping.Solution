@@ -16,5 +16,10 @@ namespace camping.Database
             ssh.AddForwardedPort(port);
             port.Start();
         }
+
+        public void BreakConnection() { 
+            port.Stop();
+            ssh.Disconnect();
+        }
     }
 }
