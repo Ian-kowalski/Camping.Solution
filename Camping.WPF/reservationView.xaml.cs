@@ -37,7 +37,7 @@ namespace Camping.WPF
         private void InitializeGrid()
         {
             Grid grid = new Grid();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 8; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
                 if (i != 0)
@@ -56,6 +56,7 @@ namespace Camping.WPF
                 AddCheckbox(grid, reservations, i);
 
                 AddID(grid, reservations, i);
+                AddSiteID(grid, reservations, i);
                 AddLastName(grid, reservations, i);
                 AddStartDate(grid, reservations, i);
                 AddEndDate(grid, reservations, i);
@@ -89,11 +90,22 @@ namespace Camping.WPF
             grid.Children.Add(TB);
         }
 
+        private void AddSiteID(Grid grid, List<Reservation> reservations, int i)
+        {
+            TextBlock TB = new TextBlock();
+            TB.Text = reservations.ElementAt(i).SiteID.ToString();
+            Grid.SetColumn(TB, 2);
+            Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
+        }
+
         private void AddLastName(Grid grid, List<Reservation> reservations, int i)
         {
             TextBlock ID = new TextBlock();
             ID.Text = reservations.ElementAt(i).Guest.LastName.ToString();
-            Grid.SetColumn(ID, 2);
+            Grid.SetColumn(ID, 3);
             Grid.SetRow(ID, i);
             ID.HorizontalAlignment = HorizontalAlignment.Center;
             ID.VerticalAlignment = VerticalAlignment.Center;
@@ -104,7 +116,7 @@ namespace Camping.WPF
         {
             TextBlock ID = new TextBlock();
             ID.Text = reservations.ElementAt(i).StartDate.ToShortDateString();
-            Grid.SetColumn(ID, 3);
+            Grid.SetColumn(ID, 4);
             Grid.SetRow(ID, i);
             ID.HorizontalAlignment = HorizontalAlignment.Center;
             ID.VerticalAlignment = VerticalAlignment.Center;
@@ -115,7 +127,7 @@ namespace Camping.WPF
         {
             TextBlock ID = new TextBlock();
             ID.Text = reservations.ElementAt(i).EndDate.ToShortDateString();
-            Grid.SetColumn(ID, 4);
+            Grid.SetColumn(ID, 5);
             Grid.SetRow(ID, i);
             ID.HorizontalAlignment = HorizontalAlignment.Center;
             ID.VerticalAlignment = VerticalAlignment.Center;
@@ -126,7 +138,7 @@ namespace Camping.WPF
         {
             TextBlock ID = new TextBlock();
             ID.Text = reservations.ElementAt(i).Guest.PhoneNumber.ToString();
-            Grid.SetColumn(ID, 5);
+            Grid.SetColumn(ID, 6);
             Grid.SetRow(ID, i);
             ID.HorizontalAlignment = HorizontalAlignment.Center;
             ID.VerticalAlignment = VerticalAlignment.Center;
@@ -139,7 +151,7 @@ namespace Camping.WPF
             B.Click += bewerkenButtonClick;
             B.Name = "BewerkButton" + reservations.ElementAt(i).ReservationID.ToString();
             B.Content = "bewerken";
-            Grid.SetColumn(B, 6);
+            Grid.SetColumn(B, 7);
             Grid.SetRow(B, i);
             B.HorizontalAlignment = HorizontalAlignment.Center;
             B.VerticalAlignment = VerticalAlignment.Center;

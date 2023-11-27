@@ -202,5 +202,23 @@ namespace Camping.Test
             }
         }
 
+
+/*        [Test]
+        public void Reservation_DeleteReservation_delete()
+        {
+            ReservationData reservationRepo = new();
+            reservationRepo.addReservation(2, "12-02-2025", "12-05-2025", "test","delete","res","this Street","here","2332XX",22, 54717700);
+            //reservationRepo.getReservationID()
+
+            if (reservationRepo.DeleteReservation(2))
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }*/
+
     }
 }
