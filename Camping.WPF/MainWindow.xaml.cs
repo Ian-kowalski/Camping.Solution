@@ -4,6 +4,7 @@ using camping.Database;
 using camping.WPF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,8 @@ namespace Camping.WPF
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
             UpdateGrid();
+
+            Closing += OnWindowClosing;
         }
 
         RowDefinition rowDef1;
@@ -132,6 +135,11 @@ namespace Camping.WPF
             ReservationDatesWindow rdw = new ReservationDatesWindow();
 
             rdw.ShowDialog();
+        }
+
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            connection.BreakConnection();
         }
     }
 }

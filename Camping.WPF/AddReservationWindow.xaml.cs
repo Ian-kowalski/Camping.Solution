@@ -42,10 +42,13 @@ namespace camping.WPF
         {
             ReservationData resData = new();
 
-            int houseNumber;
-            int.TryParse(HouseNumberBox.Text, out houseNumber);
-            int phoneNumber;
-            int.TryParse(PhoneNumberBox.Text, out phoneNumber);
+            int houseNumber = 0;
+            try { int.TryParse(HouseNumberBox.Text, out houseNumber); }
+            catch (FormatException) { MessageBox.Show("Het huisnummer is geen nummer!"); }
+
+            int phoneNumber = 0;
+            try { int.TryParse(PhoneNumberBox.Text, out phoneNumber); }
+            catch (FormatException) { MessageBox.Show("Het telefoonnummer is geen nummer!"); }
 
             if (resData.addReservation(CampSiteID, StartDate, EndDate,
                 NameBox.Text, PrepositionBox.Text, SurnameBox.Text,
