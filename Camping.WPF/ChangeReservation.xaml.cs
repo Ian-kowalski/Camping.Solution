@@ -31,7 +31,7 @@ namespace camping.WPF
         int index; /// index van de gekozen reservering meegeven vanaf het reserveringen scherm
         public ChangeReservation(int i)
         {
-            this.index = i-1;
+            this.index = i;
             InitializeComponent();
 
             reservationData = new();
@@ -99,8 +99,8 @@ namespace camping.WPF
                 res.ElementAt(index).Guest.City = City.Text;
                 res.ElementAt(index).Guest.Adress = Adress.Text;
 
-                res.ElementAt(index).StartDate = StartDate.DisplayDate;
-                res.ElementAt(index).EndDate = EndDate.DisplayDate;
+                res.ElementAt(index).StartDate = Convert.ToDateTime(StartDate.Text);
+                res.ElementAt(index).EndDate = Convert.ToDateTime(EndDate.Text);
 
 
                 retrieveData.UpdateReservation(res.ElementAt(index).ReservationID, res.ElementAt(index).StartDate, res.ElementAt(index).Guest, res.ElementAt(index).EndDate);
