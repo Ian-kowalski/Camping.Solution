@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace camping.Database
 {
-    public class ReservationData : IReservationData
+    public class ReservationRepository : IReservationData
     {
         private string connectionString = "Data Source=127.0.0.1;Initial Catalog=Camping;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
 
@@ -47,8 +47,8 @@ namespace camping.Database
 
         public List<Reservation> GetReservationInfo(DateTime date)
         {
-            string sql = "SELECT Distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
-            + "FROM reservation "
+            string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
+            +"FROM reservation "
             +"LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
             +"LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID "
             +"WHERE startDate > @startDate;";
