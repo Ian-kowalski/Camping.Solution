@@ -15,8 +15,11 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
 
@@ -27,8 +30,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -36,9 +42,11 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Plek Nr" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             <TextBlock Text="Grotte" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-            <TextBlock Text="" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-            <TextBlock Text="Faciliteiten" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-            <TextBlock Text="Reserveren" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="Schaduw" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="Kraan" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="Water" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="Dier" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <TextBlock Text="Stroom" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Grid>
 
 

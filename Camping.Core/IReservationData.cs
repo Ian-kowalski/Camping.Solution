@@ -17,5 +17,6 @@ namespace camping.Core
         public bool GetAvailableReservation(int campSite, string startDate, string endDate);
         public bool UpdateReservation(int reservationID, DateTime starDate, int visitorID, DateTime endDate);
         public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber);
+        public bool DeleteReservation(int reservationID);
     }
 }

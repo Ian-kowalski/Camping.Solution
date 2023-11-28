@@ -4,6 +4,7 @@ using camping.Database;
 using camping.WPF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace Camping.WPF
         private RetrieveData retrieveData;
         private ReservationData resData;
         private SiteData siteData;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,12 +39,8 @@ namespace Camping.WPF
             resData = new ReservationData();
             retrieveData = new(siteData, resData);
             UpdateGrid();
+            Closing += OnWindowClosing;
         }
-
-        RowDefinition rowDef1;
-        TextBlock campSiteIDText;
-        Button moreInfoButton;
-        TextBlock campSiteAvailabilityText;
 
         public void UpdateGrid()
         {
@@ -114,17 +112,6 @@ namespace Camping.WPF
             return surfaceAreas[index];
         }
 
-        private void addRow(object sender, RoutedEventArgs e)
-        {
-            rowDef1 = new RowDefinition();
-            grid.RowDefinitions.Add(rowDef1);
-        }
-
-        private void clearRow(object sender, RoutedEventArgs e)
-        {
-            grid.RowDefinitions.Clear();
-        }
-
 
 
         private void AddReservationButton_Click(object sender, RoutedEventArgs e)
@@ -132,6 +119,26 @@ namespace Camping.WPF
             ReservationDatesWindow rdw = new ReservationDatesWindow();
 
             rdw.ShowDialog();
+
+            UpdateGrid();
+        }
+
+        public void UpdateWindow(object sender, RoutedEventArgs e)
+        {
+            UpdateGrid();
+        }
+
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            connection.BreakConnection();
+        }
+
+        private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
+        {
+            reservationView resView = new reservationView(retrieveData);
+            resView.ShowDialog();
+
+            UpdateGrid();
         }
     }
 }

@@ -42,22 +42,54 @@ namespace camping.WPF
         {
             ReservationData resData = new();
 
-            int houseNumber;
-            int.TryParse(HouseNumberBox.Text, out houseNumber);
-            int phoneNumber;
-            int.TryParse(PhoneNumberBox.Text, out phoneNumber);
+
+
+            int houseNumber = 0;
+            if (!int.TryParse(HouseNumberBox.Text, out houseNumber)) {
+                MessageBox.Show("Het huisnummer is geen nummer!");
+                return;
+            }
+            if (houseNumber < 0 || houseNumber > 9999) {
+                MessageBox.Show("Het huisnummer moet tussen 0 en 9999 zijn!");
+                return;
+            }
+
+            int phoneNumber = 0;
+            if (!int.TryParse(PhoneNumberBox.Text, out phoneNumber))
+            {
+                MessageBox.Show("Het telefoonnummer is geen nummer!");
+                return;
+            }
+
+            string postalCode = PostalcodeBox.Text;
+            if (postalCode.Length > 6)
+            {
+                MessageBox.Show("De postcode mag niet langer zijn dan 6 tekens!");
+                return;
+            }
+
+            string preposition = PrepositionBox.Text;
+            if (preposition.Length > 10)
+            {
+                MessageBox.Show("De tussenvoegsel mag niet langer zijn dan 10 tekens!");
+                return;
+            }
+
 
             if (resData.addReservation(CampSiteID, StartDate, EndDate,
                 NameBox.Text, PrepositionBox.Text, SurnameBox.Text,
-                AdressBox.Text, CityBox.Text, PostalcodeBox.Text,
+                AdressBox.Text, CityBox.Text, postalCode,
                 houseNumber, phoneNumber))
             {
                 MessageBox.Show("Reservering is toegevoegd!");
+                ReservationAdded?.Invoke(this, new EventArgs());
                 Close();
             }
             else {
                 MessageBox.Show("Reservering kon niet worden toegevoegd. Incorrecte veldwaarde?");
             }
         }
+
+        public event EventHandler<EventArgs> ReservationAdded;
     }
 }
