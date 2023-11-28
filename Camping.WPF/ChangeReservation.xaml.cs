@@ -31,7 +31,7 @@ namespace camping.WPF
         int index; /// index van de gekozen reservering meegeven vanaf het reserveringen scherm
         public ChangeReservation(int i)
         {
-            this.index = i;
+            this.index = i-1;
             InitializeComponent();
 
             reservationData = new();
