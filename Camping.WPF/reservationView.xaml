@@ -46,7 +46,7 @@
                 </Grid.ColumnDefinitions>
             </Grid>
         </ScrollViewer>
-        <Button x:Name="CancelButton" Content="anuleeren" Margin="0,20,20,20" Grid.Row="2" HorizontalAlignment="Right" Width="150" Click="CancelButtonClick"/>
+        <Button x:Name="CancelButton" Content="Annuleren" Margin="0,20,20,20" Grid.Row="2" HorizontalAlignment="Right" Width="150" Click="CancelButtonClick"/>
 
     </Grid>
 </Window>
