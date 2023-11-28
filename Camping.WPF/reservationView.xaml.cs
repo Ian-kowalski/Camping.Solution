@@ -90,7 +90,11 @@ namespace Camping.WPF
         private void AddSiteID(Grid grid, List<Reservation> reservations, int i)
         {
             TextBlock TB = new TextBlock();
+<<<<<<< HEAD
             TB.Text = reservations.ElementAt(i).SiteID.ToString();
+=======
+            TB.Text = reservations.ElementAt(i).Site.CampSiteID.ToString();
+>>>>>>> 3b697441fc9de888c572bbe144fe0264dcc457fb
             Grid.SetColumn(TB, 2);
             Grid.SetRow(TB, i);
             TB.HorizontalAlignment = HorizontalAlignment.Center;
@@ -100,6 +104,7 @@ namespace Camping.WPF
 
         private void AddLastName(Grid grid, List<Reservation> reservations, int i)
         {
+<<<<<<< HEAD
             TextBlock TB = new TextBlock();
             TB.Text = reservations.ElementAt(i).Guest.LastName.ToString();
             Grid.SetColumn(TB, 3);
@@ -107,10 +112,20 @@ namespace Camping.WPF
             TB.HorizontalAlignment = HorizontalAlignment.Center;
             TB.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(TB);
+=======
+            TextBlock ID = new TextBlock();
+            ID.Text = reservations.ElementAt(i).Guest.LastName.ToString();
+            Grid.SetColumn(ID, 3);
+            Grid.SetRow(ID, i);
+            ID.HorizontalAlignment = HorizontalAlignment.Center;
+            ID.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(ID);
+>>>>>>> 3b697441fc9de888c572bbe144fe0264dcc457fb
         }
 
         private void AddStartDate(Grid grid, List<Reservation> reservations, int i)
         {
+<<<<<<< HEAD
             TextBlock TB = new TextBlock();
             TB.Text = reservations.ElementAt(i).StartDate.ToShortDateString();
             Grid.SetColumn(TB, 4);
@@ -118,10 +133,20 @@ namespace Camping.WPF
             TB.HorizontalAlignment = HorizontalAlignment.Center;
             TB.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(TB);
+=======
+            TextBlock ID = new TextBlock();
+            ID.Text = reservations.ElementAt(i).StartDate.ToShortDateString();
+            Grid.SetColumn(ID, 4);
+            Grid.SetRow(ID, i);
+            ID.HorizontalAlignment = HorizontalAlignment.Center;
+            ID.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(ID);
+>>>>>>> 3b697441fc9de888c572bbe144fe0264dcc457fb
         }
 
         private void AddEndDate(Grid grid, List<Reservation> reservations, int i)
         {
+<<<<<<< HEAD
             TextBlock TB = new TextBlock();
             TB.Text = reservations.ElementAt(i).EndDate.ToShortDateString();
             Grid.SetColumn(TB, 5);
@@ -129,10 +154,20 @@ namespace Camping.WPF
             TB.HorizontalAlignment = HorizontalAlignment.Center;
             TB.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(TB);
+=======
+            TextBlock ID = new TextBlock();
+            ID.Text = reservations.ElementAt(i).EndDate.ToShortDateString();
+            Grid.SetColumn(ID, 5);
+            Grid.SetRow(ID, i);
+            ID.HorizontalAlignment = HorizontalAlignment.Center;
+            ID.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(ID);
+>>>>>>> 3b697441fc9de888c572bbe144fe0264dcc457fb
         }
 
         private void AddPhoneNr(Grid grid, List<Reservation> reservations, int i)
         {
+<<<<<<< HEAD
             TextBlock TB = new TextBlock();
             TB.Text = reservations.ElementAt(i).Guest.PhoneNumber.ToString();
             Grid.SetColumn(TB, 6);
@@ -140,6 +175,15 @@ namespace Camping.WPF
             TB.HorizontalAlignment = HorizontalAlignment.Center;
             TB.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(TB);
+=======
+            TextBlock ID = new TextBlock();
+            ID.Text = reservations.ElementAt(i).Guest.PhoneNumber.ToString();
+            Grid.SetColumn(ID, 6);
+            Grid.SetRow(ID, i);
+            ID.HorizontalAlignment = HorizontalAlignment.Center;
+            ID.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(ID);
+>>>>>>> 3b697441fc9de888c572bbe144fe0264dcc457fb
         }
 
         private void AddButton(Grid grid, List<Reservation> reservations, int i)

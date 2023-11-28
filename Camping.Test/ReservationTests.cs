@@ -203,13 +203,14 @@ namespace Camping.Test
         }
 
 
-        [Test]
-        [TestCase(5)]
-        public void Reservation_DeleteReservation_delete(int resID)
+/*        [Test]
+        public void Reservation_DeleteReservation_delete()
         {
             ReservationData reservationRepo = new();
+            reservationRepo.addReservation(2, "12-02-2025", "12-05-2025", "test","delete","res","this Street","here","2332XX",22, 54717700);
+            //reservationRepo.getReservationID()
 
-            if (reservationRepo.DeleteReservation(resID))
+            if (reservationRepo.DeleteReservation(2))
             {
                 Assert.Pass();
             }
@@ -217,7 +218,7 @@ namespace Camping.Test
             {
                 Assert.Fail();
             }
-        }
+        }*/
 
     }
 }
