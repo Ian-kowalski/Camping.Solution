@@ -59,7 +59,7 @@ namespace camping.WPF
         {
             ///Als de messageBox niet werkt zorg er dan voor dat de 'DevExpress.Data' nuGet package is geinstalleerd 
         
-            var result = MessageBox.Show("weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+            var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -69,7 +69,7 @@ namespace camping.WPF
                 }
                 catch
                 {
-                    MessageBox.Show("verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn");
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn");
                     return;
                 }
                 try
@@ -78,7 +78,7 @@ namespace camping.WPF
                 }
                 catch
                 {
-                    MessageBox.Show("verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn");
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn");
                     return;
                 }
 
@@ -89,7 +89,7 @@ namespace camping.WPF
                 }
                 else
                 {
-                    MessageBox.Show("Onjuiste formaat. Moet vier getallen en twee letters zijn, bijv: '1234AB'");
+                    MessageBox.Show("Onjuiste formaat bij postcode ingevuld. Moet vier getallen en twee letters zijn, bijv: '1234AB'");
                     return;
                 }
 
@@ -99,9 +99,19 @@ namespace camping.WPF
                 res.ElementAt(index).Guest.City = City.Text;
                 res.ElementAt(index).Guest.Adress = Adress.Text;
 
-                res.ElementAt(index).StartDate = Convert.ToDateTime(StartDate.Text);
-                res.ElementAt(index).EndDate = Convert.ToDateTime(EndDate.Text);
-
+                if (Convert.ToDateTime(EndDate.Text) < DateTime.Today)
+                {
+                    MessageBox.Show("Einddatum kan niet in het verleden zijn");
+                    return;
+                } else if (Convert.ToDateTime(StartDate.Text) <= Convert.ToDateTime(EndDate.Text))
+                {
+                    res.ElementAt(index).StartDate = Convert.ToDateTime(StartDate.Text);
+                    res.ElementAt(index).EndDate = Convert.ToDateTime(EndDate.Text);
+                } else
+                {
+                    MessageBox.Show("Begindatum kan niet voor de einddatum komen");
+                    return;
+                }
 
                 retrieveData.UpdateReservation(res.ElementAt(index).ReservationID, res.ElementAt(index).StartDate, res.ElementAt(index).Guest, res.ElementAt(index).EndDate);
             }
