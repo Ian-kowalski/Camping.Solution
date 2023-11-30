@@ -37,18 +37,48 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
+            displayAreas();
+            displayStreets();
             displaySites();
 
             Closing += OnWindowClosing;
         }
 
         private void displayAreas() {
-            int rowNumber = 0;
+            int rowNumber = Grid.GetRowSpan(CampSiteList);
+            foreach (Area area in retrieveData.Areas)
+            {
+                RowDefinition rowDef = new RowDefinition();
+                rowDef.Height = new GridLength(50);
+                CampSiteList.RowDefinitions.Add(rowDef);
+
+                Button button = createSiteButton(area);
+
+                Grid.SetRow(button, rowNumber);
+                CampSiteList.Children.Add(button);
+                rowNumber++;
+            }
+        }
+        private void displayStreets()
+        {
+            int rowNumber = Grid.GetRowSpan(CampSiteList);
+            foreach (Street street in retrieveData.Streets)
+            {
+                RowDefinition rowDef = new RowDefinition();
+                rowDef.Height = new GridLength(50);
+                CampSiteList.RowDefinitions.Add(rowDef);
+
+                Button button = createSiteButton(street);
+
+                Grid.SetRow(button, rowNumber);
+                CampSiteList.Children.Add(button);
+                rowNumber++;
+            }
         }
 
         private void displaySites() {
 
-            int rowNumber = 0;
+            int rowNumber = Grid.GetRowSpan(CampSiteList);
             foreach (Site site in retrieveData.Sites)
             {
                 RowDefinition rowDef = new RowDefinition();
@@ -66,11 +96,35 @@ namespace camping.WPF
         private Button createSiteButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
-            button.Margin = new Thickness(128, 4, 4, 4);
+            button.Margin = new Thickness(142, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
             button.Tag = site;
+
+            return button;
+        }
+        private Button createSiteButton(Street street)
+        {
+            Button button = new Button();
+            button.Content = $"Straat {street.StreetID}";
+            button.Margin = new Thickness(80, 4, 4, 4);
+
+            // De volledige campsite wordt meegegeven aan de button.
+            // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
+            button.Tag = street;
+
+            return button;
+        }
+        private Button createSiteButton(Area area)
+        {
+            Button button = new Button();
+            button.Content = $"Gebied {area.AreaID}";
+            button.Margin = new Thickness(16, 4, 4, 4);
+
+            // De volledige campsite wordt meegegeven aan de button.
+            // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
+            button.Tag = area;
 
             return button;
         }

@@ -1,23 +1,27 @@
 ﻿using camping.Core;
 using camping.Database;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assert = NUnit.Framework.Assert;
 
 namespace camping.Test
 {
     [TestFixture]
     public class SiteDataTests
     {
-        private SiteData siteData;
-
+        SshConnection sshConnection;
         [SetUp]
         public void Setup()
         {
+            sshConnection = new SshConnection();
             siteData = new SiteData();
         }
+        private SiteData siteData;
+
 
         [Test]
         public void GetSiteInfo_ReturnsListOfSites()
@@ -41,7 +45,7 @@ namespace camping.Test
             List<Area> areas = siteData.GetAreaInfo();
 
             Assert.IsNotNull(areas);
-            Assert.IsInstanceOf<List<Site>>(areas);
+            Assert.IsInstanceOf<List<Area>>(areas);
         }
 
         [Test]
@@ -65,5 +69,7 @@ namespace camping.Test
             Assert.IsNotNull(availability);
             Assert.IsInstanceOf<List<ReservationDates>>(availability);
         }
+        [TestCleanup]
+        public void Cleanup() { sshConnection.BreakConnection(); }
     }
 }
