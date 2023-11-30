@@ -45,7 +45,7 @@ namespace camping.WPF
         }
 
         private void displayAreas() {
-            int rowNumber = Grid.GetRowSpan(CampSiteList) + 1;
+            int rowNumber = Grid.GetRowSpan(CampSiteList) - 1;
             foreach (Area area in retrieveData.Areas)
             {
                 RowDefinition rowDef = new RowDefinition();
