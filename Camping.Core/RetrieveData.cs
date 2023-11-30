@@ -44,13 +44,13 @@ namespace camping.Core
 
         public List<Reservation> GetReservations() 
         {
-            return reservationData.GetReservationInfo(); ;
+            return reservationData.GetReservationInfo();
         }
 
 
         public List<Reservation> GetReservations(DateTime dateTime)
         {
-            return reservationData.GetReservationInfo(dateTime); ;
+            return reservationData.GetReservationInfo(dateTime);
         }
 
 /*        public int GetCampSiteID(int reservationID)
@@ -70,7 +70,6 @@ namespace camping.Core
             foreach(ReservationDates dates in reservations)
             {
                 if(dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
-
                 {
                     return false;
                 }
