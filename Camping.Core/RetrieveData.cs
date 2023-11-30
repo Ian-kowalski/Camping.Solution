@@ -12,20 +12,20 @@ namespace camping.Core
         private ISiteData siteData;
         private IReservationData reservationData;
 
-        private List<Site> sites;
+        public List<Site> Sites;
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
             this.reservationData = reservationData;
 
-            sites = siteData.GetSiteInfo();
+            Sites = siteData.GetSiteInfo();
         }
 
         public List<int> GetCampSiteID()
         {
             List<int> list = new();
-            foreach (Site s in sites)
+            foreach (Site s in Sites)
             {
                 list.Add(s.CampSiteID);
             }
@@ -35,7 +35,7 @@ namespace camping.Core
         public List<int> GetSurfaceArea()
         {
             List<int> list = new();
-            foreach (Site s in sites)
+            foreach (Site s in Sites)
             {
                 list.Add(s.Size);
             }
