@@ -13,6 +13,8 @@ namespace camping.Core
         private IReservationData reservationData;
 
         public List<Site> Sites;
+        public List<Street> Streets;
+        public List<Area> Areas;
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
@@ -20,6 +22,8 @@ namespace camping.Core
             this.reservationData = reservationData;
 
             Sites = siteData.GetSiteInfo();
+            Streets = siteData.GetStreetInfo();
+            Areas = siteData.GetAreaInfo();
         }
 
         public List<int> GetCampSiteID()
