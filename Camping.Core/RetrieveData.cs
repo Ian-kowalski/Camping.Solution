@@ -44,13 +44,13 @@ namespace camping.Core
 
         public List<Reservation> GetReservations() 
         {
-            return reservationData.GetReservationInfo(); ;
+            return reservationData.GetReservationInfo();
         }
 
 
         public List<Reservation> GetReservations(DateTime dateTime)
         {
-            return reservationData.GetReservationInfo(dateTime); ;
+            return reservationData.GetReservationInfo(dateTime);
         }
 
 /*        public int GetCampSiteID(int reservationID)
@@ -58,10 +58,10 @@ namespace camping.Core
             return reservationData.GetCampSiteID(reservationID);
         }*/
 
-        public void UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+        public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
         {
-            reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate);
-            reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber);
+            return (reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate) &&
+            reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
         public bool GetDate(int siteID)
@@ -70,7 +70,6 @@ namespace camping.Core
             foreach(ReservationDates dates in reservations)
             {
                 if(dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
-
                 {
                     return false;
                 }
