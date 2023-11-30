@@ -16,7 +16,7 @@ namespace camping.Database
             string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
 
             + "FROM reservation "
-            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID"
+            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
             + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID;";
             using (var connection = new SqlConnection(connectionString))
             {
