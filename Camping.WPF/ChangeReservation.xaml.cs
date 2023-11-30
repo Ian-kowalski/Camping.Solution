@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using camping.Database;
 using DevExpress.Utils.CommonDialogs.Internal;
+using DevExpress.Xpo.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,7 +100,11 @@ namespace camping.WPF
                 res.Guest.Adress = Adress.Text;
 
 
-                if (Convert.ToDateTime(EndDate.Text) < DateTime.Today)
+                if (!reservationData.GetAvailableReservation(res.SiteID, StartDate.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDate.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy")))
+                {
+                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar");
+                    return;
+                } else if (Convert.ToDateTime(EndDate.Text) < DateTime.Today)
                 {
                     MessageBox.Show("Einddatum kan niet in het verleden zijn");
                     return;

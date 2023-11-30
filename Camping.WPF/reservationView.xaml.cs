@@ -33,10 +33,10 @@ namespace Camping.WPF
         private void InitializeGrid()
         {
             Grid grid = new Grid();
-            for (int columns = 0; columns < 8; columns++)
+            for (int i = 0; i < 2; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
-                if (columns != 0)
+                if (i > 2)
                 {
                     col.Width = new GridLength(2, GridUnitType.Star);
                 }
@@ -136,31 +136,6 @@ namespace Camping.WPF
             grid.Children.Add(TB);
         }
 
-        private void AddPhoneNr(Grid grid, Reservation reservation, int i)
-        {
-            TextBlock TB = new TextBlock();
-            TB.Text = reservation.Guest.PhoneNumber.ToString();
-            Grid.SetColumn(TB, 6);
-            Grid.SetRow(TB, i);
-            TB.HorizontalAlignment = HorizontalAlignment.Center;
-            TB.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(TB);
-        }
-
-        private void AddButton(Grid grid, Reservation reservation, int i)
-        {
-            Button B = new Button();
-            B.Click += (sender, e) => bewerkenButtonClick(reservation);
-            B.Name = "BewerkButton" + reservation.ReservationID.ToString();
-            B.Content = "bewerken";
-            B.Tag = reservation;
-            Grid.SetColumn(B, 7);
-            Grid.SetRow(B, i);
-            B.HorizontalAlignment = HorizontalAlignment.Center;
-            B.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(B);
-        }
-
 
         private void FilterClick(object sender, RoutedEventArgs e)
         {
@@ -219,6 +194,14 @@ namespace Camping.WPF
             {
                 toBeCancel.Remove(last_part);
             }  
+            if(toBeCancel.Count != 0)
+            {
+                CancelButton.IsEnabled = true;
+            }
+            else
+            {
+                CancelButton.IsEnabled = false;
+            }
         }
     }
 }

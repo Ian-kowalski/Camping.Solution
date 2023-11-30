@@ -102,7 +102,6 @@ namespace camping.WPF
 
         // laat de sites zien van de straat
         private void displaySites(int streetID) {
-
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == streetID && site.Visible) {
@@ -141,6 +140,7 @@ namespace camping.WPF
 
             displayAllSites();
         }
+
 
         // toggled de visibility van de sites van een straat
         private void toggleChildrenVisibility(Street street) {
@@ -208,6 +208,27 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
-        
+        private void tabButtonClick(object sender, RoutedEventArgs e)
+        {
+            SetButtonState((Button)sender, 
+                new[] { SiteOverview, SiteInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
+                new[] { SiteControlButton, AddReservationButton, ReservationsButton }
+                );
+        }
+
+        private void SetButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
+        {
+
+            foreach (var button in buttons)
+            {
+                button.IsEnabled = button != selectedButton;
+            }
+            for (int i = 0; i < BorderElements.Length; i+=2)
+            {
+                BorderElements[i].Visibility = i/2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
+                BorderElements[i + 1].Visibility = BorderElements[i].Visibility;
+            }
+
+        }
     }
 }
