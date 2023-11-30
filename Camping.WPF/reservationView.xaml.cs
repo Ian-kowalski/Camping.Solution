@@ -33,13 +33,13 @@ namespace Camping.WPF
         private void InitializeGrid()
         {
             Grid grid = new Grid();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 2; i++)
             {
                 ColumnDefinition col = new ColumnDefinition();
-                if (i != 0)
+  /*              if (i > 2)
                 {
                     col.Width = new GridLength(2, GridUnitType.Star);
-                }
+                }*/
                 grid.ColumnDefinitions.Add(col);
             }
             List<Reservation> reservations = retrieveData.GetReservations(date);
@@ -48,17 +48,15 @@ namespace Camping.WPF
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(50);
                 grid.RowDefinitions.Add(row);
-
                 AddCheckbox(grid, reservations, i);
-
                 AddID(grid, reservations, i);
-                AddSiteID(grid, reservations, i);
-                AddLastName(grid, reservations, i);
-                AddStartDate(grid, reservations, i);
-                AddEndDate(grid, reservations, i);
-                AddPhoneNr(grid, reservations, i);
 
-                AddButton(grid, reservations, i);
+                /*                AddCheckbox(grid, reservations, i);
+                                AddID(grid, reservations, i);
+                                AddSiteID(grid, reservations, i);
+                                AddLastName(grid, reservations, i);
+                                AddStartDate(grid, reservations, i);
+                                AddEndDate(grid, reservations, i);*/
             }
             grid.ShowGridLines = true;
             Viewer.Content = grid;
@@ -132,30 +130,6 @@ namespace Camping.WPF
             grid.Children.Add(TB);
         }
 
-        private void AddPhoneNr(Grid grid, List<Reservation> reservations, int i)
-        {
-            TextBlock TB = new TextBlock();
-            TB.Text = reservations.ElementAt(i).Guest.PhoneNumber.ToString();
-            Grid.SetColumn(TB, 6);
-            Grid.SetRow(TB, i);
-            TB.HorizontalAlignment = HorizontalAlignment.Center;
-            TB.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(TB);
-        }
-
-        private void AddButton(Grid grid, List<Reservation> reservations, int i)
-        {
-            Button B = new Button();
-            B.Click += bewerkenButtonClick;
-            B.Name = "BewerkButton" + reservations.ElementAt(i).ReservationID.ToString();
-            B.Content = "bewerken";
-            Grid.SetColumn(B, 7);
-            Grid.SetRow(B, i);
-            B.HorizontalAlignment = HorizontalAlignment.Center;
-            B.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(B);
-        }
-
 
         private void FilterClick(object sender, RoutedEventArgs e)
         {
@@ -216,6 +190,14 @@ namespace Camping.WPF
             {
                 toBeCancel.Remove(last_part);
             }  
+            if(toBeCancel.Count != 0)
+            {
+                CancelButton.IsEnabled = true;
+            }
+            else
+            {
+                CancelButton.IsEnabled = false;
+            }
         }
     }
 }
