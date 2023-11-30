@@ -218,9 +218,6 @@ namespace camping.Database
 
         public bool UpdateReservation(int reservationID, DateTime startDate, int visitorID, DateTime endDate)
         {
-            string sDate = startDate.ToString("MM-dd-yyyy");
-            string eDate = endDate.ToString("MM-dd-yyyy");
-
             string sql = $"UPDATE reservation SET startDate = @startDate, visitorID = @visitorID, endDate = @endDate WHERE reservationID = @reservationID";
 
             using (var connection = new SqlConnection(connectionString))
@@ -229,9 +226,9 @@ namespace camping.Database
                 int result;
                 using (var command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("startDate", sDate);
+                    command.Parameters.AddWithValue("startDate", startDate);
                     command.Parameters.AddWithValue("visitorID", visitorID);
-                    command.Parameters.AddWithValue("endDate", eDate);
+                    command.Parameters.AddWithValue("endDate", endDate);
                     command.Parameters.AddWithValue("reservationID", reservationID);
 
                     result = command.ExecuteNonQuery();
