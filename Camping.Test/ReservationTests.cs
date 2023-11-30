@@ -171,19 +171,13 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase(5, "12-15-2023", 2, "11-27-2023")]
+        [TestCase(4, "12-15-2023", 6, "11-27-2023")]
         public void Reservation_UpdateReservation_Update(int resID, DateTime startDate, int visitorID, DateTime endDate)
         {
             ReservationData reservationRepo = new();
 
-            if (reservationRepo.UpdateReservation(resID, startDate, visitorID, endDate))
-            {
-                Assert.Pass();
-            }
-            else
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(reservationRepo.UpdateReservation(resID, startDate, visitorID, endDate));
+
         }
 
         [Test]
@@ -192,14 +186,8 @@ namespace Camping.Test
         {
             ReservationData reservationRepo = new();
 
-            if (reservationRepo.UpdateVisitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber))
-            {
-                Assert.Pass();
-            }
-            else
-            {
-                Assert.Fail();
-            }
+            Assert.IsTrue(reservationRepo.UpdateVisitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber));
+            
         }
 
 
