@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class Street
 {
-    public Street(int streetID, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply, int areaID)
+    public Street(int streetID, int areaID, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply)
     {
         StreetID = streetID;
         OutletPresent = outletPresent;
@@ -27,4 +27,6 @@ public class Street
 
     public bool OutletPresent { get; set; }
     public bool PetsAllowed { get; set; }
+
+    public bool Visible = false;
 }

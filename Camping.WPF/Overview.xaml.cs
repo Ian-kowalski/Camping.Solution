@@ -5,6 +5,7 @@ using Renci.SshNet.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ namespace camping.WPF
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
 
+        private int rowLength;
+
         public Overview()
         {
             InitializeComponent();
@@ -37,61 +40,132 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
-            displayAreas();
-            displayStreets();
-            displaySites();
+            displayAllSites();
 
             Closing += OnWindowClosing;
         }
 
-        private void displayAreas() {
-            int rowNumber = Grid.GetRowSpan(CampSiteList) - 1;
+        // Laat alleen de areas zien
+        private void displayAllSites()
+        {
+            CampSiteList.Children.Clear();
+            rowLength = 0;
+            displayAreas();
+        }
+
+        // laat de areas zien
+        private void displayAreas()
+        {
             foreach (Area area in retrieveData.Areas)
             {
+
                 RowDefinition rowDef = new RowDefinition();
                 rowDef.Height = new GridLength(50);
                 CampSiteList.RowDefinitions.Add(rowDef);
 
                 Button button = createSiteButton(area);
+                button.Click += (sender, e) => { toggleChildrenVisibility(area); };
 
-                Grid.SetRow(button, rowNumber);
+                Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
-                rowNumber++;
+                rowLength++;
+
+                displayStreets(area.AreaID);
             }
         }
-        private void displayStreets()
+
+        
+        // laat de straten zien van de area
+        private void displayStreets(int areaID)
         {
-            int rowNumber = Grid.GetRowSpan(CampSiteList) + 1;
             foreach (Street street in retrieveData.Streets)
             {
-                RowDefinition rowDef = new RowDefinition();
-                rowDef.Height = new GridLength(50);
-                CampSiteList.RowDefinitions.Add(rowDef);
+                if (street.AreaID == areaID && street.Visible) {
+                    RowDefinition rowDef = new RowDefinition();
+                    rowDef.Height = new GridLength(50);
+                    CampSiteList.RowDefinitions.Add(rowDef);
 
-                Button button = createSiteButton(street);
+                    Button button = createSiteButton(street);
+                    button.Click += (sender, e) => { toggleChildrenVisibility(street); };
 
-                Grid.SetRow(button, rowNumber);
-                CampSiteList.Children.Add(button);
-                rowNumber++;
+                    Grid.SetRow(button, rowLength);
+                    CampSiteList.Children.Add(button);
+
+                    rowLength++;
+
+                    displaySites(street.StreetID);
+                }
+                
+                
             }
         }
 
-        private void displaySites() {
+        // laat de sites zien van de straat
+        private void displaySites(int streetID) {
 
-            int rowNumber = Grid.GetRowSpan(CampSiteList) + 1;
             foreach (Site site in retrieveData.Sites)
             {
-                RowDefinition rowDef = new RowDefinition();
-                rowDef.Height = new GridLength(50);
-                CampSiteList.RowDefinitions.Add(rowDef);
+                if (site.StreetID == streetID && site.Visible) {
 
-                Button button = createSiteButton(site);
 
-                Grid.SetRow(button, rowNumber);
-                CampSiteList.Children.Add(button);
-                rowNumber++;
+                    RowDefinition rowDef = new RowDefinition();
+                    rowDef.Height = new GridLength(50);
+                    CampSiteList.RowDefinitions.Add(rowDef);
+
+                    Button button = createSiteButton(site);
+
+
+                    Grid.SetRow(button, rowLength);
+                    CampSiteList.Children.Add(button);
+                    rowLength++;
+                }
             }
         }
+
+        // toggled de visibility van de straat van een area
+        private void toggleChildrenVisibility(Area area)
+        {
+
+            foreach (Street street in retrieveData.Streets)
+            {
+                if (street.AreaID == area.AreaID)
+                {
+                    street.Visible = !street.Visible;
+
+                    if (street.Visible) continue;
+                    // als de straat verborgen wordt, verberg ook de sites
+                    hideChildren(street);
+                }
+
+            }
+
+            displayAllSites();
+        }
+
+        // toggled de visibility van de sites van een straat
+        private void toggleChildrenVisibility(Street street) {
+
+            foreach (Site site in retrieveData.Sites) {
+                if (site.StreetID == street.StreetID) { 
+                    site.Visible = !site.Visible;
+                } 
+
+            }
+
+            displayAllSites();
+        }
+
+        // verbergt alle sites van de straat
+        private void hideChildren(Street street) {
+            foreach (Site site in retrieveData.Sites)
+            {
+                if (site.StreetID == street.StreetID)
+                {
+                    site.Visible = false;
+                }
+            }
+        }
+
 
         private Button createSiteButton(Site site) {
             Button button = new Button();
