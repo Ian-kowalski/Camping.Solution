@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using camping.Database;
 using Camping.Core;
+using Castle.DynamicProxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,7 @@ namespace camping.Test
             Assert.IsInstanceOf<List<int>>(result);
         }
 
+        [Test]
         [TestCase(1, true)] // could fail due to changes in database
         [TestCase(5, false)]
         public void GetDate_ReturnsTrueWhenNoOverlappingReservations(int siteID, bool excpected)
@@ -48,6 +50,19 @@ namespace camping.Test
             var retrieveData = new RetrieveData(siteData, reservationData);
 
             Assert.IsTrue(retrieveData.GetDate(siteID) == excpected);
+        }
+
+
+        [Test]
+        [TestCase(4, "12-15-2024", "12-26-2024")]
+        public void UpdateReservation_UpdatesReservationInfoInDatabase(int reservationID, DateTime startDate, DateTime endDate)
+        {
+            SiteData siteData = new();
+            ReservationData reservationData = new();
+
+            RetrieveData retrieveData = new(siteData, reservationData);
+
+            Assert.IsTrue(retrieveData.UpdateReservation(reservationID, startDate, new Visitor(6, "Jelle", "Bouman", string.Empty, "Bertram", "Mepple", "8269HM", 28, 28), endDate));
         }
     }
 }
