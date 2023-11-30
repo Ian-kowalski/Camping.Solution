@@ -42,6 +42,10 @@ namespace camping.WPF
             Closing += OnWindowClosing;
         }
 
+        private void displayAreas() {
+            int rowNumber = 0;
+        }
+
         private void displaySites() {
 
             int rowNumber = 0;
@@ -51,19 +55,24 @@ namespace camping.WPF
                 rowDef.Height = new GridLength(50);
                 CampSiteList.RowDefinitions.Add(rowDef);
 
-                Button button = new Button();
-                button.Content = $"Plek {site.CampSiteID}";
-                button.Margin = new Thickness(128, 4, 4, 4);
-
-                // De volledige campsite wordt meegegeven aan de button.
-                // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
-                button.Tag = site;
-
+                Button button = createSiteButton(site);
 
                 Grid.SetRow(button, rowNumber);
                 CampSiteList.Children.Add(button);
                 rowNumber++;
             }
+        }
+
+        private Button createSiteButton(Site site) {
+            Button button = new Button();
+            button.Content = $"Plek {site.CampSiteID}";
+            button.Margin = new Thickness(128, 4, 4, 4);
+
+            // De volledige campsite wordt meegegeven aan de button.
+            // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
+            button.Tag = site;
+
+            return button;
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)

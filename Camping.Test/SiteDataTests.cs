@@ -27,6 +27,22 @@ namespace camping.Test
             Assert.IsNotNull(sites);
             Assert.IsInstanceOf<List<Site>>(sites);
         }
+        [Test]
+        public void GetStreetInfo_ReturnsListOfStreets()
+        {
+            List<Street> sites = siteData.GetStreetInfo();
+
+            Assert.IsNotNull(sites);
+            Assert.IsInstanceOf<List<Street>>(sites);
+        }
+        [Test]
+        public void GetAreaInfo_ReturnsListOfAreas()
+        {
+            List<Area> areas = siteData.GetAreaInfo();
+
+            Assert.IsNotNull(areas);
+            Assert.IsInstanceOf<List<Site>>(areas);
+        }
 
         [Test]
         public void GetCampSiteID_ReturnsListOfIntegers()

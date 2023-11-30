@@ -45,6 +45,58 @@ namespace camping.Database
             }
         }
 
+        public List<Street> GetStreetInfo()
+        {
+
+            string sql = $"SELECT * FROM street ORDER BY streetID ASC";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlDataReader reader;
+                List<Street> result = new List<Street>();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
+                        result.Add(new Street(reader.GetInt32(0), true, true, true, true, true, reader.GetInt32(6)));
+                    }
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
+        public List<Area> GetAreaInfo()
+        {
+
+            string sql = $"SELECT * FROM area ORDER BY areaID ASC";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlDataReader reader;
+                List<Area> result = new List<Area>();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
+                        result.Add(new Area(reader.GetInt32(0), true, true, true, true, true));
+                    }
+                }
+                connection.Close();
+                return result;
+            }
+        }
+
         public List<int> GetCampSiteID(int reservationID)
         {
             string sql = $"SELECT campSiteID FROM reservationLines WHERE reservationID = {reservationID}";
