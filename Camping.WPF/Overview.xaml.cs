@@ -44,7 +44,8 @@ namespace camping.WPF
             Closing += OnWindowClosing;
         }
 
-        private void displayAreas() {
+        private void displayAreas()
+        {
             int rowNumber = Grid.GetRowSpan(CampSiteList);
             foreach (Area area in retrieveData.Areas)
             {
@@ -76,7 +77,8 @@ namespace camping.WPF
             }
         }
 
-        private void displaySites() {
+        private void displaySites()
+        {
 
             int rowNumber = Grid.GetRowSpan(CampSiteList);
             foreach (Site site in retrieveData.Sites)
@@ -93,7 +95,8 @@ namespace camping.WPF
             }
         }
 
-        private Button createSiteButton(Site site) {
+        private Button createSiteButton(Site site)
+        {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(142, 4, 4, 4);
@@ -134,6 +137,27 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
-        
+        private void tabButtonClick(object sender, RoutedEventArgs e)
+        {
+            SetButtonState((Button)sender, 
+                new[] { SiteOverview, SiteInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
+                new[] { SiteControlButton, AddReservationButton, ReservationsButton }
+                );
+        }
+
+        private void SetButtonState(Button selectedButton, UIElement[] BoderElements, Button[] buttons)
+        {
+
+            foreach (var button in buttons)
+            {
+                button.IsEnabled = button != selectedButton;
+            }
+            for (int i = 0; i < BoderElements.Length; i+=2)
+            {
+                BoderElements[i].Visibility = i == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
+                BoderElements[i + 1].Visibility = BoderElements[i].Visibility;
+            }
+
+        }
     }
 }
