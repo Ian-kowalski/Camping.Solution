@@ -58,6 +58,8 @@ namespace camping.WPF
                 // De volledige campsite wordt meegegeven aan de button.
                 // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
                 button.Tag = site;
+                
+                button.Click += (sender, e) => displaySiteInformation(site);
 
 
                 Grid.SetRow(button, rowNumber);
@@ -69,6 +71,11 @@ namespace camping.WPF
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             connection.BreakConnection();
+        }
+
+        public void displaySiteInformation (Site site)
+        {
+            SizeTextField.Content = site.Size;
         }
 
         

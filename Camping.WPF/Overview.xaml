@@ -33,7 +33,10 @@
             </Grid>
         </ScrollViewer>
 
-        <Menu x:Name="CampSiteInformation" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" BorderBrush="#000000" BorderThickness="3"/>
+        <Menu x:Name="LocationInformation" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" BorderBrush="#000000" BorderThickness="3">
+            <Label Content="Oppervlak: " FontSize="32"></Label>
+            <Label x:Name="SizeTextField" FontSize="32"></Label>
+        </Menu>
 
 
 
