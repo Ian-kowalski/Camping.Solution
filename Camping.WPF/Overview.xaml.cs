@@ -145,17 +145,17 @@ namespace camping.WPF
                 );
         }
 
-        private void SetButtonState(Button selectedButton, UIElement[] BoderElements, Button[] buttons)
+        private void SetButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
 
             foreach (var button in buttons)
             {
                 button.IsEnabled = button != selectedButton;
             }
-            for (int i = 0; i < BoderElements.Length; i+=2)
+            for (int i = 0; i < BorderElements.Length; i+=2)
             {
-                BoderElements[i].Visibility = i == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
-                BoderElements[i + 1].Visibility = BoderElements[i].Visibility;
+                BorderElements[i].Visibility = i/2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
+                BorderElements[i + 1].Visibility = BorderElements[i].Visibility;
             }
 
         }
