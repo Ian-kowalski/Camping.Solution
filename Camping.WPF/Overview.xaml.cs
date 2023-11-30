@@ -62,7 +62,7 @@ namespace camping.WPF
         }
         private void displayStreets()
         {
-            int rowNumber = Grid.GetRowSpan(CampSiteList);
+            int rowNumber = Grid.GetRowSpan(CampSiteList) + 1;
             foreach (Street street in retrieveData.Streets)
             {
                 RowDefinition rowDef = new RowDefinition();
@@ -80,7 +80,7 @@ namespace camping.WPF
         private void displaySites()
         {
 
-            int rowNumber = Grid.GetRowSpan(CampSiteList);
+            int rowNumber = Grid.GetRowSpan(CampSiteList) + 1;
             foreach (Site site in retrieveData.Sites)
             {
                 RowDefinition rowDef = new RowDefinition();
