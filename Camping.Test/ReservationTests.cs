@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using camping.Database;
-using Microsoft.VisualBasic;
+﻿using camping.Database;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Assert = NUnit.Framework.Assert;
 
 namespace Camping.Test
 {
     public class ReservationTests
     {
+        SshConnection sshConnection;
         [SetUp]
         public void Setup()
         {
+            sshConnection = new SshConnection();
         }
 
 
@@ -21,7 +19,7 @@ namespace Camping.Test
         [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", 26, 12345678, -1)]
         public void Reservation_GetVisitor_ID(
             string firstName, string lastName, string preposition,
-            string adress, string city, string postalcode, 
+            string adress, string city, string postalcode,
             int houseNumber, int phoneNumber,
             int result)
         {
@@ -33,10 +31,11 @@ namespace Camping.Test
             {
                 Assert.Pass($"Expected: {result} Got: {ID}");
             }
-            else { 
+            else
+            {
                 Assert.Fail($"Expected: {result} Got: {ID}");
             }
-            
+
         }
 
         [Test]
@@ -64,7 +63,7 @@ namespace Camping.Test
 
         [Test]
         [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, "12-15-2023", "11-26-2023", 2)]
-        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", 26, 12345678, "12-15-2024", "11-26-2024", - 1)]
+        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", 26, 12345678, "12-15-2024", "11-26-2024", -1)]
         public void Reservation_Visitor_GetReservation_ID(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
@@ -121,7 +120,7 @@ namespace Camping.Test
             Random random = new Random();
 
 
-            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, random.Next(1,99), random.Next(10000000, 99999999)))
+            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, random.Next(1, 99), random.Next(10000000, 99999999)))
             {
                 Assert.Pass();
             }
@@ -147,7 +146,8 @@ namespace Camping.Test
             {
                 Assert.Pass();
             }
-            else {
+            else
+            {
                 Assert.Fail("Reservation added even though unavailable");
             }
 
@@ -191,14 +191,17 @@ namespace Camping.Test
         }
 
 
-/*        [Test]
-        public void Reservation_DeleteReservation_delete()
+        [Test]
+        [TestCase(2, "12-02-2025", "12-05-2025", "test", "delete", "res", "this Street", "here", "2332XX", 22, 54717700)]
+        public void Reservation_DeleteReservation_delete(int campsId, string sDate, string eDate, string fName, string prop, string lName, string adres, string city, string postcode, int huisnummer, int phoneNumber)
         {
             ReservationData reservationRepo = new();
-            reservationRepo.addReservation(2, "12-02-2025", "12-05-2025", "test","delete","res","this Street","here","2332XX",22, 54717700);
-            //reservationRepo.getReservationID()
+            VisitorRepository visitorRepository = new();
+            reservationRepo.addReservation(campsId, sDate, eDate, fName, prop, lName, adres, city, postcode, huisnummer, phoneNumber);
+            int visitorID = visitorRepository.getVisitorID(fName, lName, prop, adres, city, postcode, huisnummer, phoneNumber);
+            int resID = reservationRepo.getReservationID(visitorID, sDate, eDate);
 
-            if (reservationRepo.DeleteReservation(2))
+            if (reservationRepo.DeleteReservation(resID))
             {
                 Assert.Pass();
             }
@@ -206,7 +209,10 @@ namespace Camping.Test
             {
                 Assert.Fail();
             }
-        }*/
+            
+        }
+        [TestCleanup]
+        public void Cleanup() { sshConnection.BreakConnection(); }
 
     }
 }
