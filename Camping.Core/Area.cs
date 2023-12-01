@@ -31,6 +31,5 @@ public class Area
 
     public bool OutletPresent { get; set; }
     public bool PetsAllowed { get; set; }
-
 }
 

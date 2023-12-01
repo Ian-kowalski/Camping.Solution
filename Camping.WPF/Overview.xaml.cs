@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,6 +33,12 @@ namespace camping.WPF
 
         private int rowLength;
 
+        private Area? SelectedArea;
+
+        private Street? SelectedStreet;
+
+        private Site? SelectedSite;
+
         public Overview()
         {
             InitializeComponent();
@@ -54,6 +61,9 @@ namespace camping.WPF
             displayAreas();
         }
 
+        
+        
+
         // laat de areas zien
         private void displayAreas()
         {
@@ -64,7 +74,9 @@ namespace camping.WPF
                 addNewRowDefinition();
 
                 Button button = createSiteButton(area);
-                button.Click += (sender, e) => { toggleChildrenVisibility(area); };
+                if (SelectedArea == area) button.Background = Brushes.LightBlue;
+                else button.Background = Brushes.Transparent;
+                button.Click += (sender, e) => { onSitePress(area); };
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
@@ -73,8 +85,10 @@ namespace camping.WPF
                 displayStreets(area.AreaID);
             }
         }
-
         
+        
+
+
         // laat de straten zien van de area
         private void displayStreets(int areaID)
         {
@@ -85,7 +99,9 @@ namespace camping.WPF
                     addNewRowDefinition();
 
                     Button button = createSiteButton(street);
-                    button.Click += (sender, e) => { toggleChildrenVisibility(street); };
+                    if (SelectedStreet == street) button.Background = Brushes.LightBlue;
+                    else button.Background = Brushes.Transparent;
+                    button.Click += (sender, e) => { onSitePress(street); };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -98,6 +114,7 @@ namespace camping.WPF
                 
             }
         }
+        
 
         // laat de sites zien van de straat
         private void displaySites(int streetID) {
@@ -109,7 +126,9 @@ namespace camping.WPF
                     
 
                     Button button = createSiteButton(site);
-
+                    if (SelectedSite == site) button.Background = Brushes.LightBlue;
+                    else button.Background = Brushes.Transparent;
+                    button.Click += (sender, e) => { onSitePress(site); };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -118,12 +137,43 @@ namespace camping.WPF
             }
         }
 
-        
+        // highlist de geselecteerde site
+        private void onSitePress(object o) {
+            if (o is Area && o is not null)
+            {
+                Area area = o as Area;
+                SelectedSite = null;
+                SelectedStreet = null;
+                SelectedArea = area;
+                toggleChildrenVisibility(area);
+                displayAllSites();
+            }
+            else
+            if (o is Street && o is not null)
+            {
+                Street street = o as Street;
+                SelectedSite = null;
+                SelectedStreet = street;
+                SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                toggleChildrenVisibility(street);
+                displayAllSites();
+            }
+            else
+            if (o is Site && o is not null)
+            {
+                Site site = o as Site;
+                SelectedSite = site;
+                SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
+                SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                displayAllSites();
+            }
+        }
 
 
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)
         {
+
 
             foreach (Street street in retrieveData.Streets)
             {
@@ -131,19 +181,23 @@ namespace camping.WPF
                 {
                     street.Visible = !street.Visible;
 
-                    if (street.Visible) continue;
                     // als de straat verborgen wordt, verberg ook de sites
-                    hideChildren(street);
+                    if (!street.Visible)
+                    {
+                        hideChildren(street);
+                    }
+                   
                 }
 
             }
 
-            displayAllSites();
+            
         }
 
 
         // toggled de visibility van de sites van een straat
         private void toggleChildrenVisibility(Street street) {
+
 
             foreach (Site site in retrieveData.Sites) {
                 if (site.StreetID == street.StreetID) { 
@@ -152,7 +206,7 @@ namespace camping.WPF
 
             }
 
-            displayAllSites();
+            
         }
 
         // verbergt alle sites van de straat
