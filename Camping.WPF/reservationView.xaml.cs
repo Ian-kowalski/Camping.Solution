@@ -44,8 +44,9 @@ namespace Camping.WPF
             }
             List<Reservation> reservations = retrieveData.GetReservations(date);
 
-            int i = 0;
+            
             foreach (Reservation reservation in reservations) {
+                int i = 0;
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(50);
                 grid.RowDefinitions.Add(row);
