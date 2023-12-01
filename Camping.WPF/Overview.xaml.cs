@@ -49,6 +49,7 @@ namespace camping.WPF
         private void displayAllSites()
         {
             CampSiteList.Children.Clear();
+            CampSiteList.RowDefinitions.Clear();
             rowLength = 0;
             displayAreas();
         }
@@ -59,9 +60,8 @@ namespace camping.WPF
             foreach (Area area in retrieveData.Areas)
             {
 
-                RowDefinition rowDef = new RowDefinition();
-                rowDef.Height = new GridLength(50);
-                CampSiteList.RowDefinitions.Add(rowDef);
+
+                addNewRowDefinition();
 
                 Button button = createSiteButton(area);
                 button.Click += (sender, e) => { toggleChildrenVisibility(area); };
@@ -81,9 +81,8 @@ namespace camping.WPF
             foreach (Street street in retrieveData.Streets)
             {
                 if (street.AreaID == areaID && street.Visible) {
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = new GridLength(50);
-                    CampSiteList.RowDefinitions.Add(rowDef);
+
+                    addNewRowDefinition();
 
                     Button button = createSiteButton(street);
                     button.Click += (sender, e) => { toggleChildrenVisibility(street); };
@@ -107,10 +106,8 @@ namespace camping.WPF
             {
                 if (site.StreetID == streetID && site.Visible) {
 
-
-                    RowDefinition rowDef = new RowDefinition();
-                    rowDef.Height = new GridLength(50);
-                    CampSiteList.RowDefinitions.Add(rowDef);
+                    addNewRowDefinition();
+                    
 
                     Button button = createSiteButton(site);
 
@@ -121,6 +118,9 @@ namespace camping.WPF
                 }
             }
         }
+
+        
+
 
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)
@@ -164,6 +164,12 @@ namespace camping.WPF
                     site.Visible = false;
                 }
             }
+        }
+
+        private void addNewRowDefinition() {
+            RowDefinition rowDef = new RowDefinition();
+            rowDef.Height = new GridLength(50);
+            CampSiteList.RowDefinitions.Add(rowDef);
         }
 
 
