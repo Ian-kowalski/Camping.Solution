@@ -51,13 +51,13 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
-            displayAllSites();
+            displayAllLocations();
 
             Closing += OnWindowClosing;
         }
 
-        // Laat alleen de areas zien
-        private void displayAllSites()
+        
+        private void displayAllLocations()
         {
             CampSiteList.Children.Clear();
             CampSiteList.RowDefinitions.Clear();
@@ -68,7 +68,7 @@ namespace camping.WPF
         
         
 
-        // laat de areas zien
+        
         private void displayAreas()
         {
             foreach (Area area in retrieveData.Areas)
@@ -161,7 +161,7 @@ namespace camping.WPF
                 SelectedStreet = null;
                 SelectedArea = area;
                 toggleChildrenVisibility(area);
-                displayAllSites();
+                displayAllLocations();
             }
             else
             if (o is Street && o is not null)
@@ -171,7 +171,7 @@ namespace camping.WPF
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
                 toggleChildrenVisibility(street);
-                displayAllSites();
+                displayAllLocations();
             }
             else
             if (o is Site && o is not null)
@@ -180,7 +180,7 @@ namespace camping.WPF
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-                displayAllSites();
+                displayAllLocations();
             }
         }
 
