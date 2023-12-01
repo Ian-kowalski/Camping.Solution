@@ -16,6 +16,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -30,6 +31,9 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
+        private Ellipse[] facilityList {  get; set; }
+        private Site currentSelected {  get; set; }
+        private bool isUpdating { get; set; }
 
         private int rowLength;
 
@@ -279,6 +283,70 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
+        private void displaySiteInformation(Site site)
+        {
+            SizeTextField.Content = site.Size;
+            var colors = GetFacilityColors(site);
+            facilityList = new Ellipse[]{ HasWaterSupply, OutletPresent, PetsAllowed, HasShadow, AtWater };
+            for (int i = 0; i < colors.Count && i < facilityList.Length; i++)
+            {
+                
+                SolidColorBrush solidColorBrush = new SolidColorBrush(colors[i]);
+                facilityList[i].Fill = solidColorBrush;
+
+                facilityList[i].MouseLeftButtonDown += Facility_Click;
+            }
+        }
+
+        private void Facility_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (isUpdating)
+            {
+                // Update the color of the clicked ellipse based on your logic
+                Ellipse clickedEllipse = (Ellipse)sender;
+                int index = Array.IndexOf(facilityList, clickedEllipse);
+
+                // Refresh the displayed information
+                MessageBox.Show("clicked facility");
+            }
+        }
+
+
+        private List<Color> GetFacilityColors(Site site)
+        {
+            List<Color> colors = new List<Color>();
+
+            colors.Add(site.HasWaterSupply ? Colors.Green : Colors.Red);
+            colors.Add(site.OutletPresent ? Colors.Green : Colors.Red);
+            colors.Add(site.PetsAllowed ? Colors.Green : Colors.Red);
+            colors.Add(site.HasShadow ? Colors.Green : Colors.Red);
+            colors.Add(site.AtWater ? Colors.Green : Colors.Red);
+            
+            return colors;
+        }
+
+        private void ChangeFacilitiesButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Toggle the updating state
+            isUpdating = !isUpdating;
+
+            if (isUpdating)
+            {
+                ChangeFacilitiesButton.Content = "Opslaan";
+            }
+            else
+            {
+                ChangeFacilitiesButton.Content = "Aanpassen faciliteiten";
+                SaveColors();
+            }
+        }
+
+        private void SaveColors()
+        {
+            // Save the current colors or perform any other action
+            // For example, you can save to a file or a data structure
+        }
+        
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
             SetButtonState((Button)sender, 
