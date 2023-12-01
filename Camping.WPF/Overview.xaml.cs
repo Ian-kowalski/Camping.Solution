@@ -53,6 +53,7 @@ namespace camping.WPF
             displayAllLocations();
             displayAlReservations();
 
+
             Closing += onWindowClosing;
         }
 
@@ -65,10 +66,7 @@ namespace camping.WPF
             displayAreas();
         }
 
-        
-        
 
-        
         private void displayAreas()
         {
             foreach (Area area in retrieveData.Areas)
@@ -241,6 +239,7 @@ namespace camping.WPF
         }
 
 
+
         private Button createLocationButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
@@ -252,6 +251,7 @@ namespace camping.WPF
 
             return button;
         }
+
         private Button createLocationButton(Street street)
         {
             Button button = new Button();
@@ -264,6 +264,7 @@ namespace camping.WPF
 
             return button;
         }
+
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
@@ -284,6 +285,7 @@ namespace camping.WPF
 
         private void displayInformation(Location location)
         {
+
             LocationInfoGrid.Children.Clear();
 
             CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
@@ -301,6 +303,22 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 60, 2, 3, location);
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
+            Button ChangeFacilitiesButton = new Button();
+            ChangeFacilitiesButton.Content = "Aanpassen";
+            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
+            ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
+
+            ChangeFacilitiesButton.Width = 180;
+            ChangeFacilitiesButton.Height = 60;
+            ChangeFacilitiesButton.BorderBrush = Brushes.Black;
+            ChangeFacilitiesButton.BorderThickness = new Thickness(2);
+            ChangeFacilitiesButton.FontSize = 16;
+
+            ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
+
+            Grid.SetRow(ChangeFacilitiesButton, 3);
+            Grid.SetColumn(ChangeFacilitiesButton, 4);
+            LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
 
         }
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
@@ -383,18 +401,18 @@ namespace camping.WPF
             return color;
         }
 
-        private void ChangeFacilitiesButtonClick(object sender, RoutedEventArgs e)
+        private void ChangeFacilitiesButtonClick(Button button)
         {
             // Toggle the updating state
             isUpdating = !isUpdating;
 
             if (isUpdating)
             {
-                ChangeFacilitiesButton.Content = "Opslaan";
+                button.Content = "Opslaan";
             }
             else
             {
-                ChangeFacilitiesButton.Content = "Aanpassen faciliteiten";
+                button.Content = "Aanpassen faciliteiten";
                 saveColors();
             }
         }
@@ -442,7 +460,7 @@ namespace camping.WPF
                 }
                 grid.ColumnDefinitions.Add(col);
             }
-            List<Reservation> reservations = retrieveData.GetReservations();
+            List<Reservation> reservations = retrieveData.Reservations;
 
             int i = 0;
             foreach (Reservation reservation in reservations)
@@ -459,7 +477,7 @@ namespace camping.WPF
             ReservationListScrollViewer.Content = grid;
         }
 
-        private void aanpassenOrSaveButtonClick(object sender, RoutedEventArgs e)
+        private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             if (ReservationAanpassenButtonState)
             {
