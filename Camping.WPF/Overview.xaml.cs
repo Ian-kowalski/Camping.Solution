@@ -50,14 +50,14 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
-            displayAllSites();
+            displayAllLocations();
             displayAlReservations();
 
             Closing += onWindowClosing;
         }
 
-        // Laat alleen de areas zien
-        private void displayAllSites()
+        
+        private void displayAllLocations()
         {
             CampSiteList.Children.Clear();
             CampSiteList.RowDefinitions.Clear();
@@ -65,7 +65,10 @@ namespace camping.WPF
             displayAreas();
         }
 
-        // laat de areas zien
+        
+        
+
+        
         private void displayAreas()
         {
             foreach (Area area in retrieveData.Areas)
@@ -74,7 +77,7 @@ namespace camping.WPF
 
                 addNewRowDefinition();
 
-                Button button = createSiteButton(area);
+                Button button = createLocationButton(area);
                 if (SelectedArea == area) button.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
                 else button.Background = new SolidColorBrush(Color.FromRgb(190, 190, 190));
                 button.BorderBrush = Brushes.Black;
@@ -99,7 +102,7 @@ namespace camping.WPF
 
                     addNewRowDefinition();
 
-                    Button button = createSiteButton(street);
+                    Button button = createLocationButton(street);
                     if (SelectedStreet == street) button.Background = new SolidColorBrush(Color.FromArgb(185, 160, 200, 240));
                     else button.Background = new SolidColorBrush(Color.FromRgb(210, 210, 210));
                     button.BorderBrush = Brushes.Black;
@@ -130,7 +133,7 @@ namespace camping.WPF
                     addNewRowDefinition();
                     
 
-                    Button button = createSiteButton(site);
+                    Button button = createLocationButton(site);
 
                     if (SelectedSite == site) button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230));
                     else button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
@@ -148,35 +151,36 @@ namespace camping.WPF
         }
 
         // highlight de geselecteerde site
-        private void onSitePress(object o) {
-            if (o is Area && o is not null)
+        private void onSitePress(Location location) {
+            if (location is Area && location is not null)
             {
-                Area area = o as Area;
+                Area area = location as Area;
                 SelectedSite = null;
                 SelectedStreet = null;
                 SelectedArea = area;
                 toggleChildrenVisibility(area);
-                displayAllSites();
+                displayAllLocations();
             }
             else
-            if (o is Street && o is not null)
+            if (location is Street && location is not null)
             {
-                Street street = o as Street;
+                Street street = location as Street;
                 SelectedSite = null;
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
                 toggleChildrenVisibility(street);
-                displayAllSites();
+                displayAllLocations();
             }
             else
-            if (o is Site && o is not null)
+            if (location is Site && location is not null)
             {
-                Site site = o as Site;
+                Site site = location as Site;
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-                displayAllSites();
+                displayAllLocations();
             }
+            displayInformation(location);
         }
 
         // toggled de visibility van de straat van een area
@@ -236,7 +240,8 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
-        private Button createSiteButton(Site site) {
+
+        private Button createLocationButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(272, 4, 4, 4);
@@ -247,8 +252,7 @@ namespace camping.WPF
 
             return button;
         }
-
-        private Button createSiteButton(Street street)
+        private Button createLocationButton(Street street)
         {
             Button button = new Button();
             button.Content = $"Straat {street.StreetID}";
@@ -260,8 +264,7 @@ namespace camping.WPF
 
             return button;
         }
-
-        private Button createSiteButton(Area area)
+        private Button createLocationButton(Area area)
         {
             Button button = new Button();
             button.Content = $"Gebied {area.AreaID}";
@@ -279,19 +282,63 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
-        private void displaySiteInformation(Site site)
+        private void displayInformation(Location location)
         {
-            SizeTextField.Content = site.Size;
-            var colors = getFacilityColors(site);
-            facilityList = new Ellipse[]{ HasWaterSupply, OutletPresent, PetsAllowed, HasShadow, AtWater };
-            for (int i = 0; i < colors.Count && i < facilityList.Length; i++)
-            {
-                
-                SolidColorBrush solidColorBrush = new SolidColorBrush(colors[i]);
-                facilityList[i].Fill = solidColorBrush;
+            LocationInfoGrid.Children.Clear();
 
-                facilityList[i].MouseLeftButtonDown += facilityClick;
+            CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
+            CreateAndAddLabel("Faciliteiten", 24, 0, 2);
+            CreateAndAddLabel("Overig", 24, 0, 3);
+
+            if (location is Site) {
+                CreateAndAddLabel("Oppervlak: ", 24, 0, 1);
+                CreateAndAddLabel(Convert.ToString(((Site)location).Size), 24, 1, 1);
             }
+
+            CreateAndAddFacility("HasWaterSupply", 60, 1, 2, location);
+            CreateAndAddFacility("OutletPresent", 60, 2, 2, location);
+            CreateAndAddFacility("HasShadow", 60, 1, 3, location);
+            CreateAndAddFacility("AtWater", 60, 2, 3, location);
+            CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
+
+
+        }
+        private void CreateAndAddLabel(string content, int fontSize, int column, int row)
+        {
+            Label dynamicLabel = new Label
+            {
+                Content = content,
+                FontSize = fontSize,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Grid.SetColumn(dynamicLabel, column);
+            Grid.SetRow(dynamicLabel, row);
+
+            LocationInfoGrid.Children.Add(dynamicLabel);
+        }
+
+        private void CreateAndAddFacility(string name, int diameter, int column, int row, Location location)
+        {
+            Ellipse facility = new Ellipse
+            {
+                Name = name,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = diameter,
+                Height = diameter
+            };
+
+            Grid.SetColumn(facility, column);
+            Grid.SetRow(facility, row);
+
+            var color = GetFacilityColor(location, facility);
+
+                SolidColorBrush solidColorBrush = new SolidColorBrush(color);
+                facility.Fill = solidColorBrush;
+                facility.MouseLeftButtonDown += facilityClick;
+
+            LocationInfoGrid.Children.Add(facility);
         }
 
         private void facilityClick(object sender, MouseButtonEventArgs e)
@@ -307,17 +354,33 @@ namespace camping.WPF
             }
         }
 
-        private List<Color> getFacilityColors(Site site)
-        {
-            List<Color> colors = new List<Color>();
 
-            colors.Add(site.HasWaterSupply ? Colors.Green : Colors.Red);
-            colors.Add(site.OutletPresent ? Colors.Green : Colors.Red);
-            colors.Add(site.PetsAllowed ? Colors.Green : Colors.Red);
-            colors.Add(site.HasShadow ? Colors.Green : Colors.Red);
-            colors.Add(site.AtWater ? Colors.Green : Colors.Red);
-            
-            return colors;
+        private Color GetFacilityColor(Location location, Ellipse facility)
+        {
+            Color color = Colors.Red; // Default color
+
+            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "OutletPresent" && location.OutletPresent)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "PetsAllowed" && location.PetsAllowed)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "HasShadow" && location.HasShadow)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "AtWater" && location.AtWater)
+            {
+                color = Colors.Green;
+            }
+
+            return color;
         }
 
         private void ChangeFacilitiesButtonClick(object sender, RoutedEventArgs e)

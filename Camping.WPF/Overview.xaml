@@ -51,11 +51,6 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-                <Label VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Content="Gebiedx/straatx/plekx" FontSize="16"></Label>
-                <Label VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Content="Oppervlak: " FontSize="24"></Label>
-                <Label VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" x:Name="SizeTextField" FontSize="24"></Label>
-                <Label VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Content="Faciliteiten" FontSize="24"></Label>
-                <Label VerticalAlignment="Center" Grid.Column="0" Grid.Row="3" Content="Overig" FontSize="24"></Label>
 
                 <Ellipse x:Name="HasWaterSupply" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Width="60" Height="60" Fill="Gray"></Ellipse>
                 <Ellipse x:Name="OutletPresent" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" Grid.Row="2" Width="60" Height="60" Fill="Gray"></Ellipse>
