@@ -152,7 +152,7 @@ namespace camping.WPF
             }
         }
 
-        // highlist de geselecteerde site
+        // highlight de geselecteerde site
         private void onSitePress(object o) {
             if (o is Area && o is not null)
             {
@@ -350,7 +350,7 @@ namespace camping.WPF
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
             SetButtonState((Button)sender, 
-                new[] { SiteOverview, SiteInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
+                new[] { SiteOverview, LocationInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
                 new[] { SiteControlButton, AddReservationButton, ReservationsButton }
                 );
         }
