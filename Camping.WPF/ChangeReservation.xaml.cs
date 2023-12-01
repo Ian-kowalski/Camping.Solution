@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using camping.Database;
 using DevExpress.Utils.CommonDialogs.Internal;
+using DevExpress.Xpo.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,32 +28,31 @@ namespace camping.WPF
         RetrieveData retrieveData;
         ReservationData reservationData;
         SiteData siteData;
-        List<Reservation> res;
-        int index; /// index van de gekozen reservering meegeven vanaf het reserveringen scherm
-        public ChangeReservation(int i)
+        Reservation res;
+
+        public ChangeReservation(Reservation reservation)
         {
-            this.index = i-1;
             InitializeComponent();
 
             reservationData = new();
             siteData = new();
 
             retrieveData = new(siteData, reservationData);
-            res = reservationData.GetReservationInfo();
 
+            res = reservation;
 
-            FirstName.Text = Convert.ToString(res.ElementAt(index).Guest.FirstName);
-            Preposition.Text = Convert.ToString(res.ElementAt(index).Guest.Preposition);
-            LastName.Text = Convert.ToString(res.ElementAt(index).Guest.LastName);
-            City.Text = Convert.ToString(res.ElementAt(index).Guest.City);
-            Adress.Text = Convert.ToString(res.ElementAt(index).Guest.Adress);
-            Phonenumber.Text = Convert.ToString(res.ElementAt(index).Guest.PhoneNumber);
-            HouseNumber.Text = Convert.ToString(res.ElementAt(index).Guest.HouseNumber);
-            PostalCode.Text = Convert.ToString(res.ElementAt(index).Guest.PostalCode);
-            StartDate.Text = Convert.ToString(res.ElementAt(index).StartDate);
-            EndDate.Text = Convert.ToString(res.ElementAt(index).EndDate);
+            FirstName.Text = Convert.ToString(reservation.Guest.FirstName);
+            Preposition.Text = Convert.ToString(reservation.Guest.Preposition);
+            LastName.Text = Convert.ToString(reservation.Guest.LastName);
+            City.Text = Convert.ToString(reservation.Guest.City);
+            Adress.Text = Convert.ToString(reservation.Guest.Adress);
+            Phonenumber.Text = Convert.ToString(reservation.Guest.PhoneNumber);
+            HouseNumber.Text = Convert.ToString(reservation.Guest.HouseNumber);
+            PostalCode.Text = Convert.ToString( reservation.Guest.PostalCode);
+            StartDate.Text = Convert.ToString(reservation.StartDate);
+            EndDate.Text = Convert.ToString(reservation.EndDate);
             
-            ReservationID.Content = Convert.ToString(res.ElementAt(index).ReservationID);
+            ReservationID.Content = Convert.ToString(reservation.ReservationID);
         }
 
         private void Aanpassen_Click(object sender, RoutedEventArgs e)
@@ -65,7 +65,7 @@ namespace camping.WPF
             {
                 try
                 {
-                    res.ElementAt(index).Guest.PhoneNumber = Int32.Parse(Phonenumber.Text);
+                    res.Guest.PhoneNumber = Int32.Parse(Phonenumber.Text);
                 }
                 catch
                 {
@@ -74,7 +74,7 @@ namespace camping.WPF
                 }
                 try
                 {
-                    res.ElementAt(index).Guest.PhoneNumber = Int32.Parse(HouseNumber.Text);
+                    res.Guest.PhoneNumber = Int32.Parse(HouseNumber.Text);
                 }
                 catch
                 {
@@ -85,7 +85,7 @@ namespace camping.WPF
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 if (regex.IsMatch(PostalCode.Text) && PostalCode.Text.Length <= 6)
                 {
-                    res.ElementAt(index).Guest.PostalCode = PostalCode.Text;
+                    res.Guest.PostalCode = PostalCode.Text;
                 }
                 else
                 {
@@ -93,27 +93,32 @@ namespace camping.WPF
                     return;
                 }
 
-                res.ElementAt(index).Guest.FirstName = FirstName.Text;
-                res.ElementAt(index).Guest.Preposition = Preposition.Text;
-                res.ElementAt(index).Guest.LastName = LastName.Text;
-                res.ElementAt(index).Guest.City = City.Text;
-                res.ElementAt(index).Guest.Adress = Adress.Text;
+                res.Guest.FirstName = FirstName.Text;
+                res.Guest.Preposition = Preposition.Text;
+                res.Guest.LastName = LastName.Text;
+                res.Guest.City = City.Text;
+                res.Guest.Adress = Adress.Text;
 
-                if (Convert.ToDateTime(EndDate.Text) < DateTime.Today)
+
+                if (!reservationData.GetAvailableReservation(res.SiteID, StartDate.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDate.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy")))
+                {
+                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar");
+                    return;
+                } else if (Convert.ToDateTime(EndDate.Text) < DateTime.Today)
                 {
                     MessageBox.Show("Einddatum kan niet in het verleden zijn");
                     return;
                 } else if (Convert.ToDateTime(StartDate.Text) <= Convert.ToDateTime(EndDate.Text))
                 {
-                    res.ElementAt(index).StartDate = Convert.ToDateTime(StartDate.Text);
-                    res.ElementAt(index).EndDate = Convert.ToDateTime(EndDate.Text);
+                    res.StartDate = Convert.ToDateTime(StartDate.Text);
+                    res.EndDate = Convert.ToDateTime(EndDate.Text);
                 } else
                 {
                     MessageBox.Show("Begindatum kan niet voor de einddatum komen");
                     return;
                 }
 
-                retrieveData.UpdateReservation(res.ElementAt(index).ReservationID, res.ElementAt(index).StartDate, res.ElementAt(index).Guest, res.ElementAt(index).EndDate);
+                retrieveData.UpdateReservation(res.ReservationID, res.StartDate, res.Guest, res.EndDate);
             }
         }
     }
