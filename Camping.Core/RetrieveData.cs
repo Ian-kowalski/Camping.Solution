@@ -1,9 +1,6 @@
 ﻿using Camping.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
+
 
 namespace camping.Core
 {
@@ -25,6 +22,38 @@ namespace camping.Core
             Streets = siteData.GetStreetInfo();
             Areas = siteData.GetAreaInfo();
         }
+
+        public Area GetAreaFromID(int id) {
+            foreach (Area area in Areas) {
+                if (area.AreaID == id) {
+                    return area;
+                }
+            }
+            throw new Exception("No area has been found with the provided ID!");
+        }
+        public Street GetStreetFromID(int id)
+        {
+            foreach (Street street in Streets)
+            {
+                if (street.StreetID == id)
+                {
+                    return street;
+                }
+            }
+            throw new Exception("No street has been found with the provided ID!");
+        }
+        public Site GetSiteFromID(int id)
+        {
+            foreach (Site site in Sites)
+            {
+                if (site.CampSiteID == id)
+                {
+                    return site;
+                }
+            }
+            throw new Exception("No site has been found with the provided ID!");
+        }
+
 
         public List<int> GetCampSiteID()
         {
