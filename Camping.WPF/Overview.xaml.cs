@@ -1,7 +1,5 @@
 ﻿using camping.Core;
 using camping.Database;
-using Camping.WPF;
-using Renci.SshNet.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,6 +32,7 @@ namespace camping.WPF
         private Ellipse[] facilityList {  get; set; }
         private Site currentSelected {  get; set; }
         private bool isUpdating { get; set; }
+        private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
         private int rowLength;
 
@@ -52,8 +51,10 @@ namespace camping.WPF
             retrieveData = new RetrieveData(siteData, resData);
 
             displayAllLocations();
+            displayAlReservations();
 
-            Closing += OnWindowClosing;
+
+            Closing += onWindowClosing;
         }
 
         
@@ -65,10 +66,7 @@ namespace camping.WPF
             displayAreas();
         }
 
-        
-        
 
-        
         private void displayAreas()
         {
             foreach (Area area in retrieveData.Areas)
@@ -92,9 +90,6 @@ namespace camping.WPF
                 displayStreets(area.AreaID);
             }
         }
-        
-        
-
 
         // laat de straten zien van de area
         private void displayStreets(int areaID)
@@ -120,17 +115,18 @@ namespace camping.WPF
 
                     displaySites(street.StreetID);
                 }
-                
-                
+
+
             }
         }
         
-
         // laat de sites zien van de straat
-        private void displaySites(int streetID) {
+        private void displaySites(int streetID)
+        {
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == streetID && site.Visible) {
+                if (site.StreetID == streetID && site.Visible)
+                {
 
                     addNewRowDefinition();
                     
@@ -185,7 +181,6 @@ namespace camping.WPF
             displayInformation(location);
         }
 
-
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)
         {
@@ -210,15 +205,15 @@ namespace camping.WPF
             
         }
 
-
         // toggled de visibility van de sites van een straat
-        private void toggleChildrenVisibility(Street street) {
+        private void toggleChildrenVisibility(Street street)
+        {
 
 
             foreach (Site site in retrieveData.Sites) {
                 if (site.StreetID == street.StreetID) { 
                     site.Visible = !site.Visible;
-                } 
+                }
 
             }
 
@@ -226,7 +221,8 @@ namespace camping.WPF
         }
 
         // verbergt alle sites van de straat
-        private void hideChildren(Street street) {
+        private void hideChildren(Street street)
+        {
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == street.StreetID)
@@ -243,6 +239,7 @@ namespace camping.WPF
         }
 
 
+
         private Button createLocationButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
@@ -254,6 +251,7 @@ namespace camping.WPF
 
             return button;
         }
+
         private Button createLocationButton(Street street)
         {
             Button button = new Button();
@@ -266,6 +264,7 @@ namespace camping.WPF
 
             return button;
         }
+
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
@@ -279,13 +278,14 @@ namespace camping.WPF
             return button;
         }
 
-        public void OnWindowClosing(object sender, CancelEventArgs e)
+        public void onWindowClosing(object sender, CancelEventArgs e)
         {
             connection.BreakConnection();
         }
 
         private void displayInformation(Location location)
         {
+
             LocationInfoGrid.Children.Clear();
 
             CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
@@ -343,7 +343,7 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(facility);
         }
 
-        private void Facility_Click(object sender, MouseButtonEventArgs e)
+        private void facilityClick(object sender, MouseButtonEventArgs e)
         {
             if (isUpdating)
             {
@@ -385,7 +385,7 @@ namespace camping.WPF
             return color;
         }
 
-        private void ChangeFacilitiesButton_Click(object sender, RoutedEventArgs e)
+        private void ChangeFacilitiesButtonClick(object sender, RoutedEventArgs e)
         {
             // Toggle the updating state
             isUpdating = !isUpdating;
@@ -397,11 +397,11 @@ namespace camping.WPF
             else
             {
                 ChangeFacilitiesButton.Content = "Aanpassen faciliteiten";
-                SaveColors();
+                saveColors();
             }
         }
 
-        private void SaveColors()
+        private void saveColors()
         {
             // Save the current colors or perform any other action
             // For example, you can save to a file or a data structure
@@ -409,25 +409,102 @@ namespace camping.WPF
         
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
-            SetButtonState((Button)sender, 
+            setTabButtonState((Button)sender, 
                 new[] { SiteOverview, LocationInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
                 new[] { SiteControlButton, AddReservationButton, ReservationsButton }
                 );
         }
 
-        private void SetButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
+        private void setTabButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
 
             foreach (var button in buttons)
             {
                 button.IsEnabled = button != selectedButton;
             }
-            for (int i = 0; i < BorderElements.Length; i+=2)
+            for (int i = 0; i < BorderElements.Length; i += 2)
             {
-                BorderElements[i].Visibility = i/2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
+                BorderElements[i].Visibility = i / 2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
                 BorderElements[i + 1].Visibility = BorderElements[i].Visibility;
             }
 
+            AnnulerenButton.Visibility = selectedButton == ReservationsButton ? Visibility.Visible : Visibility.Hidden;
+
+        }
+
+        private void displayAlReservations()
+        {
+            Grid grid = new Grid();
+            for (int counter = 0; counter < 6; counter++)
+            {
+                ColumnDefinition col = new ColumnDefinition();
+                if (counter > 2)
+                {
+                    col.Width = new GridLength(2, GridUnitType.Star);
+                }
+                grid.ColumnDefinitions.Add(col);
+            }
+            List<Reservation> reservations = retrieveData.GetReservations();
+
+            int i = 0;
+            foreach (Reservation reservation in reservations)
+            {
+                
+                RowDefinition row = new RowDefinition();
+                row.Height = new GridLength(50);
+                grid.RowDefinitions.Add(row);
+                i++;
+            }
+
+
+            grid.ShowGridLines = true;
+            ReservationListScrollViewer.Content = grid;
+        }
+
+        private void aanpassenOrSaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (ReservationAanpassenButtonState)
+            {
+                //TODO: check data in text fields and send to database
+                Checkfields();
+                saveReservation();
+            }
+
+            chanceAanpassenOrSaveButtonContent(sender);
+            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox });
+            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
+        }
+
+        private void saveReservation()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void Checkfields()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void chanceAanpassenOrSaveButtonContent(object sender)
+        {
+            ReservationAanpassenButtonState = !ReservationAanpassenButtonState;
+            ((Button)sender).Content = ReservationAanpassenButtonState ? "save" : "Aanpassen Resevering";
+        }
+
+        private void enabledReservationInfoTextBoxes(TextBox[] TextBoxElements)
+        {
+            foreach (UIElement element in TextBoxElements)
+            {
+                element.IsEnabled = !element.IsEnabled;
+            }
+        }
+
+        private void enabledReservationInfodatePicker(DatePicker[] TextBoxElements)
+        {
+            foreach (UIElement element in TextBoxElements)
+            {
+                element.IsEnabled = !element.IsEnabled;
+            }
         }
     }
 }
