@@ -311,7 +311,6 @@ namespace camping.WPF
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
 <<<<<<< HEAD
-<<<<<<< HEAD
             changeFacilitiesButton = new Button();
             changeFacilitiesButton.Name = "ChangeFacilitiesButton";
             changeFacilitiesButton.Content = "Aanpassen faciliteiten";
@@ -323,28 +322,6 @@ namespace camping.WPF
             Grid.SetColumn(changeFacilitiesButton, 4);
             Grid.SetRow(changeFacilitiesButton, 3);
 =======
-=======
->>>>>>> a46999b3cc0cc02d486b51ae63c8964ad1bb5aab
-            Button ChangeFacilitiesButton = new Button();
-            ChangeFacilitiesButton.Content = "Aanpassen";
-            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
-            ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
-
-            ChangeFacilitiesButton.Width = 180;
-            ChangeFacilitiesButton.Height = 60;
-            ChangeFacilitiesButton.BorderBrush = Brushes.Black;
-            ChangeFacilitiesButton.BorderThickness = new Thickness(2);
-            ChangeFacilitiesButton.FontSize = 16;
-
-            ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
-
-            Grid.SetRow(ChangeFacilitiesButton, 3);
-            Grid.SetColumn(ChangeFacilitiesButton, 4);
-            LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
-<<<<<<< HEAD
->>>>>>> e7f1b30f4d7883082258fc4304bcaeea212eb5e6
-=======
->>>>>>> a46999b3cc0cc02d486b51ae63c8964ad1bb5aab
 
         }
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
@@ -419,28 +396,17 @@ namespace camping.WPF
 
             if (isUpdating)
             {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a46999b3cc0cc02d486b51ae63c8964ad1bb5aab
+
                 changeFacilitiesButton.Content = "Opslaan";
             }
             else
             {
                 changeFacilitiesButton.Content = "Aanpassen faciliteiten";
-<<<<<<< HEAD
-                SaveColors();
-=======
+                saveColors();
+
                 button.Content = "Opslaan";
             }
-            else
-            {
-                button.Content = "Aanpassen faciliteiten";
-                saveColors();
->>>>>>> e7f1b30f4d7883082258fc4304bcaeea212eb5e6
-=======
-                saveColors();
->>>>>>> a46999b3cc0cc02d486b51ae63c8964ad1bb5aab
+
             }
         }
 
