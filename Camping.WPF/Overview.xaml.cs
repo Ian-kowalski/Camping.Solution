@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
@@ -28,6 +29,9 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
+        private Ellipse[] facilityList {  get; set; }
+        private Site currentSelected {  get; set; }
+        private bool isUpdating { get; set; }
 
         public Overview()
         {
@@ -85,20 +89,14 @@ namespace camping.WPF
                 rowDef.Height = new GridLength(50);
                 CampSiteList.RowDefinitions.Add(rowDef);
 
-<<<<<<< HEAD
                 Button button = new Button();
                 button.Content = $"Plek {site.CampSiteID}";
                 button.Margin = new Thickness(128, 4, 4, 4);
 
-                // De volledige campsite wordt meegegeven aan de button.
-                // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
-                button.Tag = site;
                 
+                //geeft site mee voor de info
                 button.Click += (sender, e) => displaySiteInformation(site);
-
-=======
-                Button button = createSiteButton(site);
->>>>>>> d459a2515f6afada48a912a381644632cd629f08
+                Button createSiteButton = createSite(site);
 
                 Grid.SetRow(button, rowNumber);
                 CampSiteList.Children.Add(button);
@@ -106,7 +104,7 @@ namespace camping.WPF
             }
         }
 
-        private Button createSiteButton(Site site) {
+        private Button createSite(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(142, 4, 4, 4);
@@ -147,11 +145,68 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
-        public void displaySiteInformation (Site site)
+        private void displaySiteInformation(Site site)
         {
             SizeTextField.Content = site.Size;
+            var colors = GetFacilityColors(site);
+            facilityList = new Ellipse[]{ HasWaterSupply, OutletPresent, PetsAllowed, HasShadow, AtWater };
+            for (int i = 0; i < colors.Count && i < facilityList.Length; i++)
+            {
+                
+                SolidColorBrush solidColorBrush = new SolidColorBrush(colors[i]);
+                facilityList[i].Fill = solidColorBrush;
+
+                facilityList[i].MouseLeftButtonDown += Facility_Click;
+            }
         }
 
-        
+        private void Facility_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (isUpdating)
+            {
+                // Update the color of the clicked ellipse based on your logic
+                Ellipse clickedEllipse = (Ellipse)sender;
+                int index = Array.IndexOf(facilityList, clickedEllipse);
+
+                // Refresh the displayed information
+                MessageBox.Show("clicked facility");
+            }
+        }
+
+
+        private List<Color> GetFacilityColors(Site site)
+        {
+            List<Color> colors = new List<Color>();
+
+            colors.Add(site.HasWaterSupply ? Colors.Green : Colors.Red);
+            colors.Add(site.OutletPresent ? Colors.Green : Colors.Red);
+            colors.Add(site.PetsAllowed ? Colors.Green : Colors.Red);
+            colors.Add(site.HasShadow ? Colors.Green : Colors.Red);
+            colors.Add(site.AtWater ? Colors.Green : Colors.Red);
+            
+            return colors;
+        }
+
+        private void ChangeFacilitiesButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Toggle the updating state
+            isUpdating = !isUpdating;
+
+            if (isUpdating)
+            {
+                ChangeFacilitiesButton.Content = "Opslaan";
+            }
+            else
+            {
+                ChangeFacilitiesButton.Content = "Aanpassen faciliteiten";
+                SaveColors();
+            }
+        }
+
+        private void SaveColors()
+        {
+            // Save the current colors or perform any other action
+            // For example, you can save to a file or a data structure
+        }
     }
 }
