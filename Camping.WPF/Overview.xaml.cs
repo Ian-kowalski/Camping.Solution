@@ -153,10 +153,10 @@ namespace camping.WPF
         }
 
         // highlight de geselecteerde site
-        private void onSitePress(object o) {
-            if (o is Area && o is not null)
+        private void onSitePress(Location location) {
+            if (location is Area && location is not null)
             {
-                Area area = o as Area;
+                Area area = location as Area;
                 SelectedSite = null;
                 SelectedStreet = null;
                 SelectedArea = area;
@@ -164,9 +164,9 @@ namespace camping.WPF
                 displayAllLocations();
             }
             else
-            if (o is Street && o is not null)
+            if (location is Street && location is not null)
             {
-                Street street = o as Street;
+                Street street = location as Street;
                 SelectedSite = null;
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
@@ -174,14 +174,15 @@ namespace camping.WPF
                 displayAllLocations();
             }
             else
-            if (o is Site && o is not null)
+            if (location is Site && location is not null)
             {
-                Site site = o as Site;
+                Site site = location as Site;
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
                 displayAllLocations();
             }
+            displayInformation(location);
         }
 
 
@@ -283,19 +284,63 @@ namespace camping.WPF
             connection.BreakConnection();
         }
 
-        private void displaySiteInformation(Site site)
+        private void displayInformation(Location location)
         {
-            SizeTextField.Content = site.Size;
-            var colors = GetFacilityColors(site);
-            facilityList = new Ellipse[]{ HasWaterSupply, OutletPresent, PetsAllowed, HasShadow, AtWater };
-            for (int i = 0; i < colors.Count && i < facilityList.Length; i++)
-            {
-                
-                SolidColorBrush solidColorBrush = new SolidColorBrush(colors[i]);
-                facilityList[i].Fill = solidColorBrush;
+            LocationInfoGrid.Children.Clear();
 
-                facilityList[i].MouseLeftButtonDown += Facility_Click;
+            CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
+            CreateAndAddLabel("Faciliteiten", 24, 0, 2);
+            CreateAndAddLabel("Overig", 24, 0, 3);
+
+            if (location is Site) {
+                CreateAndAddLabel("Oppervlak: ", 24, 0, 1);
+                CreateAndAddLabel(Convert.ToString(((Site)location).Size), 24, 1, 1);
             }
+
+            CreateAndAddFacility("HasWaterSupply", 60, 1, 2, location);
+            CreateAndAddFacility("OutletPresent", 60, 2, 2, location);
+            CreateAndAddFacility("HasShadow", 60, 1, 3, location);
+            CreateAndAddFacility("AtWater", 60, 2, 3, location);
+            CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
+
+
+        }
+        private void CreateAndAddLabel(string content, int fontSize, int column, int row)
+        {
+            Label dynamicLabel = new Label
+            {
+                Content = content,
+                FontSize = fontSize,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+
+            Grid.SetColumn(dynamicLabel, column);
+            Grid.SetRow(dynamicLabel, row);
+
+            LocationInfoGrid.Children.Add(dynamicLabel);
+        }
+
+        private void CreateAndAddFacility(string name, int diameter, int column, int row, Location location)
+        {
+            Ellipse facility = new Ellipse
+            {
+                Name = name,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = diameter,
+                Height = diameter
+            };
+
+            Grid.SetColumn(facility, column);
+            Grid.SetRow(facility, row);
+
+            var color = GetFacilityColor(location, facility);
+
+                SolidColorBrush solidColorBrush = new SolidColorBrush(color);
+                facility.Fill = solidColorBrush;
+                facility.MouseLeftButtonDown += Facility_Click;
+
+            LocationInfoGrid.Children.Add(facility);
         }
 
         private void Facility_Click(object sender, MouseButtonEventArgs e)
@@ -312,17 +357,32 @@ namespace camping.WPF
         }
 
 
-        private List<Color> GetFacilityColors(Site site)
+        private Color GetFacilityColor(Location location, Ellipse facility)
         {
-            List<Color> colors = new List<Color>();
+            Color color = Colors.Red; // Default color
 
-            colors.Add(site.HasWaterSupply ? Colors.Green : Colors.Red);
-            colors.Add(site.OutletPresent ? Colors.Green : Colors.Red);
-            colors.Add(site.PetsAllowed ? Colors.Green : Colors.Red);
-            colors.Add(site.HasShadow ? Colors.Green : Colors.Red);
-            colors.Add(site.AtWater ? Colors.Green : Colors.Red);
-            
-            return colors;
+            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "OutletPresent" && location.OutletPresent)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "PetsAllowed" && location.PetsAllowed)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "HasShadow" && location.HasShadow)
+            {
+                color = Colors.Green;
+            }
+            else if (facility.Name == "AtWater" && location.AtWater)
+            {
+                color = Colors.Green;
+            }
+
+            return color;
         }
 
         private void ChangeFacilitiesButton_Click(object sender, RoutedEventArgs e)
