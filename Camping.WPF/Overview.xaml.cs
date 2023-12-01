@@ -1,22 +1,9 @@
 ﻿using camping.Core;
 using camping.Database;
-using Camping.WPF;
-using Renci.SshNet.Common;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace camping.WPF
 {
@@ -74,13 +61,14 @@ namespace camping.WPF
             }
         }
 
-        
+
         // laat de straten zien van de area
         private void displayStreets(int areaID)
         {
             foreach (Street street in retrieveData.Streets)
             {
-                if (street.AreaID == areaID && street.Visible) {
+                if (street.AreaID == areaID && street.Visible)
+                {
                     RowDefinition rowDef = new RowDefinition();
                     rowDef.Height = new GridLength(50);
                     CampSiteList.RowDefinitions.Add(rowDef);
@@ -95,16 +83,18 @@ namespace camping.WPF
 
                     displaySites(street.StreetID);
                 }
-                
-                
+
+
             }
         }
 
         // laat de sites zien van de straat
-        private void displaySites(int streetID) {
+        private void displaySites(int streetID)
+        {
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == streetID && site.Visible) {
+                if (site.StreetID == streetID && site.Visible)
+                {
 
 
                     RowDefinition rowDef = new RowDefinition();
@@ -143,12 +133,15 @@ namespace camping.WPF
 
 
         // toggled de visibility van de sites van een straat
-        private void toggleChildrenVisibility(Street street) {
+        private void toggleChildrenVisibility(Street street)
+        {
 
-            foreach (Site site in retrieveData.Sites) {
-                if (site.StreetID == street.StreetID) { 
+            foreach (Site site in retrieveData.Sites)
+            {
+                if (site.StreetID == street.StreetID)
+                {
                     site.Visible = !site.Visible;
-                } 
+                }
 
             }
 
@@ -156,7 +149,8 @@ namespace camping.WPF
         }
 
         // verbergt alle sites van de straat
-        private void hideChildren(Street street) {
+        private void hideChildren(Street street)
+        {
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == street.StreetID)
@@ -167,7 +161,8 @@ namespace camping.WPF
         }
 
 
-        private Button createSiteButton(Site site) {
+        private Button createSiteButton(Site site)
+        {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(142, 4, 4, 4);
@@ -210,8 +205,8 @@ namespace camping.WPF
 
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
-            SetButtonState((Button)sender, 
-                new[] { SiteOverview, SiteInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
+            SetButtonState((Button)sender,
+                new[] { SiteOverview, SiteInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo },
                 new[] { SiteControlButton, AddReservationButton, ReservationsButton }
                 );
         }
@@ -223,14 +218,36 @@ namespace camping.WPF
             {
                 button.IsEnabled = button != selectedButton;
             }
-            for (int i = 0; i < BorderElements.Length; i+=2)
+            for (int i = 0; i < BorderElements.Length; i += 2)
             {
-                BorderElements[i].Visibility = i/2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
+                BorderElements[i].Visibility = i / 2 == Array.IndexOf(buttons, selectedButton) ? Visibility.Visible : Visibility.Hidden;
                 BorderElements[i + 1].Visibility = BorderElements[i].Visibility;
             }
 
             AnnulerenButton.Visibility = selectedButton == ReservationsButton ? Visibility.Visible : Visibility.Hidden;
 
+        }
+
+        private void AanpassenOrSaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            EnabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox });
+            EnabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
+        }
+
+        private void EnabledReservationInfoTextBoxes(TextBox[] TextBoxElements)
+        {
+            foreach (UIElement element in TextBoxElements)
+            {
+                element.IsEnabled = !element.IsEnabled;
+            }
+        }
+
+        private void EnabledReservationInfodatePicker(DatePicker[] TextBoxElements)
+        {
+            foreach (UIElement element in TextBoxElements)
+            {
+                element.IsEnabled = !element.IsEnabled;
+            }
         }
     }
 }
