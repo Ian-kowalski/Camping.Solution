@@ -44,8 +44,9 @@ namespace Camping.WPF
             }
             List<Reservation> reservations = retrieveData.GetReservations(date);
 
-            int i = 0;
+            
             foreach (Reservation reservation in reservations) {
+                int i = 0;
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(50);
                 grid.RowDefinitions.Add(row);
@@ -57,9 +58,6 @@ namespace Camping.WPF
                 AddLastName(grid, reservation, i);
                 AddStartDate(grid, reservation, i);
                 AddEndDate(grid, reservation, i);
-                AddPhoneNr(grid, reservation, i);
-
-                AddButton(grid, reservation, i);
                 i++;
             }
 

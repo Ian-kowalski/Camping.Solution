@@ -158,6 +158,8 @@ namespace camping.WPF
                 BorderElements[i + 1].Visibility = BorderElements[i].Visibility;
             }
 
+            AnnulerenButton.Visibility = selectedButton == ReservationsButton ? Visibility.Visible : Visibility.Hidden;
+
         }
     }
 }
