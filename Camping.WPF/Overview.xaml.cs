@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static DevExpress.Data.Helpers.ExpressiveSortInfo;
 
 namespace camping.WPF
 {
@@ -42,6 +43,9 @@ namespace camping.WPF
         private Street? SelectedStreet;
 
         private Site? SelectedSite;
+
+        private Location selectedLocation;
+        private Button changeFacilitiesButton;
 
         public Overview()
         {
@@ -160,6 +164,7 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = null;
                 SelectedArea = area;
+                selectedLocation = area;
                 toggleChildrenVisibility(area);
                 displayAllLocations();
             }
@@ -170,6 +175,7 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                selectedLocation = street;
                 toggleChildrenVisibility(street);
                 displayAllLocations();
             }
@@ -180,6 +186,7 @@ namespace camping.WPF
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                selectedLocation = site;
                 displayAllLocations();
             }
             displayInformation(location);
@@ -303,7 +310,18 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 60, 2, 3, location);
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
+            changeFacilitiesButton = new Button();
+            changeFacilitiesButton.Name = "ChangeFacilitiesButton";
+            changeFacilitiesButton.Content = "Aanpassen faciliteiten";
+            changeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
+            changeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
+            changeFacilitiesButton.Width = 180;
+            changeFacilitiesButton.Height = 60;
+            changeFacilitiesButton.Click += ChangeFacilitiesButton_Click;
+            Grid.SetColumn(changeFacilitiesButton, 4);
+            Grid.SetRow(changeFacilitiesButton, 3);
 
+            LocationInfoGrid.Children.Add(changeFacilitiesButton);
         }
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
         {
@@ -349,10 +367,10 @@ namespace camping.WPF
             {
                 // Update the color of the clicked ellipse based on your logic
                 Ellipse clickedEllipse = (Ellipse)sender;
-                int index = Array.IndexOf(facilityList, clickedEllipse);
+
 
                 // Refresh the displayed information
-                MessageBox.Show("clicked facility");
+                MessageBox.Show(clickedEllipse.Name);
             }
         }
 
@@ -361,27 +379,12 @@ namespace camping.WPF
         {
             Color color = Colors.Red; // Default color
 
-            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply)
-            {
-                color = Colors.Green;
-            }
-            else if (facility.Name == "OutletPresent" && location.OutletPresent)
-            {
-                color = Colors.Green;
-            }
-            else if (facility.Name == "PetsAllowed" && location.PetsAllowed)
-            {
-                color = Colors.Green;
-            }
-            else if (facility.Name == "HasShadow" && location.HasShadow)
-            {
-                color = Colors.Green;
-            }
-            else if (facility.Name == "AtWater" && location.AtWater)
-            {
-                color = Colors.Green;
-            }
-
+            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply) color = Colors.Green;
+            else if (facility.Name == "OutletPresent" && location.OutletPresent) color = Colors.Green;
+            else if (facility.Name == "PetsAllowed" && location.PetsAllowed) color = Colors.Green;
+            else if (facility.Name == "HasShadow" && location.HasShadow) color = Colors.Green;
+            else if (facility.Name == "AtWater" && location.AtWater) color = Colors.Green;
+            
             return color;
         }
 
@@ -392,11 +395,11 @@ namespace camping.WPF
 
             if (isUpdating)
             {
-                ChangeFacilitiesButton.Content = "Opslaan";
+                changeFacilitiesButton.Content = "Opslaan";
             }
             else
             {
-                ChangeFacilitiesButton.Content = "Aanpassen faciliteiten";
+                changeFacilitiesButton.Content = "Aanpassen faciliteiten";
                 SaveColors();
             }
         }

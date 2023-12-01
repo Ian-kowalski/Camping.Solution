@@ -52,7 +52,7 @@
                 </Grid.RowDefinitions>
 
                 
-                <Button x:Name="ChangeFacilitiesButton" Content="Aanpassen faciliteiten" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="4" Grid.Row="3" Width="180" Height="60" Click="ChangeFacilitiesButton_Click"></Button>
+                
             </Grid>
         </Border>
 
