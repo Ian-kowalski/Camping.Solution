@@ -74,8 +74,11 @@ namespace camping.WPF
                 addNewRowDefinition();
 
                 Button button = createSiteButton(area);
-                if (SelectedArea == area) button.Background = Brushes.LightBlue;
-                else button.Background = Brushes.Transparent;
+                if (SelectedArea == area) button.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
+                else button.Background = new SolidColorBrush(Color.FromRgb(190, 190, 190));
+                button.BorderBrush = Brushes.Black;
+                button.BorderThickness = new Thickness(2);
+                button.FontSize = 16;
                 button.Click += (sender, e) => { onSitePress(area); };
 
                 Grid.SetRow(button, rowLength);
@@ -99,8 +102,11 @@ namespace camping.WPF
                     addNewRowDefinition();
 
                     Button button = createSiteButton(street);
-                    if (SelectedStreet == street) button.Background = Brushes.LightBlue;
-                    else button.Background = Brushes.Transparent;
+                    if (SelectedStreet == street) button.Background = new SolidColorBrush(Color.FromArgb(185, 160, 200, 240));
+                    else button.Background = new SolidColorBrush(Color.FromRgb(210, 210, 210));
+                    button.BorderBrush = Brushes.Black;
+                    button.BorderThickness = new Thickness(2);
+                    button.FontSize = 16;
                     button.Click += (sender, e) => { onSitePress(street); };
 
                     Grid.SetRow(button, rowLength);
@@ -126,8 +132,13 @@ namespace camping.WPF
                     
 
                     Button button = createSiteButton(site);
-                    if (SelectedSite == site) button.Background = Brushes.LightBlue;
-                    else button.Background = Brushes.Transparent;
+
+                    if (SelectedSite == site) button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230));
+                    else button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
+                    button.BorderBrush = Brushes.Black;
+                    button.BorderThickness = new Thickness(2);
+                    button.FontSize = 16;
+
                     button.Click += (sender, e) => { onSitePress(site); };
 
                     Grid.SetRow(button, rowLength);
@@ -230,7 +241,7 @@ namespace camping.WPF
         private Button createSiteButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
-            button.Margin = new Thickness(142, 4, 4, 4);
+            button.Margin = new Thickness(272, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
@@ -242,7 +253,7 @@ namespace camping.WPF
         {
             Button button = new Button();
             button.Content = $"Straat {street.StreetID}";
-            button.Margin = new Thickness(80, 4, 4, 4);
+            button.Margin = new Thickness(144, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
