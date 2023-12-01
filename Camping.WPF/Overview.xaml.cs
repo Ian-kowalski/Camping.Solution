@@ -51,13 +51,13 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
-            displayAllSites();
+            displayAllLocations();
 
             Closing += OnWindowClosing;
         }
 
-        // Laat alleen de areas zien
-        private void displayAllSites()
+        
+        private void displayAllLocations()
         {
             CampSiteList.Children.Clear();
             CampSiteList.RowDefinitions.Clear();
@@ -68,7 +68,7 @@ namespace camping.WPF
         
         
 
-        // laat de areas zien
+        
         private void displayAreas()
         {
             foreach (Area area in retrieveData.Areas)
@@ -77,7 +77,7 @@ namespace camping.WPF
 
                 addNewRowDefinition();
 
-                Button button = createSiteButton(area);
+                Button button = createLocationButton(area);
                 if (SelectedArea == area) button.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
                 else button.Background = new SolidColorBrush(Color.FromRgb(190, 190, 190));
                 button.BorderBrush = Brushes.Black;
@@ -105,7 +105,7 @@ namespace camping.WPF
 
                     addNewRowDefinition();
 
-                    Button button = createSiteButton(street);
+                    Button button = createLocationButton(street);
                     if (SelectedStreet == street) button.Background = new SolidColorBrush(Color.FromArgb(185, 160, 200, 240));
                     else button.Background = new SolidColorBrush(Color.FromRgb(210, 210, 210));
                     button.BorderBrush = Brushes.Black;
@@ -135,7 +135,7 @@ namespace camping.WPF
                     addNewRowDefinition();
                     
 
-                    Button button = createSiteButton(site);
+                    Button button = createLocationButton(site);
 
                     if (SelectedSite == site) button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230));
                     else button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
@@ -161,7 +161,7 @@ namespace camping.WPF
                 SelectedStreet = null;
                 SelectedArea = area;
                 toggleChildrenVisibility(area);
-                displayAllSites();
+                displayAllLocations();
             }
             else
             if (location is Street && location is not null)
@@ -171,7 +171,7 @@ namespace camping.WPF
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
                 toggleChildrenVisibility(street);
-                displayAllSites();
+                displayAllLocations();
             }
             else
             if (location is Site && location is not null)
@@ -180,7 +180,7 @@ namespace camping.WPF
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-                displayAllSites();
+                displayAllLocations();
             }
             displayInformation(location);
         }
@@ -243,7 +243,7 @@ namespace camping.WPF
         }
 
 
-        private Button createSiteButton(Site site) {
+        private Button createLocationButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(272, 4, 4, 4);
@@ -254,7 +254,7 @@ namespace camping.WPF
 
             return button;
         }
-        private Button createSiteButton(Street street)
+        private Button createLocationButton(Street street)
         {
             Button button = new Button();
             button.Content = $"Straat {street.StreetID}";
@@ -266,7 +266,7 @@ namespace camping.WPF
 
             return button;
         }
-        private Button createSiteButton(Area area)
+        private Button createLocationButton(Area area)
         {
             Button button = new Button();
             button.Content = $"Gebied {area.AreaID}";
