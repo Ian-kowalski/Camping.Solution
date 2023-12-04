@@ -40,7 +40,7 @@ namespace camping.WPF
 
         private Area? SelectedArea;
 
-        private List<Reservation> toBeCancel;
+        private List<Reservation> toBeCancel = new List<Reservation>();
 
         private Reservation selectedReservation;
 
@@ -415,7 +415,7 @@ namespace camping.WPF
                 else if (facility.Name == "HasShadow" && tempLocation.HasShadow) color = Colors.Green;
                 else if (facility.Name == "AtWater" && tempLocation.AtWater) color = Colors.Green;
             }
-            if(tempLocation is Street or Site)
+/*            if(tempLocation is Street or Site)
             {
                 Site siteorstreet = tempLocation as Site;
                 if(facility.Name == "HasWaterSupply")
@@ -424,7 +424,7 @@ namespace camping.WPF
                     if (siteorstreet.Inherits && SelectedStreet.HasWaterSupply) color = Colors.Green;
                     else color = Colors.Red;
                 }
-            }
+            }*/
 
             return color;
         }
@@ -522,6 +522,7 @@ namespace camping.WPF
             Grid InfoGrid = GetGridOfReservationLine(reservation);
             Grid.SetColumn(InfoGrid, 1);
             Grid.SetRow(InfoGrid, i);
+            InfoGrid.MouseDown += (sender, e) => { RowClick(reservation); };
             grid.Children.Add(InfoGrid);
         }
         private Grid GetGridOfReservationLine(Reservation reservation)
@@ -529,11 +530,14 @@ namespace camping.WPF
 
             Grid grid = new Grid();
             grid.MouseDown += (sender, e) => { fillReservationInfoGrid(reservation); };
-            grid.Tag = reservation;
 
-            if (reservation.ReservationID == reservation.ReservationID)
+            if (selectedReservation is not null)
             {
-                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
+                if (reservation.ReservationID == selectedReservation.ReservationID)
+                {
+                    grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
+                }
+                else { grid.Background = Brushes.Transparent; }
             }
             else { grid.Background = Brushes.Transparent; }
 
@@ -596,7 +600,7 @@ namespace camping.WPF
             selectedReservation = reservation;
 
 
-            SiteIDBox.Text = reservation.ReservationID.ToString();
+            SiteIDBox.Text = reservation.SiteID.ToString();
             StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
             EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
 
@@ -609,6 +613,13 @@ namespace camping.WPF
 
             HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
             PostalCodeBox.Text = reservation.Guest.PostalCode;
+        }
+        private void RowClick(Reservation reservation)
+        {
+            selectedReservation = reservation;
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+
+            displayAllReservations();
         }
 
         private void Un_Checkt(Reservation reservation, object sender)
