@@ -463,6 +463,16 @@ namespace camping.WPF
 
         private void displayAllReservations()
         {
+            Grid grid = new Grid();
+            for (int counter = 0; counter < 6; counter++)
+            {
+                ColumnDefinition col = new ColumnDefinition();
+                if (counter > 2)
+                {
+                    col.Width = new GridLength(2, GridUnitType.Star);
+                }
+                grid.ColumnDefinitions.Add(col);
+            }
             List<Reservation> reservations = retrieveData.Reservations;
            
             int i = 0;
@@ -548,6 +558,20 @@ namespace camping.WPF
                 grid.Children.Add(label);
             }
             return grid;
+        }
+        private void fillReservationInfoGrid(Reservation reservation)
+        {
+            SiteIDBox.Text = reservation.ReservationID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
         }
 
         private void addCancelCheckBoxColum(Grid grid, int i, Reservation reservation)
