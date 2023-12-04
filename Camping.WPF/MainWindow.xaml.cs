@@ -42,11 +42,6 @@ namespace Camping.WPF
             Closing += OnWindowClosing;
         }
 
-        RowDefinition rowDef1;
-        TextBlock campSiteIDText;
-        Button moreInfoButton;
-        TextBlock campSiteAvailabilityText;
-
         public void UpdateGrid()
         {
             // Removes all existing items in grid
@@ -117,17 +112,6 @@ namespace Camping.WPF
             return surfaceAreas[index];
         }
 
-        private void addRow(object sender, RoutedEventArgs e)
-        {
-            rowDef1 = new RowDefinition();
-            grid.RowDefinitions.Add(rowDef1);
-        }
-
-        private void clearRow(object sender, RoutedEventArgs e)
-        {
-            grid.RowDefinitions.Clear();
-        }
-
 
 
         private void AddReservationButton_Click(object sender, RoutedEventArgs e)
@@ -151,8 +135,10 @@ namespace Camping.WPF
 
         private void viewReservationsButton_Click(object sender, RoutedEventArgs e)
         {
-            reservationView resView = new reservationView();
+            reservationView resView = new reservationView(retrieveData);
             resView.ShowDialog();
+
+            UpdateGrid();
         }
     }
 }

@@ -51,9 +51,6 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-
-
-
             </Grid>
         </Border>
 
@@ -102,8 +99,6 @@
                     <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" Margin="46,4,22,5"/>
                     <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2" Margin="92,4,104,5" Grid.ColumnSpan="2"/>
                     <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="123,4,161,5" Grid.ColumnSpan="2"/>
-
-
                 </Grid>
 
                 <ScrollViewer x:Name="ReservationListScrollViewer" Grid.Row="2" BorderBrush="#000000" BorderThickness="3" Margin="8,8,8,8"/>

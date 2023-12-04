@@ -15,20 +15,16 @@ namespace Camping.WPF
     /// </summary>
     public partial class reservationView : Window
     {
-        private ReservationData rData;
-        private SiteData sData;
         RetrieveData retrieveData;
         FilterDialog filterDialog;
         ChangeReservation changeReservationDialog;
         List<int> toBeCancel = new List<int>();
 
-        DateTime date = DateTime.Now;
-        public reservationView()
+        DateTime date = DateTime.Today;
+        public reservationView(RetrieveData retrieveData)
         {
             InitializeComponent();
-            rData = new ReservationData();
-            sData = new SiteData();
-            retrieveData = new(sData,rData);
+            this.retrieveData = retrieveData;
             InitializeGrid();
 
         }
@@ -37,40 +33,44 @@ namespace Camping.WPF
         private void InitializeGrid()
         {
             Grid grid = new Grid();
-            for (int i = 0; i < 7; i++)
+            for (int counter = 0; counter < 2; counter++)
             {
                 ColumnDefinition col = new ColumnDefinition();
-                if (i != 0)
+                if (counter > 2)
                 {
                     col.Width = new GridLength(2, GridUnitType.Star);
                 }
                 grid.ColumnDefinitions.Add(col);
             }
             List<Reservation> reservations = retrieveData.GetReservations(date);
-            for (int i = 0; i < reservations.Count; i++)
-            {
+
+            
+            foreach (Reservation reservation in reservations) {
+                int i = 0;
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(50);
                 grid.RowDefinitions.Add(row);
 
-                AddCheckbox(grid, reservations, i);
+                AddCheckbox(grid, reservation, i);
 
-                AddID(grid, reservations, i);
-                AddLastName(grid, reservations, i);
-                AddStartDate(grid, reservations, i);
-                AddEndDate(grid, reservations, i);
-                AddPhoneNr(grid, reservations, i);
-
-                AddButton(grid, reservations, i);
+                AddID(grid, reservation, i);
+                AddSiteID(grid, reservation, i);
+                AddLastName(grid, reservation, i);
+                AddStartDate(grid, reservation, i);
+                AddEndDate(grid, reservation, i);
+                i++;
             }
+
+            
             grid.ShowGridLines = true;
             Viewer.Content = grid;
         }
-        private void AddCheckbox(Grid grid, List<Reservation> reservations, int i)
+        private void AddCheckbox(Grid grid, Reservation reservation, int i)
         {
             CheckBox CB = new CheckBox();
             CB.Checked += CB_checkt;
-            CB.Name = "CB"+reservations.ElementAt(i).ReservationID.ToString();
+            CB.Unchecked += CB_checkt;
+            CB.Name = "CB" + reservation.ReservationID.ToString();
             Grid.SetColumn(CB, 0);
             Grid.SetRow(CB, i);
             CB.HorizontalAlignment = HorizontalAlignment.Center;
@@ -78,10 +78,10 @@ namespace Camping.WPF
             grid.Children.Add(CB);
         }
 
-        private void AddID(Grid grid, List<Reservation> reservations, int i)
+        private void AddID(Grid grid, Reservation reservation, int i)
         {
             TextBlock TB = new TextBlock();
-            TB.Text = reservations.ElementAt(i).ReservationID.ToString();
+            TB.Text = reservation.ReservationID.ToString();
             Grid.SetColumn(TB, 1);
             Grid.SetRow(TB, i);
             TB.HorizontalAlignment = HorizontalAlignment.Center;
@@ -89,61 +89,49 @@ namespace Camping.WPF
             grid.Children.Add(TB);
         }
 
-        private void AddLastName(Grid grid, List<Reservation> reservations, int i)
+        private void AddSiteID(Grid grid, Reservation reservation, int i)
         {
-            TextBlock ID = new TextBlock();
-            ID.Text = reservations.ElementAt(i).Guest.LastName.ToString();
-            Grid.SetColumn(ID, 2);
-            Grid.SetRow(ID, i);
-            ID.HorizontalAlignment = HorizontalAlignment.Center;
-            ID.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(ID);
+            TextBlock TB = new TextBlock();
+            TB.Text = reservation.SiteID.ToString();
+
+            Grid.SetColumn(TB, 2);
+            Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
         }
 
-        private void AddStartDate(Grid grid, List<Reservation> reservations, int i)
+        private void AddLastName(Grid grid, Reservation reservation, int i)
         {
-            TextBlock ID = new TextBlock();
-            ID.Text = reservations.ElementAt(i).StartDate.ToShortDateString();
-            Grid.SetColumn(ID, 3);
-            Grid.SetRow(ID, i);
-            ID.HorizontalAlignment = HorizontalAlignment.Center;
-            ID.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(ID);
+            TextBlock TB = new TextBlock();
+            TB.Text = reservation.Guest.LastName.ToString();
+            Grid.SetColumn(TB, 3);
+            Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
         }
 
-        private void AddEndDate(Grid grid, List<Reservation> reservations, int i)
+        private void AddStartDate(Grid grid, Reservation reservation, int i)
         {
-            TextBlock ID = new TextBlock();
-            ID.Text = reservations.ElementAt(i).EndDate.ToShortDateString();
-            Grid.SetColumn(ID, 4);
-            Grid.SetRow(ID, i);
-            ID.HorizontalAlignment = HorizontalAlignment.Center;
-            ID.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(ID);
+            TextBlock TB = new TextBlock();
+            TB.Text = reservation.StartDate.ToShortDateString();
+            Grid.SetColumn(TB, 4);
+            Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
         }
 
-        private void AddPhoneNr(Grid grid, List<Reservation> reservations, int i)
+        private void AddEndDate(Grid grid, Reservation reservation, int i)
         {
-            TextBlock ID = new TextBlock();
-            ID.Text = reservations.ElementAt(i).Guest.PhoneNumber.ToString();
-            Grid.SetColumn(ID, 5);
-            Grid.SetRow(ID, i);
-            ID.HorizontalAlignment = HorizontalAlignment.Center;
-            ID.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(ID);
-        }
-
-        private void AddButton(Grid grid, List<Reservation> reservations, int i)
-        {
-            Button B = new Button();
-            B.Click += bewerkenButtonClick;
-            B.Name = "BewerkButton" + reservations.ElementAt(i).ReservationID.ToString();
-            B.Content = "bewerken";
-            Grid.SetColumn(B, 6);
-            Grid.SetRow(B, i);
-            B.HorizontalAlignment = HorizontalAlignment.Center;
-            B.VerticalAlignment = VerticalAlignment.Center;
-            grid.Children.Add(B);
+            TextBlock TB = new TextBlock();
+            TB.Text = reservation.EndDate.ToShortDateString();
+            Grid.SetColumn(TB, 5);
+            Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
         }
 
 
@@ -155,19 +143,17 @@ namespace Camping.WPF
             InitializeGrid();
         }
 
-        private void bewerkenButtonClick(object sender, RoutedEventArgs e)
+        private void bewerkenButtonClick(Reservation reservation)
         {
-            Button c = sender as Button;
-            char last_char = c.Name[c.Name.Length - 1];
-            changeReservationDialog = new ChangeReservation(last_char-'0');
+            changeReservationDialog = new ChangeReservation(reservation);
             changeReservationDialog.ShowDialog();
             
         }
-
+        
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
             string combinedString = string.Join(", ", toBeCancel);
-            string messageBoxText = "Do you want to cansel these resevations: "+ combinedString;
+            string messageBoxText = "Do you want to cancel these reservation(s): "+ combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
@@ -181,6 +167,7 @@ namespace Camping.WPF
                     foreach (var reservationNr in toBeCancel)
                     {
                         // ...Delete out of database
+                        retrieveData.DeleteReservation(reservationNr);
                     }
                     toBeCancel.Clear();
                     break;
@@ -196,8 +183,23 @@ namespace Camping.WPF
         private void CB_checkt(object sender, RoutedEventArgs e)
         {
             CheckBox c = sender as CheckBox;
-            char last_char = c.Name[c.Name.Length - 1];
-            toBeCancel.Add( last_char - '0');
+            int last_part = int.Parse(c.Name.Remove(0, 2));
+            if (c.IsChecked == true)
+            {
+                toBeCancel.Add(last_part);
+            }
+            else
+            {
+                toBeCancel.Remove(last_part);
+            }  
+            if(toBeCancel.Count != 0)
+            {
+                CancelButton.IsEnabled = true;
+            }
+            else
+            {
+                CancelButton.IsEnabled = false;
+            }
         }
     }
 }

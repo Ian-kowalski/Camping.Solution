@@ -11,6 +11,8 @@ namespace Camping.Core
     public interface ISiteData : INotifyPropertyChanged
     {
         public List<Site> GetSiteInfo();
+        public List<Street> GetStreetInfo();
+        public List<Area> GetAreaInfo();
 
         public List<int> GetCampSiteID(int reservationID);
 

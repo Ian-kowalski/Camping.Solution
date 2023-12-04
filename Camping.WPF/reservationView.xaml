@@ -8,11 +8,17 @@
         Title="reservationView" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="0,0,17,0" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width = "3*"/>
+            <ColumnDefinition Width = "2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,17,0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
@@ -20,33 +26,23 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Filter" Click="FilterClick"/>
             <Label Grid.Column="1" Content="Reserv Nr" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="2" Content="Achternaam" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="3" Content="Begin datum" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="4" Content="Eind datum" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="5" Content="Telefoon Nr" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label Grid.Column="6" Content="Bewerken" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Grid.Column="2" Content="plaats Nr" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Grid.Column="3" Content="Achternaam" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Grid.Column="4" Content="start datum" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Label Grid.Column="5" Content="eind datum" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
-        <ScrollViewer x:Name="Viewer" Grid.Row="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-            </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+
+
+        </Grid>
+
+        <ScrollViewer x:Name="Viewer" Grid.Column="0" Grid.Row="2">
         </ScrollViewer>
-        <Button x:Name="CancelButton" Content="anuleeren" Margin="0,20,20,20" Grid.Row="2" HorizontalAlignment="Right" Width="150" Click="CancelButtonClick"/>
+
+        <Button x:Name="CancelButton" Content="Annuleren" Margin="10,40,184,32" Grid.Row="3" Click="CancelButtonClick" IsEnabled="False"/>
+
 
     </Grid>
 </Window>

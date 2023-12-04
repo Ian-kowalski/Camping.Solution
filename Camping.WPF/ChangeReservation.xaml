@@ -7,7 +7,7 @@
         xmlns:Database="clr-namespace:camping.Database;assembly=camping.Database" x:Class="camping.WPF.ChangeReservation"
         mc:Ignorable="d"
         Title="Aanpassen reservering" Height="380" Width="800">
-    <Grid Margin="0,0,0,-6">
+    <Grid>
         <Label Margin="0,51,676,0" Content="Voornaam" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
         <TextBox x:Name="FirstName" Margin="0,56,503,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"></TextBox>
         <Label Margin="0,250,676,0" Content="Telefoonnummer" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
@@ -23,13 +23,13 @@
         <Label x:Name="ReservationID" Margin="0,51,266,0" Content="" FontSize="12" HorizontalAlignment="Right" Width="72" Height="33" VerticalAlignment="Top"/>
         <Label Margin="0,174,358,0" Content="Begin datum" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
         <Label Margin="0,133,357,0" Content="Postcode" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
-        <TextBox x:Name="StartDate" Margin="0,178,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
+        <DatePicker x:Name="StartDate" Margin="0,178,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
         <Label Margin="0,92,358,0" Content="Plaats Nr." FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
         <TextBox x:Name="PostalCode" Margin="0,138,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
         <Label Margin="0,54,355,0" Content="Reservering Nr." FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
         <TextBox x:Name="HouseNumber" Margin="0,97,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
         <Button x:Name="Change" Margin="0,250,178,0" Content="Aanpassen" FontSize="20" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="160" Click="Aanpassen_Click"/>
-        <TextBox x:Name="EndDate" Margin="0,217,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
+        <DatePicker x:Name="EndDate" Margin="0,217,178,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"/>
         <Label Margin="0,212,357,0" Content="Eind datum" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
     </Grid>
 </Window>

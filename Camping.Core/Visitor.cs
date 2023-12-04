@@ -12,6 +12,20 @@
         HouseNumber = houseNumber;
         PhoneNumber = phoneNumber;
     }
+
+    public Visitor()
+    {
+        VisitorID = -1;
+        FirstName = "<FirstName>";
+        LastName = "<LastName>";
+        Preposition = "<Preposition>";
+        Adress = "<thisStreet>";
+        City = "<thatCity";
+        PostalCode = "1234XX";
+        HouseNumber = -1;
+        PhoneNumber = 1234567;
+    }
+
     public int VisitorID { get; set; }
     public string FirstName { get; set; }
     public string LastName {  get; set; }

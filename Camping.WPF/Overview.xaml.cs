@@ -521,6 +521,7 @@ namespace camping.WPF
                 element.IsEnabled = !element.IsEnabled;
             }
         }
+
         private void AddCheckbox(Grid grid, Reservation reservation, int i)
         {
             CheckBox CB = new CheckBox();
