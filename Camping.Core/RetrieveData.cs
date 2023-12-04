@@ -19,9 +19,8 @@ namespace camping.Core
             this.siteData = siteData;
             this.reservationData = reservationData;
 
-            Sites = siteData.GetSiteInfo();
-            Streets = siteData.GetStreetInfo();
-            Areas = siteData.GetAreaInfo();
+            UpdateLocations();
+
             Reservations = reservationData.GetReservationInfo();
         }
 
@@ -113,6 +112,11 @@ namespace camping.Core
         {
             return reservationData.DeleteReservation(reservationID);
         }
-
+        public void UpdateLocations()
+        {
+            Sites = siteData.GetSiteInfo();
+            Streets = siteData.GetStreetInfo();
+            Areas = siteData.GetAreaInfo();
+        }
     }
 }

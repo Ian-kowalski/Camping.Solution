@@ -17,5 +17,6 @@ namespace Camping.Core
         public List<int> GetCampSiteID(int reservationID);
 
         public List<ReservationDates> GetAvailability(int siteID);
+        public void UpdateFacilities(Location location);
     }
 }
