@@ -263,8 +263,6 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
-
-
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
@@ -400,7 +398,6 @@ namespace camping.WPF
             }
         }
 
-
         private Color GetFacilityColor(Location location, Ellipse facility)
         {
             Color color = Colors.Red; // Default color
@@ -436,6 +433,8 @@ namespace camping.WPF
             // For example, you can save to a file or a data structure
         }
 
+
+
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
             setTabButtonState((Button)sender,
@@ -460,6 +459,7 @@ namespace camping.WPF
             AnnulerenButton.Visibility = selectedButton == ReservationsButton ? Visibility.Visible : Visibility.Hidden;
 
         }
+
 
 
         private void displayAllReservations()
@@ -491,13 +491,13 @@ namespace camping.WPF
 
         private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
         {
-            Grid InfoGrid = GetGridFullOfReservationInfo(reservation);
+            Grid InfoGrid = GetGridOfReservationLine(reservation);
             Grid.SetColumn(InfoGrid, 1);
             Grid.SetRow(InfoGrid, i);
             grid.Children.Add(InfoGrid);
         }
 
-        private Grid GetGridFullOfReservationInfo(Reservation reservation)
+        private Grid GetGridOfReservationLine(Reservation reservation)
         {
 
             Grid grid = new Grid();
@@ -549,20 +549,6 @@ namespace camping.WPF
             }
             return grid;
         }
-        private void fillReservationInfoGrid(Reservation reservation)
-        {
-            SiteIDBox.Text = reservation.ReservationID.ToString();
-            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
-            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
-            FirstNameBox.Text = reservation.Guest.FirstName;
-            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
-            LastNameBox.Text = reservation.Guest.LastName;
-            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
-            CityBox.Text = reservation.Guest.City.ToString();
-            AdressBox.Text = reservation.Guest.Adress;
-            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
-            PostalCodeBox.Text = reservation.Guest.PostalCode;
-        }
 
         private void addCancelCheckBoxColum(Grid grid, int i, Reservation reservation)
         {
@@ -596,6 +582,16 @@ namespace camping.WPF
             {
                 AnnulerenButton.IsEnabled = false;
             }
+        }
+
+        private void RowClick(Reservation reservation)
+        {
+            selectedReservation = reservation;
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+
+            fillReservationInfoTextBoxes(reservation);
+            displayAllReservations();
+
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
@@ -632,13 +628,31 @@ namespace camping.WPF
             displayAllReservations();
         }
 
+
+
+        private void fillReservationInfoTextBoxes(Reservation reservation)
+        {
+            SiteIDBox.Text = reservation.ReservationID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
+            EditReservationButton.Tag = reservation;
+        }
+
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             if (ReservationAanpassenButtonState)
             {
                 //TODO: check data in text fields and send to database
                 Checkfields();
-                saveReservation();
+                saveReservation(sender);
             }
 
             chanceAanpassenOrSaveButtonContent(sender);
@@ -646,8 +660,10 @@ namespace camping.WPF
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
         }
 
-        private void saveReservation()
+        private void saveReservation(object sender)
         {
+            Reservation oldReservation = (Reservation)((Button)sender).Tag;
+            //retrieveData.UpdateReservation();
             throw new NotImplementedException();
         }
 
@@ -678,15 +694,7 @@ namespace camping.WPF
             }
         }
 
-        private void RowClick(Reservation reservation)
-        {
-            selectedReservation = reservation;
-            ReservationInfoGrid.Visibility = Visibility.Visible;
 
-            fillReservationInfoGrid(reservation);
-            displayAllReservations();
-           
-        }
 
         private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {

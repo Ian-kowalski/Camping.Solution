@@ -12,7 +12,7 @@ namespace camping.Core
         public List<Site> Sites;
         public List<Street> Streets;
         public List<Area> Areas;
-        public List<Reservation> Reservations;
+        public List<Reservation> Reservations { get { return reservationData.GetReservationInfo(); } }
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
@@ -22,7 +22,6 @@ namespace camping.Core
             Sites = siteData.GetSiteInfo();
             Streets = siteData.GetStreetInfo();
             Areas = siteData.GetAreaInfo();
-            Reservations = reservationData.GetReservationInfo();
         }
 
         public Area GetAreaFromID(int id) {
