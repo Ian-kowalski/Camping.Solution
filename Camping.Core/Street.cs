@@ -16,6 +16,7 @@ public class Street : Location
 
     public int StreetID { get; set; }
     public int AreaID { get; set; }
+    public bool Inherits {  get; set; }
 
     public bool Visible = false;
 }

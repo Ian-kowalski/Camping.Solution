@@ -15,6 +15,7 @@ namespace camping.Core
         public bool OutletPresent { get; set; }
         public bool PetsAllowed { get; set; }
 
+
         protected Location(bool atWater, bool hasShadow, bool hasWaterSupply, bool outletPresent, bool petsAllowed)
         {
             AtWater = atWater;
