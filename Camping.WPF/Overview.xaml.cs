@@ -30,8 +30,8 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
-        private Ellipse[] facilityList {  get; set; }
-        private Site currentSelected {  get; set; }
+        private Ellipse[] facilityList { get; set; }
+        private Site currentSelected { get; set; }
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
@@ -54,6 +54,9 @@ namespace camping.WPF
             resData = new ReservationData();
             retrieveData = new RetrieveData(siteData, resData);
 
+            StartDateButton.DisplayDateStart = DateTime.Today;
+            EndDateButton.DisplayDateStart = DateTime.Today;
+
             displayAllLocations();
             displayAlReservations();
 
@@ -61,7 +64,7 @@ namespace camping.WPF
             Closing += onWindowClosing;
         }
 
-        
+
         private void displayAllLocations()
         {
             CampSiteList.Children.Clear();
@@ -100,7 +103,8 @@ namespace camping.WPF
         {
             foreach (Street street in retrieveData.Streets)
             {
-                if (street.AreaID == areaID && street.Visible) {
+                if (street.AreaID == areaID && street.Visible)
+                {
 
                     addNewRowDefinition();
 
@@ -123,7 +127,7 @@ namespace camping.WPF
 
             }
         }
-        
+
         // laat de sites zien van de straat
         private void displaySites(int streetID)
         {
@@ -133,7 +137,7 @@ namespace camping.WPF
                 {
 
                     addNewRowDefinition();
-                    
+
 
                     Button button = createLocationButton(site);
 
@@ -153,7 +157,8 @@ namespace camping.WPF
         }
 
         // highlight de geselecteerde site
-        private void onSitePress(Location location) {
+        private void onSitePress(Location location)
+        {
             if (location is Area && location is not null)
             {
                 Area area = location as Area;
@@ -204,12 +209,12 @@ namespace camping.WPF
                     {
                         hideChildren(street);
                     }
-                   
+
                 }
 
             }
 
-            
+
         }
 
         // toggled de visibility van de sites van een straat
@@ -217,14 +222,16 @@ namespace camping.WPF
         {
 
 
-            foreach (Site site in retrieveData.Sites) {
-                if (site.StreetID == street.StreetID) { 
+            foreach (Site site in retrieveData.Sites)
+            {
+                if (site.StreetID == street.StreetID)
+                {
                     site.Visible = !site.Visible;
                 }
 
             }
 
-            
+
         }
 
         // verbergt alle sites van de straat
@@ -239,7 +246,8 @@ namespace camping.WPF
             }
         }
 
-        private void addNewRowDefinition() {
+        private void addNewRowDefinition()
+        {
             RowDefinition rowDef = new RowDefinition();
             rowDef.Height = new GridLength(50);
             CampSiteList.RowDefinitions.Add(rowDef);
@@ -247,7 +255,8 @@ namespace camping.WPF
 
 
 
-        private Button createLocationButton(Site site) {
+        private Button createLocationButton(Site site)
+        {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(272, 4, 4, 4);
@@ -299,7 +308,8 @@ namespace camping.WPF
             CreateAndAddLabel("Faciliteiten", 24, 0, 2);
             CreateAndAddLabel("Overig", 24, 0, 3);
 
-            if (location is Site) {
+            if (location is Site)
+            {
                 CreateAndAddLabel("Oppervlak: ", 24, 0, 1);
                 CreateAndAddLabel(Convert.ToString(((Site)location).Size), 24, 1, 1);
             }
@@ -359,9 +369,9 @@ namespace camping.WPF
 
             var color = GetFacilityColor(location, facility);
 
-                SolidColorBrush solidColorBrush = new SolidColorBrush(color);
-                facility.Fill = solidColorBrush;
-                facility.MouseLeftButtonDown += facilityClick;
+            SolidColorBrush solidColorBrush = new SolidColorBrush(color);
+            facility.Fill = solidColorBrush;
+            facility.MouseLeftButtonDown += facilityClick;
 
             LocationInfoGrid.Children.Add(facility);
         }
@@ -389,7 +399,7 @@ namespace camping.WPF
             else if (facility.Name == "PetsAllowed" && location.PetsAllowed) color = Colors.Green;
             else if (facility.Name == "HasShadow" && location.HasShadow) color = Colors.Green;
             else if (facility.Name == "AtWater" && location.AtWater) color = Colors.Green;
-            
+
             return color;
         }
 
@@ -414,11 +424,11 @@ namespace camping.WPF
             // Save the current colors or perform any other action
             // For example, you can save to a file or a data structure
         }
-        
+
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
-            setTabButtonState((Button)sender, 
-                new[] { SiteOverview, LocationInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo }, 
+            setTabButtonState((Button)sender,
+                new[] { SiteOverview, LocationInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo },
                 new[] { SiteControlButton, AddReservationButton, ReservationsButton }
                 );
         }
@@ -457,7 +467,7 @@ namespace camping.WPF
             int i = 0;
             foreach (Reservation reservation in reservations)
             {
-                
+
                 RowDefinition row = new RowDefinition();
                 row.Height = new GridLength(50);
                 grid.RowDefinitions.Add(row);
@@ -513,6 +523,22 @@ namespace camping.WPF
             {
                 element.IsEnabled = !element.IsEnabled;
             }
+        }
+
+        private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
+        }
+
+        private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            AvailableCampsites availableCampsites = new AvailableCampsites(AddReservationGridList, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
+            //MessageBox.Show($"zoeken voor \n{StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)} tot {EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)}");
         }
     }
 }
