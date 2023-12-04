@@ -637,7 +637,7 @@ namespace camping.WPF
             {
                 combinedString += reservation.ReservationID.ToString();
             }
-            string messageBoxText = "Do you want to cancel these reservation(s): " + combinedString;
+            string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
