@@ -55,7 +55,8 @@ namespace camping.WPF
             retrieveData = new RetrieveData(siteData, resData);
 
             displayAllLocations();
-            displayAlReservations();
+
+            displayAllReservations();
 
 
             Closing += onWindowClosing;
@@ -245,9 +246,8 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
-
-
-        private Button createLocationButton(Site site) {
+        private Button createLocationButton(Site site)
+        {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
             button.Margin = new Thickness(272, 4, 4, 4);
@@ -476,33 +476,178 @@ namespace camping.WPF
 
         }
 
-        private void displayAlReservations()
+
+        private void displayAllReservations()
         {
-            Grid grid = new Grid();
-            for (int counter = 0; counter < 6; counter++)
-            {
-                ColumnDefinition col = new ColumnDefinition();
-                if (counter > 2)
-                {
-                    col.Width = new GridLength(2, GridUnitType.Star);
-                }
-                grid.ColumnDefinitions.Add(col);
-            }
             List<Reservation> reservations = retrieveData.Reservations;
 
-            int i = 0;
-            foreach (Reservation reservation in reservations)
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(8, GridUnitType.Star) });
+
+
+            for (int i = 0; i < reservations.Count; i++)
+
             {
-                
+
+                Reservation reservation = reservations[i];
                 RowDefinition row = new RowDefinition();
-                row.Height = new GridLength(50);
+
+                row.Tag = reservation;
+                row.Height = new GridLength(30);
+
+
+                addCancelCheckBoxColum(grid, i, reservation);
+                AddReservationInfoColum(grid, i, reservation);
+
+
                 grid.RowDefinitions.Add(row);
-                i++;
             }
-
-
-            grid.ShowGridLines = true;
             ReservationListScrollViewer.Content = grid;
+        }
+
+        // TODO: haal deze weg en gebruik degene hieronder. 
+        // Maakt button aan per reservering in de lijst die subscribed naar die methode en geeft de reservering eraan mee.
+        // selectedRerservation hoeft dus ook niet gebruikt te worden.
+
+
+        private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
+        {
+            Grid InfoGrid = GetGridOfReservationLine(reservation);
+            Grid.SetColumn(InfoGrid, 1);
+            Grid.SetRow(InfoGrid, i);
+            grid.Children.Add(InfoGrid);
+        }
+        private Grid GetGridOfReservationLine(Reservation reservation)
+        {
+
+            Grid grid = new Grid();
+            grid.MouseDown += (sender, e) => { RowClick(reservation); };
+            grid.Tag = reservation;
+
+            if (reservation.ReservationID == selectedReservation.ReservationID)
+            {
+                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
+            }
+            else { grid.Background = Brushes.Transparent; }
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                Label label = new Label();
+                label.Margin = new Thickness(0);
+                label.VerticalContentAlignment = VerticalAlignment.Center;
+                label.HorizontalContentAlignment = HorizontalAlignment.Center;
+                int info = i;
+                switch (info)
+                {
+                    case 0:
+                        label.Content = reservation.ReservationID.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition());
+                        break;
+                    case 1:
+                        label.Content = reservation.SiteID.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition());
+                        break;
+                    case 2:
+                        label.Content = reservation.Guest.LastName.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break;
+                    case 3:
+                        label.Content = reservation.StartDate.ToShortDateString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break;
+                    case 4:
+                        label.Content = reservation.EndDate.ToShortDateString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break;
+                }
+
+                grid.Margin = new Thickness(0);
+                Grid.SetRow(label, 0);
+                Grid.SetColumn(label, i);
+                grid.Children.Add(label);
+            }
+            return grid;
+        }
+
+
+
+        private void addCancelCheckBoxColum(Grid grid, int i, Reservation reservation)
+        {
+            CheckBox checkBox = new CheckBox();
+            checkBox.Checked += (sender, e) => { Un_Checkt(reservation ,sender); };
+            checkBox.Unchecked += (sender, e) => { Un_Checkt(reservation, sender); };
+
+            Grid.SetColumn(checkBox, 0);
+            Grid.SetRow(checkBox, i);
+            checkBox.HorizontalAlignment = HorizontalAlignment.Center;
+            checkBox.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(checkBox);
+        }
+
+        private void Un_Checkt(Reservation reservation, object sender)
+        {
+            CheckBox c = (CheckBox)sender;
+            if (c.IsChecked == true)
+            {
+                toBeCancel.Add(reservation);
+            }
+            else
+            {
+                toBeCancel.Remove(reservation);
+            }
+            if (toBeCancel.Count != 0)
+            {
+                AnnulerenButton.IsEnabled = true;
+            }
+            else
+            {
+                AnnulerenButton.IsEnabled = false;
+            }
+        }
+
+        private void RowClick(Reservation reservation)
+        {
+            selectedReservation = reservation;
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+
+            displayAllReservations();
+
+        }
+
+        private void CancelButtonClick(object sender, RoutedEventArgs e)
+        {
+            string combinedString = "";
+            foreach (var reservation in toBeCancel)
+            {
+                combinedString += reservation.ReservationID.ToString();
+            }
+            string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
+            string caption = "Annuleren reservering(en)";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    // User pressed Yes button
+                    foreach (var reservation in toBeCancel)
+                    {
+                        // ...Delete out of database
+                        retrieveData.DeleteReservation(reservation.ReservationID);
+                    }
+                    toBeCancel.Clear();
+                    break;
+                case MessageBoxResult.No:
+                    // User pressed No button
+                    // ...Nothing
+                    toBeCancel.Clear();
+                    break;
+            }
+            displayAllReservations();
         }
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
@@ -521,7 +666,86 @@ namespace camping.WPF
 
         private void saveReservation()
         {
-            throw new NotImplementedException();
+
+            var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
+                    {
+                        MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
+                        return false;
+                    }
+                    else Reservation.SiteID = int.Parse(SiteIDBox.Text);
+                } catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+
+                Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
+                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
+                {
+                    Reservation.Guest.PostalCode = PostalCodeBox.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Onjuiste formaat bij postcode ingevuld. Moet vier getallen en twee letters zijn, bijv: '1234AB'.");
+                    return false;
+                }
+
+                Reservation.Guest.FirstName = FirstNameBox.Text;
+                Reservation.Guest.Preposition = PrepositionBox.Text;
+                Reservation.Guest.LastName = LastNameBox.Text;
+                Reservation.Guest.City = CityBox.Text;
+                Reservation.Guest.Adress = AdressBox.Text;
+
+
+                if (!retrieveData.GetOtherAvailableReservations(Reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), Reservation.ReservationID))
+                {
+                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar.");
+                    return false ;
+                }
+                else if (Convert.ToDateTime(EndDatedatePicker.Text) < DateTime.Today)
+                {
+                    MessageBox.Show("Einddatum kan niet in het verleden zijn.");
+                    return false;
+                }
+                else if (Convert.ToDateTime(StartDateDatePicker.Text) <= Convert.ToDateTime(EndDatedatePicker.Text))
+                {
+                    Reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                    Reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Begindatum kan niet voor de einddatum komen.");
+                    return false;
+                }
+
+                retrieveData.UpdateReservation(Reservation.ReservationID, Reservation.StartDate, Reservation.Guest, Reservation.EndDate, Reservation.SiteID);
+              
+                return true;
+            }
+            return false;
         }
 
         private void Checkfields()
@@ -549,6 +773,21 @@ namespace camping.WPF
             {
                 element.IsEnabled = !element.IsEnabled;
             }
+        }
+
+        private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
+        }
+
+        private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            AvailableCampsites availableCampsites = new AvailableCampsites(AddReservationGridList, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
         }
     }
 }
