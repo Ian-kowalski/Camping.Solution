@@ -51,13 +51,6 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-
-
-                
-<<<<<<< HEAD
-                
-=======
->>>>>>> e7f1b30f4d7883082258fc4304bcaeea212eb5e6
             </Grid>
         </Border>
 

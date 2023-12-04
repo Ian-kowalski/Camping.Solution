@@ -30,7 +30,7 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
-        private Ellipse[] facilityList {  get; set; }
+        private Location tempLocation;
         private Site currentSelected {  get; set; }
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
@@ -292,7 +292,23 @@ namespace camping.WPF
 
         private void displayInformation(Location location)
         {
-
+            if (location is Area) {
+                Area area = location as Area;
+                Area tempArea = new(area.AreaID, area.OutletPresent, area.AtWater, area.PetsAllowed, area.HasShadow, area.HasWaterSupply);
+                tempLocation = tempArea;
+            }
+            if (location is Street)
+            {
+                Street street = location as Street;
+                Street tempStreet = new(street.StreetID, street.AreaID, street.OutletPresent, street.AtWater, street.PetsAllowed, street.HasShadow, street.HasWaterSupply);
+                tempLocation = tempStreet;
+            }
+            if (location is Site)
+            {
+                Site site = location as Site;
+                Site tempSite = new(site.CampSiteID, site.OutletPresent, site.AtWater, site.PetsAllowed, site.HasShadow, site.HasWaterSupply, site.Size, site.StreetID);
+                tempLocation = tempSite;
+            }
             LocationInfoGrid.Children.Clear();
 
             CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
@@ -310,19 +326,23 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 60, 2, 3, location);
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
-<<<<<<< HEAD
-            changeFacilitiesButton = new Button();
-            changeFacilitiesButton.Name = "ChangeFacilitiesButton";
-            changeFacilitiesButton.Content = "Aanpassen faciliteiten";
-            changeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
-            changeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
-            changeFacilitiesButton.Width = 180;
-            changeFacilitiesButton.Height = 60;
-            changeFacilitiesButton.Click += ChangeFacilitiesButton_Click;
-            Grid.SetColumn(changeFacilitiesButton, 4);
-            Grid.SetRow(changeFacilitiesButton, 3);
-=======
+            isUpdating = false;
+            Button ChangeFacilitiesButton = new Button();
+            ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
+            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
+            ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
 
+            ChangeFacilitiesButton.Width = 180;
+            ChangeFacilitiesButton.Height = 60;
+            ChangeFacilitiesButton.BorderBrush = Brushes.Black;
+            ChangeFacilitiesButton.BorderThickness = new Thickness(2);
+            ChangeFacilitiesButton.FontSize = 16;
+
+            ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
+
+            Grid.SetRow(ChangeFacilitiesButton, 3);
+            Grid.SetColumn(ChangeFacilitiesButton, 4);
+            LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
         }
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
         {
@@ -349,11 +369,12 @@ namespace camping.WPF
                 Width = diameter,
                 Height = diameter
             };
+            
 
             Grid.SetColumn(facility, column);
             Grid.SetRow(facility, row);
 
-            var color = GetFacilityColor(location, facility);
+            var color = GetFacilityColor(facility);
 
                 SolidColorBrush solidColorBrush = new SolidColorBrush(color);
                 facility.Fill = solidColorBrush;
@@ -366,27 +387,36 @@ namespace camping.WPF
         {
             if (isUpdating)
             {
-                // Update the color of the clicked ellipse based on your logic
                 Ellipse clickedEllipse = (Ellipse)sender;
-
-
-                // Refresh the displayed information
-                MessageBox.Show(clickedEllipse.Name);
+                SolidColorBrush solidColorBrush = new SolidColorBrush();
+ 
+                ChangeFacilityColor(clickedEllipse);
+                solidColorBrush.Color = GetFacilityColor(clickedEllipse);
+                clickedEllipse.Fill = solidColorBrush;
             }
         }
 
 
-        private Color GetFacilityColor(Location location, Ellipse facility)
+        private Color GetFacilityColor(Ellipse facility)
         {
-            Color color = Colors.Red; // Default color
+            Color color = Colors.Red;
 
-            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply) color = Colors.Green;
-            else if (facility.Name == "OutletPresent" && location.OutletPresent) color = Colors.Green;
-            else if (facility.Name == "PetsAllowed" && location.PetsAllowed) color = Colors.Green;
-            else if (facility.Name == "HasShadow" && location.HasShadow) color = Colors.Green;
-            else if (facility.Name == "AtWater" && location.AtWater) color = Colors.Green;
-            
+            if (facility.Name == "HasWaterSupply" && tempLocation.HasWaterSupply) color = Colors.Green;
+            else if (facility.Name == "OutletPresent" && tempLocation.OutletPresent) color = Colors.Green;
+            else if (facility.Name == "PetsAllowed" && tempLocation.PetsAllowed) color = Colors.Green;
+            else if (facility.Name == "HasShadow" && tempLocation.HasShadow) color = Colors.Green;
+            else if (facility.Name == "AtWater" && tempLocation.AtWater) color = Colors.Green;
+
             return color;
+        }
+
+        private void ChangeFacilityColor(Ellipse facility)
+        {
+            if (facility.Name == "HasWaterSupply") tempLocation.HasWaterSupply = !tempLocation.HasWaterSupply;
+            else if (facility.Name == "OutletPresent") tempLocation.OutletPresent = !tempLocation.OutletPresent;
+            else if (facility.Name == "PetsAllowed") tempLocation.PetsAllowed = !tempLocation.PetsAllowed;
+            else if (facility.Name == "HasShadow") tempLocation.HasShadow = !tempLocation.HasShadow;
+            else if (facility.Name == "AtWater") tempLocation.AtWater = !tempLocation.AtWater;
         }
 
         private void ChangeFacilitiesButtonClick(Button button)
@@ -396,25 +426,17 @@ namespace camping.WPF
 
             if (isUpdating)
             {
-
-                changeFacilitiesButton.Content = "Opslaan";
+                button.Content = "Opslaan";
             }
             else
             {
-                changeFacilitiesButton.Content = "Aanpassen faciliteiten";
-                saveColors();
-
-                button.Content = "Opslaan";
-            }
-
-            }
+                button.Content = "Faciliteiten aanpassen";
+                siteData.UpdateFacilities(tempLocation);
+                retrieveData.UpdateLocations();
+                
+            }          
         }
 
-        private void saveColors()
-        {
-            // Save the current colors or perform any other action
-            // For example, you can save to a file or a data structure
-        }
         
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
