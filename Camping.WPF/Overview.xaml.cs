@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,8 +34,13 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
-        private Ellipse[] facilityList { get; set; }
-        private Site currentSelected { get; set; }
+
+        private Location tempLocation;
+        private Site currentSelected {  get; set; }
+
+            // TODO: haal deze weg en gebruik selectedReservation voor alles
+        private Reservation Reservation { get; set; }
+
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
@@ -69,6 +75,10 @@ namespace camping.WPF
 
             displayAllLocations();
             displayAllReservations();
+
+            
+            // TODO: pas tonen wanneer iets geselecteerd wordt
+            displayChangeReservationInfo();
 
 
             Closing += onWindowClosing;
@@ -309,7 +319,23 @@ namespace camping.WPF
 
         private void displayInformation(Location location)
         {
-
+            if (location is Area) {
+                Area area = location as Area;
+                Area tempArea = new(area.AreaID, area.OutletPresent, area.AtWater, area.PetsAllowed, area.HasShadow, area.HasWaterSupply);
+                tempLocation = tempArea;
+            }
+            if (location is Street)
+            {
+                Street street = location as Street;
+                Street tempStreet = new(street.StreetID, street.AreaID, street.OutletPresent, street.AtWater, street.PetsAllowed, street.HasShadow, street.HasWaterSupply);
+                tempLocation = tempStreet;
+            }
+            if (location is Site)
+            {
+                Site site = location as Site;
+                Site tempSite = new(site.CampSiteID, site.OutletPresent, site.AtWater, site.PetsAllowed, site.HasShadow, site.HasWaterSupply, site.Size, site.StreetID);
+                tempLocation = tempSite;
+            }
             LocationInfoGrid.Children.Clear();
 
             CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
@@ -328,8 +354,9 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 60, 2, 3, location);
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
+            isUpdating = false;
             Button ChangeFacilitiesButton = new Button();
-            ChangeFacilitiesButton.Content = "Aanpassen";
+            ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
             ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
             ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
 
@@ -344,7 +371,6 @@ namespace camping.WPF
             Grid.SetRow(ChangeFacilitiesButton, 3);
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
-
         }
 
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
@@ -372,11 +398,12 @@ namespace camping.WPF
                 Width = diameter,
                 Height = diameter
             };
+            
 
             Grid.SetColumn(facility, column);
             Grid.SetRow(facility, row);
 
-            var color = GetFacilityColor(location, facility);
+            var color = GetFacilityColor(facility);
 
             SolidColorBrush solidColorBrush = new SolidColorBrush(color);
             facility.Fill = solidColorBrush;
@@ -389,26 +416,36 @@ namespace camping.WPF
         {
             if (isUpdating)
             {
-                // Update the color of the clicked ellipse based on your logic
                 Ellipse clickedEllipse = (Ellipse)sender;
-
-
-                // Refresh the displayed information
-                MessageBox.Show(clickedEllipse.Name);
+                SolidColorBrush solidColorBrush = new SolidColorBrush();
+ 
+                ChangeFacilityColor(clickedEllipse);
+                solidColorBrush.Color = GetFacilityColor(clickedEllipse);
+                clickedEllipse.Fill = solidColorBrush;
             }
         }
 
-        private Color GetFacilityColor(Location location, Ellipse facility)
-        {
-            Color color = Colors.Red; // Default color
 
-            if (facility.Name == "HasWaterSupply" && location.HasWaterSupply) color = Colors.Green;
-            else if (facility.Name == "OutletPresent" && location.OutletPresent) color = Colors.Green;
-            else if (facility.Name == "PetsAllowed" && location.PetsAllowed) color = Colors.Green;
-            else if (facility.Name == "HasShadow" && location.HasShadow) color = Colors.Green;
-            else if (facility.Name == "AtWater" && location.AtWater) color = Colors.Green;
+        private Color GetFacilityColor(Ellipse facility)
+        {
+            Color color = Colors.Red;
+
+            if (facility.Name == "HasWaterSupply" && tempLocation.HasWaterSupply) color = Colors.Green;
+            else if (facility.Name == "OutletPresent" && tempLocation.OutletPresent) color = Colors.Green;
+            else if (facility.Name == "PetsAllowed" && tempLocation.PetsAllowed) color = Colors.Green;
+            else if (facility.Name == "HasShadow" && tempLocation.HasShadow) color = Colors.Green;
+            else if (facility.Name == "AtWater" && tempLocation.AtWater) color = Colors.Green;
 
             return color;
+        }
+
+        private void ChangeFacilityColor(Ellipse facility)
+        {
+            if (facility.Name == "HasWaterSupply") tempLocation.HasWaterSupply = !tempLocation.HasWaterSupply;
+            else if (facility.Name == "OutletPresent") tempLocation.OutletPresent = !tempLocation.OutletPresent;
+            else if (facility.Name == "PetsAllowed") tempLocation.PetsAllowed = !tempLocation.PetsAllowed;
+            else if (facility.Name == "HasShadow") tempLocation.HasShadow = !tempLocation.HasShadow;
+            else if (facility.Name == "AtWater") tempLocation.AtWater = !tempLocation.AtWater;
         }
 
         private void ChangeFacilitiesButtonClick(Button button)
@@ -418,22 +455,16 @@ namespace camping.WPF
 
             if (isUpdating)
             {
-                changeFacilitiesButton.Content = "Opslaan";
+                button.Content = "Opslaan";
             }
             else
             {
-                changeFacilitiesButton.Content = "Aanpassen faciliteiten";
-                saveColors();
-            }
+                button.Content = "Faciliteiten aanpassen";
+                siteData.UpdateFacilities(tempLocation);
+                retrieveData.UpdateLocations();
+                
+            }          
         }
-
-        private void saveColors()
-        {
-            // Save the current colors or perform any other action
-            // For example, you can save to a file or a data structure
-        }
-
-
 
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
@@ -466,13 +497,13 @@ namespace camping.WPF
         {
             List<Reservation> reservations = retrieveData.Reservations;
 
-
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(8, GridUnitType.Star) });
 
 
             for (int i = 0; i < reservations.Count; i++)
+
             {
                 Reservation reservation = reservations[i];
                 RowDefinition row = new RowDefinition();
@@ -489,26 +520,25 @@ namespace camping.WPF
             ReservationListScrollViewer.Content = grid;
         }
 
-        private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
+        // TODO: haal deze weg en gebruik degene hieronder. 
+        // Maakt button aan per reservering in de lijst die subscribed naar die methode en geeft de reservering eraan mee.
+        // selectedRerservation hoeft dus ook niet gebruikt te worden.
+        private void displayChangeReservationInfo()
         {
-            Grid InfoGrid = GetGridOfReservationLine(reservation);
-            Grid.SetColumn(InfoGrid, 1);
-            Grid.SetRow(InfoGrid, i);
-            grid.Children.Add(InfoGrid);
+            SiteIDBox.Text = Convert.ToString(Reservation.SiteID);
+            StartDateDatePicker.Text = Convert.ToString(Reservation.StartDate);
+            EndDatedatePicker.Text = Convert.ToString(Reservation.EndDate);
+
+            FirstNameBox.Text = Convert.ToString(Reservation.Guest.FirstName);
+            PrepositionBox.Text = Convert.ToString(Reservation.Guest.Preposition);
+            LastNameBox.Text = Convert.ToString(Reservation.Guest.LastName);
+            PhoneNumberBox.Text = Convert.ToString(Reservation.Guest.PhoneNumber);
+            CityBox.Text = Convert.ToString(Reservation.Guest.City);
+            AdressBox.Text = Convert.ToString(Reservation.Guest.Adress);
+
+            HouseNumberBox.Text = Convert.ToString(Reservation.Guest.HouseNumber);
+            PostalCodeBox.Text = Convert.ToString(Reservation.Guest.PostalCode);
         }
-
-        private Grid GetGridOfReservationLine(Reservation reservation)
-        {
-
-            Grid grid = new Grid();
-            grid.MouseDown += (sender, e) => { RowClick(reservation); } ;
-            grid.Tag = reservation;
-
-            if (reservation.ReservationID == selectedReservation.ReservationID)
-            {
-                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
-            }
-            else { grid.Background = Brushes.Transparent; }
 
 
             for (int i = 0; i <5; i++) 
@@ -548,6 +578,21 @@ namespace camping.WPF
                 grid.Children.Add(label);
             }
             return grid;
+        }
+
+        private void fillReservationInfoGrid(Reservation reservation)
+        {
+            SiteIDBox.Text = reservation.ReservationID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
         }
 
         private void addCancelCheckBoxColum(Grid grid, int i, Reservation reservation)
@@ -601,7 +646,7 @@ namespace camping.WPF
             {
                 combinedString += reservation.ReservationID.ToString();
             }
-            string messageBoxText = "Do you want to cancel these reservation(s): " + combinedString;
+            string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
@@ -628,31 +673,14 @@ namespace camping.WPF
             displayAllReservations();
         }
 
-
-
-        private void fillReservationInfoTextBoxes(Reservation reservation)
-        {
-            SiteIDBox.Text = reservation.ReservationID.ToString();
-            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
-            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
-            FirstNameBox.Text = reservation.Guest.FirstName;
-            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
-            LastNameBox.Text = reservation.Guest.LastName;
-            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
-            CityBox.Text = reservation.Guest.City.ToString();
-            AdressBox.Text = reservation.Guest.Adress;
-            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
-            PostalCodeBox.Text = reservation.Guest.PostalCode;
-            EditReservationButton.Tag = reservation;
-        }
-
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             if (ReservationAanpassenButtonState)
             {
-                //TODO: check data in text fields and send to database
-                Checkfields();
-                saveReservation(sender);
+                if (!saveReservation())
+                {
+                    return;
+                }
             }
 
             chanceAanpassenOrSaveButtonContent(sender);
@@ -660,17 +688,89 @@ namespace camping.WPF
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
         }
 
-        private void saveReservation(object sender)
+        private bool saveReservation()
         {
-            Reservation oldReservation = (Reservation)((Button)sender).Tag;
-            //retrieveData.UpdateReservation();
-            throw new NotImplementedException();
+            var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
+                    {
+                        MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
+                        return false;
+                    }
+                    else Reservation.SiteID = int.Parse(SiteIDBox.Text);
+                } catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+
+                Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
+                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
+                {
+                    Reservation.Guest.PostalCode = PostalCodeBox.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Onjuiste formaat bij postcode ingevuld. Moet vier getallen en twee letters zijn, bijv: '1234AB'.");
+                    return false;
+                }
+
+                Reservation.Guest.FirstName = FirstNameBox.Text;
+                Reservation.Guest.Preposition = PrepositionBox.Text;
+                Reservation.Guest.LastName = LastNameBox.Text;
+                Reservation.Guest.City = CityBox.Text;
+                Reservation.Guest.Adress = AdressBox.Text;
+
+
+                if (!retrieveData.GetOtherAvailableReservations(Reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), Reservation.ReservationID))
+                {
+                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar.");
+                    return false ;
+                }
+                else if (Convert.ToDateTime(EndDatedatePicker.Text) < DateTime.Today)
+                {
+                    MessageBox.Show("Einddatum kan niet in het verleden zijn.");
+                    return false;
+                }
+                else if (Convert.ToDateTime(StartDateDatePicker.Text) <= Convert.ToDateTime(EndDatedatePicker.Text))
+                {
+                    Reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                    Reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Begindatum kan niet voor de einddatum komen.");
+                    return false;
+                }
+
+                retrieveData.UpdateReservation(Reservation.ReservationID, Reservation.StartDate, Reservation.Guest, Reservation.EndDate, Reservation.SiteID);
+                displayChangeReservationInfo();
+                return true;
+            }
+            return false;
         }
 
-        private void Checkfields()
-        {
-            throw new NotImplementedException();
-        }
 
         private void chanceAanpassenOrSaveButtonContent(object sender)
         {

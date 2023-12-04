@@ -118,7 +118,7 @@ namespace camping.WPF
                     return;
                 }
 
-                retrieveData.UpdateReservation(res.ReservationID, res.StartDate, res.Guest, res.EndDate);
+                retrieveData.UpdateReservation(res.ReservationID, res.StartDate, res.Guest, res.EndDate, res.SiteID);
             }
         }
     }

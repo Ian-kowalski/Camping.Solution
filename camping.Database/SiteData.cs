@@ -9,7 +9,6 @@ using Microsoft.Data.SqlClient;
 using Camping.Core;
 using System.Runtime.CompilerServices;
 using camping.Core;
-using Renci.SshNet;
 
 namespace camping.Database
 {
@@ -63,7 +62,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     {                       // streetID
-                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), true, true, true, true, true));
+                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5)), Convert.ToBoolean(reader.GetInt32(6))));
                     }
                 }
                 connection.Close();
@@ -89,7 +88,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
-                        result.Add(new Area(reader.GetInt32(0), true, true, true, true, true));
+                        result.Add(new Area(reader.GetInt32(0), Convert.ToBoolean(reader.GetInt32(1)), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5))));
                     }
                 }
                 connection.Close();
@@ -146,5 +145,71 @@ namespace camping.Database
             return result;
 
         }
+
+        public void UpdateFacilities(Location location)
+        {
+            string sql = "";
+            if (location is Site)
+            {
+                Site site = location as Site;
+                sql = $"UPDATE campSite " +
+                      $"SET powerSupply = @powerSupply, " +
+                      $"    waterFront = @waterFront, " +
+                      $"    pets = @pets, " +
+                      $"    shadow = @shadow, " +
+                      $"    waterSupply = @waterSupply " +
+                      $"WHERE campSiteID = {site.CampSiteID}";
+            }
+            if (location is Street)
+            {
+                Street street = location as Street;
+                sql = $"UPDATE street " +
+                      $"SET powerSupply = @powerSupply, " +
+                      $"    waterFront = @waterFront, " +
+                      $"    pets = @pets, " +
+                      $"    shadow = @shadow, " +
+                      $"    waterSupply = @waterSupply " +
+                      $"WHERE streetID = {street.StreetID}";
+            }
+            if (location is Area)
+            {
+                Area area = location as Area;
+                sql = $"UPDATE area " +
+                      $"SET powerSupply = @powerSupply, " +
+                      $"    waterFront = @waterFront, " +
+                      $"    pets = @pets, " +
+                      $"    shadow = @shadow, " +
+                      $"    waterSupply = @waterSupply " +
+                      $"WHERE areaID = {area.AreaID}";
+            }
+            using (var connection = new SqlConnection(connectionString))
+            {
+                int outletPresent = 0;
+                if (location.OutletPresent) outletPresent = 1;
+                int atWater = 0;
+                if (location.AtWater) atWater = 1;
+                int petsAllowed = 0;
+                if (location.PetsAllowed) petsAllowed = 1;
+                int hasShadow = 0;
+                if (location.HasShadow) hasShadow = 1;
+                int hasWaterSupply = 0;
+                if (location.HasWaterSupply) hasWaterSupply = 1;
+
+                connection.Open();
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@powerSupply", outletPresent);
+                    command.Parameters.AddWithValue("@waterFront", atWater);
+                    command.Parameters.AddWithValue("@pets", petsAllowed);
+                    command.Parameters.AddWithValue("@shadow", hasShadow);
+                    command.Parameters.AddWithValue("@waterSupply", hasWaterSupply);                    
+                    command.ExecuteNonQuery();
+
+                }
+            }
+            
+        }
+
+
     }
 }
