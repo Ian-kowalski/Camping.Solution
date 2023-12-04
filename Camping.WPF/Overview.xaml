@@ -51,23 +51,89 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="100"/>
                 </Grid.RowDefinitions>
-
-
-              
             </Grid>
         </Border>
 
-        <Border x:Name="AddReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
-            <TextBlock Text="hi"/>
-        </Border>
-        <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3"/>
+        <Border x:Name="AddReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,256" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
 
-        <Border x:Name="ReservationList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,0" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Begindatum" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Width="74" Height="24" VerticalAlignment="Top" Margin="0,24,24,0"/>
+                <DatePicker x:Name="StartDateButton" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" Width="102" Height="24" VerticalAlignment="Top" Margin="24,24,0,0"  SelectedDateChanged="StartDateButton_SelectedDateChanged"/>
+
+                <Label Content="Einddatum" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Width="67" Height="24" VerticalAlignment="Bottom" Margin="0,0,24,24"/>
+                <DatePicker x:Name="EndDateButton"  Grid.Column="1" Grid.Row="0" Height="24" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="102" Margin="24,0,0,24"  SelectedDateChanged="EndDateButton_SelectedDateChanged"/>
+
+                <Button x:Name="SearchButton" Content="Zoek" Grid.Column="3" Grid.ColumnSpan="2" FontSize="32"  Background="#99FF99" Margin="24,24,24,24" Click="SearchButton_Click"/>
+
+            </Grid>
+        </Border>
+
+        <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+            <Grid>
+                <ScrollViewer Margin="24,64,24,10">
+                    <Grid Name ="AddReservationGridList">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                    </Grid>
+                </ScrollViewer>
+                <Grid Name="AddReservationGridHeader" Margin="24,24,24,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Plek Nr" FontWeight="Bold"  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Grotte" FontWeight="Bold" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Schaduw" FontWeight="Bold" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Kraan" FontWeight="Bold" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Water" FontWeight="Bold" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Dier" FontWeight="Bold" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Stroom" FontWeight="Bold" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="ReservationList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20*"/>
                     <RowDefinition Height="10*"/>
                     <RowDefinition Height="80*"/>
+                    <RowDefinition Height="20*"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0">
@@ -87,26 +153,33 @@
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
                     <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap" Text=""  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0"/>
                 </Grid>
-                <Grid Grid.Row="1" Margin="0,0,30,0">
+                <Grid Margin="0,0,0,0" HorizontalAlignment="Left" Width="859" Height="55" VerticalAlignment="Center" Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition Width="65*"/>
+                        <ColumnDefinition Width="87*"/>
+                        <ColumnDefinition Width="85*"/>
+                        <ColumnDefinition Width="97*"/>
+                        <ColumnDefinition Width="191*"/>
+                        <ColumnDefinition Width="191*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="1" Content="Label" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,0"/>
-                    <Label Grid.Column="2" Content="Label" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,0"/>
-                    <Label Grid.Column="3" Content="Label" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,0"/>
-                    <Label Grid.Column="4" Content="Label" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,0"/>
-                    <Label Grid.Column="5" Content="Label" BorderBrush="Black" BorderThickness="2" Margin="0,0,0,0"/>
-
+                    <Label Grid.Column="2" Content="Plaats. Nr." BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" Width="75" Margin="4,4,0,5"/>
+                    <Label Grid.Column="2" Content="Reserv. Nr." BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="75" Margin="77,4,0,5"/>
+                    <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" Margin="46,4,22,5"/>
+                    <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2" Margin="92,4,104,5" Grid.ColumnSpan="2"/>
+                    <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="123,4,161,5" Grid.ColumnSpan="2"/>
+                </Grid>
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                    <Button x:Name="AnnulerenButton" Content="Annuleren" Grid.Column="0" Grid.Row="0" Height="50" Margin="32,32,32,0" VerticalAlignment="Top" IsEnabled="False" BorderBrush="#000000" BorderThickness="2" FontSize="16" Click="CancelButtonClick"/>
 
                 </Grid>
 
-                <ScrollViewer x:Name="ReservationListScrollViewer" Grid.Row="2" BorderBrush="#000000" BorderThickness="3" Margin="8,8,8,8"/>
-
+                <ScrollViewer x:Name="ReservationListScrollViewer" Grid.Row="2" BorderBrush="#000000" BorderThickness="3"/>
             </Grid>
         </Border>
         <Border x:Name="ReservationInfo" Visibility="Visible" Grid.Column="2" Grid.Row="1" Margin="32,32,32,0" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
@@ -128,7 +201,7 @@
                 <Label Content="Begindatum*" Margin="6,96,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Einddatum*" Margin="6,128,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <TextBox x:Name="SiteIDBox" Text="-1" Grid.Column="1" Height="28" Margin="8,64,16,0"  TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="SiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0"  TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <DatePicker x:Name="StartDateDatePicker" Grid.Column="1" Height="28" Margin="8,96,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="False" />
                 <DatePicker x:Name="EndDatedatePicker" Grid.Column="1" Height="28" Margin="8,128,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="False"/>
 
@@ -142,26 +215,26 @@
                 <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Huis nr*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Text="" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
                         <ColumnDefinition Width="11*"/>
                         <ColumnDefinition Width="20*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="HouseNumberBox" Height="28" TextWrapping="Wrap" Text=""  Grid.Column="0" Background="LightGray" IsEnabled="False"/>
+                    <TextBox x:Name="HouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="False"/>
                     <Label Content="Postcode*" Height="32" HorizontalContentAlignment="Center" Grid.Column="1" VerticalContentAlignment="Center"/>
-                    <TextBox x:Name="PostalCodeBox"  Height="28" TextWrapping="Wrap" Text=""  Grid.Column="2" Background="LightGray" IsEnabled="False"/>
+                    <TextBox x:Name="PostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="False"/>
                 </Grid>
 
                 <Button x:Name="EditReservationButton" Content="Aanpassen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="EditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
             </Grid>
         </Border>
-        <Button x:Name="AnnulerenButton" Content="Annuleren" Grid.Column="0" Grid.Row="2" Margin="64,32,320,32" IsEnabled="False" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
+        
     </Grid>
 </Window>
