@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +37,9 @@ namespace camping.WPF
 
         private Location tempLocation;
         private Site currentSelected {  get; set; }
+
+            // TODO: haal deze weg en gebruik selectedReservation voor alles
+        private Reservation Reservation { get; set; }
 
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
@@ -71,6 +75,10 @@ namespace camping.WPF
 
             displayAllLocations();
             displayAllReservations();
+
+            
+            // TODO: pas tonen wanneer iets geselecteerd wordt
+            displayChangeReservationInfo();
 
 
             Closing += onWindowClosing;
@@ -498,7 +506,10 @@ namespace camping.WPF
                 grid.ColumnDefinitions.Add(col);
             }
             List<Reservation> reservations = retrieveData.Reservations;
-           
+            
+            // TODO: maak dit selectedReservation = ... ; de eerste hoeft ook niet getoond te worden
+            Reservation = reservations[0];
+
             int i = 0;
             foreach (Reservation reservation in reservations)
             {
@@ -521,68 +532,27 @@ namespace camping.WPF
             ReservationListScrollViewer.Content = grid;
         }
 
-        private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
+        // TODO: haal deze weg en gebruik degene hieronder. 
+        // Maakt button aan per reservering in de lijst die subscribed naar die methode en geeft de reservering eraan mee.
+        // selectedRerservation hoeft dus ook niet gebruikt te worden.
+        private void displayChangeReservationInfo()
         {
-            Grid InfoGrid = GetGridFullOfReservationInfo(reservation);
-            Grid.SetColumn(InfoGrid, 1);
-            Grid.SetRow(InfoGrid, i);
-            grid.Children.Add(InfoGrid);
+            SiteIDBox.Text = Convert.ToString(Reservation.SiteID);
+            StartDateDatePicker.Text = Convert.ToString(Reservation.StartDate);
+            EndDatedatePicker.Text = Convert.ToString(Reservation.EndDate);
+
+            FirstNameBox.Text = Convert.ToString(Reservation.Guest.FirstName);
+            PrepositionBox.Text = Convert.ToString(Reservation.Guest.Preposition);
+            LastNameBox.Text = Convert.ToString(Reservation.Guest.LastName);
+            PhoneNumberBox.Text = Convert.ToString(Reservation.Guest.PhoneNumber);
+            CityBox.Text = Convert.ToString(Reservation.Guest.City);
+            AdressBox.Text = Convert.ToString(Reservation.Guest.Adress);
+
+            HouseNumberBox.Text = Convert.ToString(Reservation.Guest.HouseNumber);
+            PostalCodeBox.Text = Convert.ToString(Reservation.Guest.PostalCode);
         }
 
-        private Grid GetGridFullOfReservationInfo(Reservation reservation)
-        {
 
-            Grid grid = new Grid();
-            grid.MouseDown += (sender, e) => { RowClick(reservation); } ;
-            grid.Tag = reservation;
-
-            if (reservation.ReservationID == selectedReservation.ReservationID)
-            {
-                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
-            }
-            else { grid.Background = Brushes.Transparent; }
-
-
-            for (int i = 0; i <5; i++) 
-            {
-                Label label = new Label();
-                label.Margin = new Thickness(0);
-                label.VerticalContentAlignment = VerticalAlignment.Center;
-                label.HorizontalContentAlignment = HorizontalAlignment.Center;
-                int info = i;
-                switch (info)
-                {
-                    case 0:
-                        label.Content = reservation.ReservationID.ToString();
-                        grid.ColumnDefinitions.Add(new ColumnDefinition());
-                        break;
-                    case 1:
-                        label.Content = reservation.SiteID.ToString();
-                        grid.ColumnDefinitions.Add(new ColumnDefinition());
-                        break; 
-                    case 2:
-                        label.Content = reservation.Guest.LastName.ToString();
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                        break; 
-                    case 3:
-                        label.Content = reservation.StartDate.ToShortDateString();
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                        break;
-                    case 4:
-                        label.Content = reservation.EndDate.ToShortDateString();
-                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                        break;
-                } 
-                
-                grid.Margin = new Thickness(0); 
-                
-                grid.ShowGridLines = true;
-                Grid.SetRow(label, 0);
-                Grid.SetColumn(label, i);
-                grid.Children.Add(label);
-            }
-            return grid;
-        }
         private void fillReservationInfoGrid(Reservation reservation)
         {
             SiteIDBox.Text = reservation.ReservationID.ToString();
@@ -670,9 +640,10 @@ namespace camping.WPF
         {
             if (ReservationAanpassenButtonState)
             {
-                //TODO: check data in text fields and send to database
-                Checkfields();
-                saveReservation();
+                if (!saveReservation())
+                {
+                    return;
+                }
             }
 
             chanceAanpassenOrSaveButtonContent(sender);
@@ -680,15 +651,89 @@ namespace camping.WPF
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
         }
 
-        private void saveReservation()
+        private bool saveReservation()
         {
-            throw new NotImplementedException();
+            var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
+                    {
+                        MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
+                        return false;
+                    }
+                    else Reservation.SiteID = int.Parse(SiteIDBox.Text);
+                } catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+                try
+                {
+                    Reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                }
+                catch
+                {
+                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.");
+                    return false;
+                }
+
+                Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
+                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
+                {
+                    Reservation.Guest.PostalCode = PostalCodeBox.Text;
+                }
+                else
+                {
+                    MessageBox.Show("Onjuiste formaat bij postcode ingevuld. Moet vier getallen en twee letters zijn, bijv: '1234AB'.");
+                    return false;
+                }
+
+                Reservation.Guest.FirstName = FirstNameBox.Text;
+                Reservation.Guest.Preposition = PrepositionBox.Text;
+                Reservation.Guest.LastName = LastNameBox.Text;
+                Reservation.Guest.City = CityBox.Text;
+                Reservation.Guest.Adress = AdressBox.Text;
+
+
+                if (!retrieveData.GetOtherAvailableReservations(Reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), Reservation.ReservationID))
+                {
+                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar.");
+                    return false ;
+                }
+                else if (Convert.ToDateTime(EndDatedatePicker.Text) < DateTime.Today)
+                {
+                    MessageBox.Show("Einddatum kan niet in het verleden zijn.");
+                    return false;
+                }
+                else if (Convert.ToDateTime(StartDateDatePicker.Text) <= Convert.ToDateTime(EndDatedatePicker.Text))
+                {
+                    Reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                    Reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+                }
+                else
+                {
+                    MessageBox.Show("Begindatum kan niet voor de einddatum komen.");
+                    return false;
+                }
+
+                retrieveData.UpdateReservation(Reservation.ReservationID, Reservation.StartDate, Reservation.Guest, Reservation.EndDate, Reservation.SiteID);
+                displayChangeReservationInfo();
+                return true;
+            }
+            return false;
         }
 
-        private void Checkfields()
-        {
-            throw new NotImplementedException();
-        }
 
         private void chanceAanpassenOrSaveButtonContent(object sender)
         {

@@ -76,8 +76,15 @@ namespace camping.Core
             return list;
         }
 
-        
+        public bool GetAvailableReservations(int campSite, string startDate, string endDate)
+        {
+            return reservationData.GetAvailableReservation(campSite, startDate, endDate);
+        }
 
+        public bool GetOtherAvailableReservations(int campSite, string startDate, string endDate, int reservationID)
+        {
+            return reservationData.GetOtherAvailableReservation(campSite, startDate, endDate, reservationID);
+        }
 
         public List<Reservation> GetReservations(DateTime dateTime)
         {
@@ -89,10 +96,11 @@ namespace camping.Core
             return reservationData.GetCampSiteID(reservationID);
         }*/
 
-        public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+        public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
-            return (reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate) &&
-            reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
+            return (reservationData.UpdateReservation(reservationID, startDate, endDate, campSiteID) &&
+                reservationData.UpdateReservationLines(campSiteID, reservationID) &&
+                reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
         public bool GetDate(int siteID)
