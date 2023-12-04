@@ -218,10 +218,40 @@ namespace camping.Database
                 }
             }
         }
-
-        public bool UpdateReservation(int reservationID, DateTime startDate, int visitorID, DateTime endDate)
+        public bool GetOtherAvailableReservation(int campSite, string startDate, string endDate, int reservationID)
         {
-            string sql = $"UPDATE reservation SET startDate = @startDate, visitorID = @visitorID, endDate = @endDate WHERE reservationID = @reservationID";
+            string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
+                                "WHERE reservationLines.campSiteID = @campSite AND " +
+                                "((@startDate >= startDate AND @startDate <= endDate) OR " +
+                                "(@endDate >= startDate AND @endDate <= endDate) OR " +
+                                "(@startDate <= startDate AND @endDate >= endDate) AND " +
+                                "(startDate <= endDate) AND (reservation.reservationID != @reservationID))";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("campSite", campSite);
+                    command.Parameters.AddWithValue("startDate", startDate);
+                    command.Parameters.AddWithValue("endDate", endDate);
+                    command.Parameters.AddWithValue("reservationID", reservationID);
+
+
+                    int result = (int)command.ExecuteScalar();
+
+                    connection.Close();
+                    return (result == 0);
+
+                }
+            }
+        }
+
+        public bool UpdateReservation(int reservationID, DateTime startDate, DateTime endDate, int campSiteID)
+        {
+            string sql = $"UPDATE reservation SET startDate = @startDate, endDate = @endDate, campSiteID = @campSiteID WHERE reservation.reservationID = @reservationID" +
+                $"LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -230,8 +260,29 @@ namespace camping.Database
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("startDate", startDate);
-                    command.Parameters.AddWithValue("visitorID", visitorID);
                     command.Parameters.AddWithValue("endDate", endDate);
+                    command.Parameters.AddWithValue("reservationID", reservationID);
+                    command.Parameters.AddWithValue("campSiteID", campSiteID);
+
+                    result = command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return (result != 0);
+            }
+        }
+
+        public bool UpdateReservationLines(int campSiteID, int reservationID)
+        {
+            string sql = $"UPDATE reservationLines SET campSiteID = @campSiteID WHERE reservationID = @reservationID";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                int result;
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("campSiteID", campSiteID);
                     command.Parameters.AddWithValue("reservationID", reservationID);
 
                     result = command.ExecuteNonQuery();
@@ -240,7 +291,7 @@ namespace camping.Database
                 return (result != 0);
             }
         }
-        
+
         public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
             string sql = $"UPDATE visitor SET firstName = @firstName, lastName = @lastName, preposition = @preposition, adress = @adress, city = @city, postalcode = @Postalcode, houseNumber = @houseNumber, phoneNumber = @phoneNumber WHERE visitorID = @visitorID";

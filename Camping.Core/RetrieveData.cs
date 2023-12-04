@@ -1,9 +1,6 @@
 ﻿using Camping.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
+
 
 namespace camping.Core
 {
@@ -15,6 +12,7 @@ namespace camping.Core
         public List<Site> Sites;
         public List<Street> Streets;
         public List<Area> Areas;
+        public List<Reservation> Reservations;
 
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
@@ -24,7 +22,40 @@ namespace camping.Core
             Sites = siteData.GetSiteInfo();
             Streets = siteData.GetStreetInfo();
             Areas = siteData.GetAreaInfo();
+            Reservations = reservationData.GetReservationInfo();
         }
+
+        public Area GetAreaFromID(int id) {
+            foreach (Area area in Areas) {
+                if (area.AreaID == id) {
+                    return area;
+                }
+            }
+            throw new Exception("No area has been found with the provided ID!");
+        }
+        public Street GetStreetFromID(int id)
+        {
+            foreach (Street street in Streets)
+            {
+                if (street.StreetID == id)
+                {
+                    return street;
+                }
+            }
+            throw new Exception("No street has been found with the provided ID!");
+        }
+        public Site GetSiteFromID(int id)
+        {
+            foreach (Site site in Sites)
+            {
+                if (site.CampSiteID == id)
+                {
+                    return site;
+                }
+            }
+            throw new Exception("No site has been found with the provided ID!");
+        }
+
 
         public List<int> GetCampSiteID()
         {
@@ -46,11 +77,15 @@ namespace camping.Core
             return list;
         }
 
-        public List<Reservation> GetReservations() 
+        public bool GetAvailableReservations(int campSite, string startDate, string endDate)
         {
-            return reservationData.GetReservationInfo();
+            return reservationData.GetAvailableReservation(campSite, startDate, endDate);
         }
 
+        public bool GetOtherAvailableReservations(int campSite, string startDate, string endDate, int reservationID)
+        {
+            return reservationData.GetOtherAvailableReservation(campSite, startDate, endDate, reservationID);
+        }
 
         public List<Reservation> GetReservations(DateTime dateTime)
         {
@@ -62,10 +97,11 @@ namespace camping.Core
             return reservationData.GetCampSiteID(reservationID);
         }*/
 
-        public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate)
+        public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
-            return (reservationData.UpdateReservation(reservationID, startDate, visitor.VisitorID, endDate) &&
-            reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
+            return (reservationData.UpdateReservation(reservationID, startDate, endDate, campSiteID) &&
+                reservationData.UpdateReservationLines(campSiteID, reservationID) &&
+                reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
         public bool GetDate(int siteID)

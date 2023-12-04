@@ -7,7 +7,7 @@
         xmlns:Database="clr-namespace:camping.Database;assembly=camping.Database" x:Class="camping.WPF.ChangeReservation"
         mc:Ignorable="d"
         Title="Aanpassen reservering" Height="380" Width="800">
-    <Grid Margin="0,0,0,-6">
+    <Grid>
         <Label Margin="0,51,676,0" Content="Voornaam" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>
         <TextBox x:Name="FirstName" Margin="0,56,503,0" Background="LightGray" HorizontalAlignment="Right" Width="160" Height="21" VerticalAlignment="Top"></TextBox>
         <Label Margin="0,250,676,0" Content="Telefoonnummer" FontSize="12" HorizontalAlignment="Right" Height="33" VerticalAlignment="Top"/>

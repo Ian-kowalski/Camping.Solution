@@ -36,8 +36,8 @@ namespace camping.Database
                     reader = command.ExecuteReader();
 
                     while (reader.Read())
-                    { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
-                        result.Add(new Site(reader.GetInt32(0), Convert.ToBoolean(reader.GetInt32(1)), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5)), reader.GetInt32(6)));
+                    { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size, 7 streetID
+                        result.Add(new Site(reader.GetInt32(0), Convert.ToBoolean(reader.GetInt32(1)), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5)), reader.GetInt32(6), reader.GetInt32(7)));
                     }
                 }
                 connection.Close();
@@ -62,8 +62,8 @@ namespace camping.Database
                     reader = command.ExecuteReader();
 
                     while (reader.Read())
-                    { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
-                        result.Add(new Street(reader.GetInt32(0), true, true, true, true, true, reader.GetInt32(6)));
+                    {                       // streetID
+                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), true, true, true, true, true));
                     }
                 }
                 connection.Close();
