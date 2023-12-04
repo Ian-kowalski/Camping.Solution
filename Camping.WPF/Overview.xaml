@@ -197,7 +197,7 @@
 
                 <Label Content="Reserveringsgegevens" Margin="16,0,16,0" Grid.Row="0"  Grid.ColumnSpan="2" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="top" FontSize="24" FontWeight="Bold"/>
 
-                <Label Content="Plaats nr*" Margin="16,64,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Plaats Nr.*" Margin="16,64,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Begindatum*" Margin="6,96,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Einddatum*" Margin="6,128,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
@@ -210,10 +210,10 @@
                 <Label Content="Voornaam*" Margin="16,16,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Tussenvoegsel" Margin="6,48,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Achternaam*" Margin="6,80,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-                <Label Content="Telefoon nr*" Margin="6,112,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Telefoon nr.*" Margin="6,112,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Woonplaats*" Margin="6,144,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-                <Label Content="Huis nr*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
                 <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>

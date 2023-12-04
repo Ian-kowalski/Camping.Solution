@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -332,9 +331,8 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 60, 2, 3, location);
             CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
 
-            isUpdating = false;
             Button ChangeFacilitiesButton = new Button();
-            ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
+            ChangeFacilitiesButton.Content = "Aanpassen";
             ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
             ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
 
@@ -349,6 +347,7 @@ namespace camping.WPF
             Grid.SetRow(ChangeFacilitiesButton, 3);
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
+
         }
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
         {
@@ -375,12 +374,11 @@ namespace camping.WPF
                 Width = diameter,
                 Height = diameter
             };
-            
 
             Grid.SetColumn(facility, column);
             Grid.SetRow(facility, row);
 
-            var color = GetFacilityColor(facility);
+            var color = GetFacilityColor(location, facility);
 
                 SolidColorBrush solidColorBrush = new SolidColorBrush(color);
                 facility.Fill = solidColorBrush;
@@ -393,17 +391,16 @@ namespace camping.WPF
         {
             if (isUpdating)
             {
+                // Update the color of the clicked ellipse based on your logic
                 Ellipse clickedEllipse = (Ellipse)sender;
-                SolidColorBrush solidColorBrush = new SolidColorBrush();
- 
-                ChangeFacilityColor(clickedEllipse);
-                solidColorBrush.Color = GetFacilityColor(clickedEllipse);
-                clickedEllipse.Fill = solidColorBrush;
+
+
+                // Refresh the displayed information
+                MessageBox.Show(clickedEllipse.Name);
             }
         }
 
-
-        private Color GetFacilityColor(Ellipse facility)
+        private Color GetFacilityColor(Location location, Ellipse facility)
         {
             Color color = Colors.OrangeRed;
 
@@ -429,15 +426,6 @@ namespace camping.WPF
             return color;
         }
 
-        private void ChangeFacilityColor(Ellipse facility)
-        {
-            if (facility.Name == "HasWaterSupply") tempLocation.HasWaterSupply = !tempLocation.HasWaterSupply;
-            else if (facility.Name == "OutletPresent") tempLocation.OutletPresent = !tempLocation.OutletPresent;
-            else if (facility.Name == "PetsAllowed") tempLocation.PetsAllowed = !tempLocation.PetsAllowed;
-            else if (facility.Name == "HasShadow") tempLocation.HasShadow = !tempLocation.HasShadow;
-            else if (facility.Name == "AtWater") tempLocation.AtWater = !tempLocation.AtWater;
-        }
-
         private void ChangeFacilitiesButtonClick(Button button)
         {
             // Toggle the updating state
@@ -445,15 +433,19 @@ namespace camping.WPF
 
             if (isUpdating)
             {
-                button.Content = "Opslaan";
+                changeFacilitiesButton.Content = "Opslaan";
             }
             else
             {
-                button.Content = "Faciliteiten aanpassen";
-                siteData.UpdateFacilities(tempLocation);
-                retrieveData.UpdateLocations();
-                
-            }          
+                changeFacilitiesButton.Content = "Aanpassen faciliteiten";
+                saveColors();
+            }
+        }
+
+        private void saveColors()
+        {
+            // Save the current colors or perform any other action
+            // For example, you can save to a file or a data structure
         }
 
         
@@ -487,6 +479,7 @@ namespace camping.WPF
         {
             retrieveData.UpdateReservations();
             List<Reservation> reservations = retrieveData.Reservations;
+
 
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
