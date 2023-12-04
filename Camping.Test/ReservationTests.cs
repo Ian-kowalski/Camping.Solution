@@ -173,12 +173,12 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase(4, "12-15-2023", 6, "11-27-2023")]
-        public void Reservation_UpdateReservation_Update(int resID, DateTime startDate, int visitorID, DateTime endDate)
+        [TestCase(4, "12-15-2023", "11-27-2023", 3)]
+        public void Reservation_UpdateReservation_Update(int resID, DateTime startDate, DateTime endDate, int campSiteID)
         {
             ReservationData reservationRepo = new();
 
-            Assert.IsTrue(reservationRepo.UpdateReservation(resID, startDate, visitorID, endDate));
+            Assert.IsTrue(reservationRepo.UpdateReservation(resID, startDate, endDate, campSiteID));
 
         }
 
