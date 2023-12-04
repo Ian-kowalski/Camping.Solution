@@ -163,8 +163,8 @@
                         <ColumnDefinition Width="191*"/>
                         <ColumnDefinition Width="191*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="2" Content="Plaats. Nr." BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" Width="75" Margin="4,4,0,5"/>
-                    <Label Grid.Column="2" Content="Reserv. Nr." BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="75" Margin="77,4,0,5"/>
+                    <Label Grid.Column="2" Content="Reserv. Nr." BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Left" Width="75" Margin="4,4,0,5"/>
+                    <Label Grid.Column="2" Content="Plaats Nr." BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="75" Margin="77,4,0,5"/>
                     <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2" Grid.ColumnSpan="2" Margin="46,4,22,5"/>
                     <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2" Margin="92,4,104,5" Grid.ColumnSpan="2"/>
                     <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="123,4,161,5" Grid.ColumnSpan="2"/>
