@@ -37,10 +37,6 @@ namespace camping.WPF
 
         private Location tempLocation;
         private Site currentSelected {  get; set; }
-
-            // TODO: haal deze weg en gebruik selectedReservation voor alles
-        private Reservation Reservation { get; set; }
-
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
@@ -76,9 +72,6 @@ namespace camping.WPF
             displayAllLocations();
             displayAllReservations();
 
-            
-            // TODO: pas tonen wanneer iets geselecteerd wordt
-            displayChangeReservationInfo();
 
 
             Closing += onWindowClosing;
@@ -496,7 +489,7 @@ namespace camping.WPF
         private void displayAllReservations()
         {
             Grid grid = new Grid();
-            for (int counter = 0; counter < 6; counter++)
+            for (int counter = 0; counter < 7; counter++)
             {
                 ColumnDefinition col = new ColumnDefinition();
                 if (counter > 2)
@@ -507,9 +500,6 @@ namespace camping.WPF
             }
             List<Reservation> reservations = retrieveData.Reservations;
             
-            // TODO: maak dit selectedReservation = ... ; de eerste hoeft ook niet getoond te worden
-            Reservation = reservations[0];
-
             int i = 0;
             foreach (Reservation reservation in reservations)
             {
@@ -524,6 +514,7 @@ namespace camping.WPF
                 AddLastName(grid, reservation, i);
                 AddStartDate(grid, reservation, i);
                 AddEndDate(grid, reservation, i);
+                AddEditReservationButton(grid, reservation, i);
                 i++;
             }
 
@@ -532,38 +523,23 @@ namespace camping.WPF
             ReservationListScrollViewer.Content = grid;
         }
 
-        // TODO: haal deze weg en gebruik degene hieronder. 
-        // Maakt button aan per reservering in de lijst die subscribed naar die methode en geeft de reservering eraan mee.
-        // selectedRerservation hoeft dus ook niet gebruikt te worden.
-        private void displayChangeReservationInfo()
-        {
-            SiteIDBox.Text = Convert.ToString(Reservation.SiteID);
-            StartDateDatePicker.Text = Convert.ToString(Reservation.StartDate);
-            EndDatedatePicker.Text = Convert.ToString(Reservation.EndDate);
-
-            FirstNameBox.Text = Convert.ToString(Reservation.Guest.FirstName);
-            PrepositionBox.Text = Convert.ToString(Reservation.Guest.Preposition);
-            LastNameBox.Text = Convert.ToString(Reservation.Guest.LastName);
-            PhoneNumberBox.Text = Convert.ToString(Reservation.Guest.PhoneNumber);
-            CityBox.Text = Convert.ToString(Reservation.Guest.City);
-            AdressBox.Text = Convert.ToString(Reservation.Guest.Adress);
-
-            HouseNumberBox.Text = Convert.ToString(Reservation.Guest.HouseNumber);
-            PostalCodeBox.Text = Convert.ToString(Reservation.Guest.PostalCode);
-        }
-
 
         private void fillReservationInfoGrid(Reservation reservation)
         {
+            selectedReservation = reservation;
+
+
             SiteIDBox.Text = reservation.ReservationID.ToString();
             StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
             EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+
             FirstNameBox.Text = reservation.Guest.FirstName;
             PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
             LastNameBox.Text = reservation.Guest.LastName;
             PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
             CityBox.Text = reservation.Guest.City.ToString();
             AdressBox.Text = reservation.Guest.Adress;
+
             HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
             PostalCodeBox.Text = reservation.Guest.PostalCode;
         }
@@ -640,10 +616,11 @@ namespace camping.WPF
         {
             if (ReservationAanpassenButtonState)
             {
-                if (!saveReservation())
+                if (!saveReservation(selectedReservation))
                 {
                     return;
                 }
+                displayAllReservations();
             }
 
             chanceAanpassenOrSaveButtonContent(sender);
@@ -651,7 +628,7 @@ namespace camping.WPF
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
         }
 
-        private bool saveReservation()
+        private bool saveReservation(Reservation reservation)
         {
             var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
 
@@ -664,14 +641,14 @@ namespace camping.WPF
                         MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
                         return false;
                     }
-                    else Reservation.SiteID = int.Parse(SiteIDBox.Text);
+                    else reservation.SiteID = int.Parse(SiteIDBox.Text);
                 } catch
                 {
                     MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
                 }
                 try
                 {
-                    Reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
                 }
                 catch
                 {
@@ -680,7 +657,7 @@ namespace camping.WPF
                 }
                 try
                 {
-                    Reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                    reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
                 }
                 catch
                 {
@@ -691,7 +668,7 @@ namespace camping.WPF
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
                 {
-                    Reservation.Guest.PostalCode = PostalCodeBox.Text;
+                    reservation.Guest.PostalCode = PostalCodeBox.Text;
                 }
                 else
                 {
@@ -699,14 +676,14 @@ namespace camping.WPF
                     return false;
                 }
 
-                Reservation.Guest.FirstName = FirstNameBox.Text;
-                Reservation.Guest.Preposition = PrepositionBox.Text;
-                Reservation.Guest.LastName = LastNameBox.Text;
-                Reservation.Guest.City = CityBox.Text;
-                Reservation.Guest.Adress = AdressBox.Text;
+                reservation.Guest.FirstName = FirstNameBox.Text;
+                reservation.Guest.Preposition = PrepositionBox.Text;
+                reservation.Guest.LastName = LastNameBox.Text;
+                reservation.Guest.City = CityBox.Text;
+                reservation.Guest.Adress = AdressBox.Text;
 
 
-                if (!retrieveData.GetOtherAvailableReservations(Reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), Reservation.ReservationID))
+                if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
                 {
                     MessageBox.Show("De ingevulde datums zijn niet beschikbaar.");
                     return false ;
@@ -718,8 +695,8 @@ namespace camping.WPF
                 }
                 else if (Convert.ToDateTime(StartDateDatePicker.Text) <= Convert.ToDateTime(EndDatedatePicker.Text))
                 {
-                    Reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
-                    Reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+                    reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                    reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
                 }
                 else
                 {
@@ -727,8 +704,7 @@ namespace camping.WPF
                     return false;
                 }
 
-                retrieveData.UpdateReservation(Reservation.ReservationID, Reservation.StartDate, Reservation.Guest, Reservation.EndDate, Reservation.SiteID);
-                displayChangeReservationInfo();
+                retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Guest, reservation.EndDate, reservation.SiteID);
                 return true;
             }
             return false;
@@ -849,6 +825,17 @@ namespace camping.WPF
             TB.Text = reservation.EndDate.ToShortDateString();
             Grid.SetColumn(TB, 5);
             Grid.SetRow(TB, i);
+            TB.HorizontalAlignment = HorizontalAlignment.Center;
+            TB.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(TB);
+        }
+        private void AddEditReservationButton(Grid grid, Reservation reservation, int i)
+        {
+            Button TB = new();
+            TB.Content = "Bewerken";
+            Grid.SetColumn(TB, 6);
+            Grid.SetRow(TB, i);
+            TB.Click += (sender, e) => { fillReservationInfoGrid(reservation); };
             TB.HorizontalAlignment = HorizontalAlignment.Center;
             TB.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(TB);
