@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,6 +39,10 @@ namespace camping.WPF
         private int rowLength;
 
         private Area? SelectedArea;
+
+        private List<Reservation> toBeCancel;
+
+        private Reservation selectedReservation;
 
         private Street? SelectedStreet;
 
@@ -523,10 +528,10 @@ namespace camping.WPF
         {
 
             Grid grid = new Grid();
-            grid.MouseDown += (sender, e) => { RowClick(reservation); };
+            grid.MouseDown += (sender, e) => { fillReservationInfoGrid(reservation); };
             grid.Tag = reservation;
 
-            if (reservation.ReservationID == selectedReservation.ReservationID)
+            if (reservation.ReservationID == reservation.ReservationID)
             {
                 grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
             }
@@ -586,6 +591,25 @@ namespace camping.WPF
             checkBox.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(checkBox);
         }
+        private void fillReservationInfoGrid(Reservation reservation)
+        {
+            selectedReservation = reservation;
+
+
+            SiteIDBox.Text = reservation.ReservationID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
+
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
+        }
 
         private void Un_Checkt(Reservation reservation, object sender)
         {
@@ -608,14 +632,7 @@ namespace camping.WPF
             }
         }
 
-        private void RowClick(Reservation reservation)
-        {
-            selectedReservation = reservation;
-            ReservationInfoGrid.Visibility = Visibility.Visible;
 
-            displayAllReservations();
-
-        }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
