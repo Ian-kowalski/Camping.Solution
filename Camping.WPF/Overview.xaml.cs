@@ -1,5 +1,8 @@
 ﻿using camping.Core;
 using camping.Database;
+using Camping.WPF;
+using DevExpress.Utils.About;
+using DevExpress.XtraExport;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,6 +45,10 @@ namespace camping.WPF
 
         private Site? SelectedSite;
 
+        private Reservation? selectedReservation = new Reservation();
+
+        private List<Reservation> toBeCancel = new List<Reservation>();
+
         public Overview()
         {
             InitializeComponent();
@@ -51,7 +58,7 @@ namespace camping.WPF
             retrieveData = new RetrieveData(siteData, resData);
 
             displayAllLocations();
-            displayAlReservations();
+            displayAllReservations();
 
 
             Closing += onWindowClosing;
@@ -238,8 +245,6 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
-
-
         private Button createLocationButton(Site site) {
             Button button = new Button();
             button.Content = $"Plek {site.CampSiteID}";
@@ -321,6 +326,7 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
 
         }
+
         private void CreateAndAddLabel(string content, int fontSize, int column, int row)
         {
             Label dynamicLabel = new Label
@@ -448,33 +454,166 @@ namespace camping.WPF
 
         }
 
-        private void displayAlReservations()
+        private void displayAllReservations()
         {
-            Grid grid = new Grid();
-            for (int counter = 0; counter < 6; counter++)
-            {
-                ColumnDefinition col = new ColumnDefinition();
-                if (counter > 2)
-                {
-                    col.Width = new GridLength(2, GridUnitType.Star);
-                }
-                grid.ColumnDefinitions.Add(col);
-            }
             List<Reservation> reservations = retrieveData.Reservations;
 
-            int i = 0;
-            foreach (Reservation reservation in reservations)
+            
+            Grid grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(8, GridUnitType.Star) });
+
+
+
+            for (int i = 0; i < reservations.Count; i++)
             {
-                
+                Reservation reservation = reservations[i];
                 RowDefinition row = new RowDefinition();
+
+                row.Tag = reservation;
                 row.Height = new GridLength(50);
+
+
+                addCancelCheckBoxColum(grid, i, reservation);
+                AddReservationInfoColum(grid, i, reservation);
+
                 grid.RowDefinitions.Add(row);
-                i++;
             }
 
 
-            grid.ShowGridLines = true;
+            grid.ShowGridLines = false;
             ReservationListScrollViewer.Content = grid;
+        }
+
+        private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
+        {
+            Grid InfoGrid = GetGridFullOfReservationInfo(reservation);
+            Grid.SetColumn(InfoGrid, 1);
+            Grid.SetRow(InfoGrid, i);
+            grid.Children.Add(InfoGrid);
+        }
+
+        private Grid GetGridFullOfReservationInfo(Reservation reservation)
+        {
+
+            Grid grid = new Grid();
+            grid.MouseDown += (sender, e) => { RowClick(reservation); } ;
+            grid.Tag = reservation;
+
+            if (reservation.ReservationID == selectedReservation.ReservationID)
+            {
+                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
+            }
+            else { grid.Background = Brushes.Transparent; }
+
+
+            for (int i = 0; i <5; i++) 
+            {
+                Label label = new Label();
+                label.Margin = new Thickness(0);
+                label.VerticalContentAlignment = VerticalAlignment.Center;
+                label.HorizontalContentAlignment = HorizontalAlignment.Center;
+                int info = i;
+                switch (info)
+                {
+                    case 0:
+                        label.Content = reservation.ReservationID.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition());
+                        break;
+                    case 1:
+                        label.Content = reservation.SiteID.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition());
+                        break; 
+                    case 2:
+                        label.Content = reservation.Guest.LastName.ToString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break; 
+                    case 3:
+                        label.Content = reservation.StartDate.ToShortDateString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break;
+                    case 4:
+                        label.Content = reservation.EndDate.ToShortDateString();
+                        grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
+                        break;
+                } 
+                
+                grid.Margin = new Thickness(0); 
+                
+                grid.ShowGridLines = true;
+                Grid.SetRow(label, 0);
+                Grid.SetColumn(label, i);
+                grid.Children.Add(label);
+            }
+            return grid;
+        }
+
+        private void addCancelCheckBoxColum(Grid grid, int i, Reservation reservation)
+        {
+            CheckBox checkBox = new CheckBox();
+            checkBox.Checked += (sender, e) => { Un_Checkt(reservation ,sender); };
+            checkBox.Unchecked += (sender, e) => { Un_Checkt(reservation, sender); };
+
+            Grid.SetColumn(checkBox, 0);
+            Grid.SetRow(checkBox, i);
+            checkBox.HorizontalAlignment = HorizontalAlignment.Center;
+            checkBox.VerticalAlignment = VerticalAlignment.Center;
+            grid.Children.Add(checkBox);
+        }
+
+        private void Un_Checkt(Reservation reservation, object sender)
+        {
+            CheckBox c = (CheckBox)sender;
+            if (c.IsChecked == true)
+            {
+                toBeCancel.Add(reservation);
+            }
+            else
+            {
+                toBeCancel.Remove(reservation);
+            }
+            if (toBeCancel.Count != 0)
+            {
+                AnnulerenButton.IsEnabled = true;
+            }
+            else
+            {
+                AnnulerenButton.IsEnabled = false;
+            }
+        }
+
+        private void CancelButtonClick(object sender, RoutedEventArgs e)
+        {
+            string combinedString = "";
+            foreach (var reservation in toBeCancel)
+            {
+                combinedString += reservation.ReservationID.ToString();
+            }
+            string messageBoxText = "Do you want to cancel these reservation(s): " + combinedString;
+            string caption = "Annuleren reservering(en)";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    // User pressed Yes button
+                    foreach (var reservation in toBeCancel)
+                    {
+                        // ...Delete out of database
+                        retrieveData.DeleteReservation(reservation.ReservationID);
+                    }
+                    toBeCancel.Clear();
+                    break;
+                case MessageBoxResult.No:
+                    // User pressed No button
+                    // ...Nothing
+                    toBeCancel.Clear();
+                    break;
+            }
+            displayAllReservations();
         }
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
@@ -521,6 +660,33 @@ namespace camping.WPF
             {
                 element.IsEnabled = !element.IsEnabled;
             }
+        }
+
+        private void RowClick(Reservation reservation)
+        {
+            selectedReservation = reservation;
+
+            //MessageBox.Show( reservation.ReservationID.ToString());
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+            fillReservationInfoGrid(reservation);
+
+            displayAllReservations();
+           
+        }
+
+        private void fillReservationInfoGrid( Reservation reservation)
+        {
+            SiteIDBox.Text = reservation.ReservationID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text= reservation.EndDate.ToShortDateString();
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty? "": reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
         }
     }
 }
