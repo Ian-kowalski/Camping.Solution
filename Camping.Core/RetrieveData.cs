@@ -131,5 +131,9 @@ namespace camping.Core
         {
             Reservations = reservationData.GetReservationInfo();
         }
+        public void UpdateReservations(int siteID, String lastname)
+        {
+            Reservations = reservationData.GetReservationInfo(siteID, lastname);
+        }
     }
 }
