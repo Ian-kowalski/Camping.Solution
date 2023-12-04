@@ -147,7 +147,7 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
-                    <Label Content="Plaats nr" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
+                    <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
                     <TextBox x:Name="SiteIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text=""  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0"/>
 
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>

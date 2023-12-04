@@ -485,6 +485,7 @@ namespace camping.WPF
 
         private void displayAllReservations()
         {
+            retrieveData.UpdateReservations();
             List<Reservation> reservations = retrieveData.Reservations;
 
             Grid grid = new Grid();
@@ -710,21 +711,9 @@ namespace camping.WPF
                         return false;
                     }
                     else reservation.SiteID = int.Parse(SiteIDBox.Text);
-                } catch
-                {
-                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
-                }
-                try
-                {
+
                     reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
-                }
-                catch
-                {
-                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.");
-                    return false;
-                }
-                try
-                {
+
                     reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
                 }
                 catch
