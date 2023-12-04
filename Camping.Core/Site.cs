@@ -14,7 +14,7 @@ public class Site : Location
     public int Size { get; set; }
     public bool HasResevation { get; set; }
     public int StreetID { get; set; }  
-
+    public bool Inherits {  get; set; }
 
     public bool Visible = false;
 }
