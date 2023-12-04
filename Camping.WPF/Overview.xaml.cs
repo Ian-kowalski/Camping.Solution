@@ -77,6 +77,8 @@ namespace camping.WPF
             displayAllReservations();
 
             
+            // TODO: pas tonen wanneer iets geselecteerd wordt
+            displayChangeReservationInfo();
 
 
             Closing += onWindowClosing;
@@ -270,8 +272,6 @@ namespace camping.WPF
             rowDef.Height = new GridLength(50);
             CampSiteList.RowDefinitions.Add(rowDef);
         }
-
-
 
         private Button createLocationButton(Site site)
         {
@@ -492,6 +492,7 @@ namespace camping.WPF
         }
 
 
+
         private void displayAllReservations()
         {
             List<Reservation> reservations = retrieveData.Reservations;
@@ -519,29 +520,28 @@ namespace camping.WPF
             ReservationListScrollViewer.Content = grid;
         }
 
-        private void AddReservationInfoColum(Grid grid, int i, Reservation reservation)
+        // TODO: haal deze weg en gebruik degene hieronder. 
+        // Maakt button aan per reservering in de lijst die subscribed naar die methode en geeft de reservering eraan mee.
+        // selectedRerservation hoeft dus ook niet gebruikt te worden.
+        private void displayChangeReservationInfo()
         {
-            Grid InfoGrid = GetGridOfReservationLine(reservation);
-            Grid.SetColumn(InfoGrid, 1);
-            Grid.SetRow(InfoGrid, i);
-            grid.Children.Add(InfoGrid);
+            SiteIDBox.Text = Convert.ToString(Reservation.SiteID);
+            StartDateDatePicker.Text = Convert.ToString(Reservation.StartDate);
+            EndDatedatePicker.Text = Convert.ToString(Reservation.EndDate);
+
+            FirstNameBox.Text = Convert.ToString(Reservation.Guest.FirstName);
+            PrepositionBox.Text = Convert.ToString(Reservation.Guest.Preposition);
+            LastNameBox.Text = Convert.ToString(Reservation.Guest.LastName);
+            PhoneNumberBox.Text = Convert.ToString(Reservation.Guest.PhoneNumber);
+            CityBox.Text = Convert.ToString(Reservation.Guest.City);
+            AdressBox.Text = Convert.ToString(Reservation.Guest.Adress);
+
+            HouseNumberBox.Text = Convert.ToString(Reservation.Guest.HouseNumber);
+            PostalCodeBox.Text = Convert.ToString(Reservation.Guest.PostalCode);
         }
 
-        private Grid GetGridOfReservationLine(Reservation reservation)
-        {
 
-            Grid grid = new Grid();
-            grid.MouseDown += (sender, e) => { RowClick(reservation); };
-            grid.Tag = reservation;
-
-            if (reservation.ReservationID == selectedReservation.ReservationID)
-            {
-                grid.Background = new SolidColorBrush(Color.FromArgb(185, 150, 190, 250));
-            }
-            else { grid.Background = Brushes.Transparent; }
-
-
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i <5; i++) 
             {
                 Label label = new Label();
                 label.Margin = new Thickness(0);
@@ -557,11 +557,11 @@ namespace camping.WPF
                     case 1:
                         label.Content = reservation.SiteID.ToString();
                         grid.ColumnDefinitions.Add(new ColumnDefinition());
-                        break;
+                        break; 
                     case 2:
                         label.Content = reservation.Guest.LastName.ToString();
                         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-                        break;
+                        break; 
                     case 3:
                         label.Content = reservation.StartDate.ToShortDateString();
                         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
@@ -570,9 +570,9 @@ namespace camping.WPF
                         label.Content = reservation.EndDate.ToShortDateString();
                         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
                         break;
-                }
-
-                grid.Margin = new Thickness(0);
+                } 
+                
+                grid.Margin = new Thickness(0); 
                 Grid.SetRow(label, 0);
                 Grid.SetColumn(label, i);
                 grid.Children.Add(label);
@@ -627,6 +627,16 @@ namespace camping.WPF
             {
                 AnnulerenButton.IsEnabled = false;
             }
+        }
+
+        private void RowClick(Reservation reservation)
+        {
+            selectedReservation = reservation;
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+
+            fillReservationInfoTextBoxes(reservation);
+            displayAllReservations();
+
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
@@ -755,7 +765,7 @@ namespace camping.WPF
                 }
 
                 retrieveData.UpdateReservation(Reservation.ReservationID, Reservation.StartDate, Reservation.Guest, Reservation.EndDate, Reservation.SiteID);
-                
+                displayChangeReservationInfo();
                 return true;
             }
             return false;
@@ -784,15 +794,7 @@ namespace camping.WPF
             }
         }
 
-        private void RowClick(Reservation reservation)
-        {
-            selectedReservation = reservation;
-            ReservationInfoGrid.Visibility = Visibility.Visible;
 
-            fillReservationInfoGrid(reservation);
-            displayAllReservations();
-           
-        }
 
         private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
