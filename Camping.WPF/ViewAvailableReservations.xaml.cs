@@ -149,10 +149,10 @@ namespace camping.WPF
             grid.RowDefinitions.Clear();
         }
 
-        private Rectangle createRectangle(bool color, Rectangle rect) {
+        private Rectangle createRectangle(int color, Rectangle rect) {
             rect.Height = 100;
             rect.Width = 100;
-            if (color)
+            if (color % 2 == 1)
             {
                 rect.Fill = new SolidColorBrush(Color.FromRgb(100, 255, 100));
             }

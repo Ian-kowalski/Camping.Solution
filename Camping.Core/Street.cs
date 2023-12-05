@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class Street : Location
 {
-    public Street(int streetID, int areaID, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply)
+    public Street(int streetID, int areaID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
         : base(atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
     {
         StreetID = streetID;

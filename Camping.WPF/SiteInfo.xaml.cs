@@ -85,7 +85,7 @@ namespace Camping.WPF
             CheckBox animalCheckbox = FindCheckBoxByNumberAndFacility(number, "Animal");
             CheckBox shadowCheckbox = FindCheckBoxByNumberAndFacility(number, "Shadow");
             CheckBox waterCheckbox = FindCheckBoxByNumberAndFacility(number, "Water");
-
+/*
             if (site.HasWaterSupply)
             {
                 craneCheckbox.IsChecked = site.HasWaterSupply;
@@ -106,7 +106,7 @@ namespace Camping.WPF
             if (site.AtWater)
             {
                 waterCheckbox.IsChecked = site.AtWater;
-            }
+            }*/
             SetCheckboxBackground(craneCheckbox);
             SetCheckboxBackground(powerCheckbox);
             SetCheckboxBackground(animalCheckbox);

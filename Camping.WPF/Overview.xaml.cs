@@ -1,6 +1,8 @@
 ﻿using camping.Core;
 using camping.Database;
+using DevExpress.DirectX.Common;
 using DevExpress.Utils;
+using DevExpress.Utils.Svg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -397,7 +399,7 @@ namespace camping.WPF
             {
                 Ellipse clickedEllipse = (Ellipse)sender;
                 SolidColorBrush solidColorBrush = new SolidColorBrush();
-
+                
                 ChangeFacilityColor(clickedEllipse);
                 solidColorBrush.Color = GetFacilityColor(clickedEllipse);
                 clickedEllipse.Fill = solidColorBrush;
@@ -414,37 +416,16 @@ namespace camping.WPF
             {
                 if (facilityName == facility.Name)
                 {
-                    if (tempLocation is Area area)
-                    {
-                        var property = area.GetType().GetProperty(facilityName);
-                        if (property != null)
-                        {
-                            var value = (bool)property.GetValue(area);
-                            color = value ? Colors.DarkGreen : Colors.DarkRed;
-                        }
-                    }
-                    else if (tempLocation is Street street || tempLocation is Site site)
-                    {
-                        var inherits = GetInheritanceVariable(facilityName);
-                        color = InheritsColor(inherits, facilityName, tempLocation);
-                    }
+                    int value = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
+                        if (value == 0) return Colors.OrangeRed;
+                        if (value == 1) return Colors.LightGreen;
+                        if (value == 2) return Colors.DarkRed;
+                        if (value == 3) return Colors.DarkGreen;
+
+                    
                 }
             }
             return color;
-        }
-
-        private Color InheritsColor(bool inherits, string facilityName, object location)
-        {
-            if (inherits)
-            {
-                var property = location.GetType().GetProperty(facilityName);
-                return property != null && (bool)property.GetValue(location) ? Colors.DarkGreen : Colors.DarkRed;
-            }
-            else
-            {
-                var property = location.GetType().GetProperty(facilityName);
-                return property != null && (bool)property.GetValue(location) ? Colors.LightGreen : Colors.OrangeRed;
-            }
         }
 
         private void ChangeFacilityColor(Ellipse facility)
@@ -455,63 +436,36 @@ namespace camping.WPF
             {
                 if (facilityName == facility.Name)
                 {
-                    var currentValue = GetFacilityValue(selectedLocation ,facilityName);
-                    var inherits = GetInheritanceVariable(facilityName);
-
-                    MessageBox.Show($"{facilityName}: Current Value - {currentValue}, Inherits - {inherits}");
-
+                    int currentValue = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
                     ToggleFacilityValue(facilityName);
                 }
             }
         }
 
-        private bool GetFacilityValue(object location, string facilityName)
-        {
-            var property = location.GetType().GetProperty(facilityName);
-            return property != null && (bool)property.GetValue(location);
-        }
-
-
-        private bool GetInheritanceVariable(string facilityName)
-        {
-            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
-            return inheritanceVariable != null && (bool)inheritanceVariable.GetValue(tempLocation);
-        }
-        private void SetInheritanceVariable(string facilityName, bool value)
-        {
-            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
-            if (inheritanceVariable != null && inheritanceVariable.PropertyType == typeof(bool))
-            {
-                inheritanceVariable.SetValue(tempLocation, value);
-            }
-        }
 
         private void ToggleFacilityValue(string facilityName)
         {
-            bool inherits = GetInheritanceVariable(facilityName);
             var property = tempLocation.GetType().GetProperty(facilityName);
             if (property != null)
             {
-               
-                var currentValue = (bool)property.GetValue(tempLocation);
-                if (inherits)
+                int currentValue = (int)property.GetValue(tempLocation);
+                if (currentValue == 0) property.SetValue(tempLocation, 1);
+                if (currentValue == 1)
                 {
-                    SetInheritanceVariable(facilityName, false);
-                    property.SetValue(tempLocation, false);
-                }
-                else if(tempLocation is Area && currentValue == true) property.SetValue(tempLocation, false);
-
-                else
-                {
-                    if (currentValue == false) property.SetValue(tempLocation, true);
-                    else if(tempLocation is not Area)
+                    if (tempLocation is Area) property.SetValue(tempLocation, 0);
+                    else
                     {
-                        object tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
-                        SetInheritanceVariable(facilityName, true);
-                        property.SetValue(tempLocation, GetFacilityValue(tempSelectedLocation, facilityName));
+                        Location tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
+                        if((int)tempSelectedLocation.GetType().GetProperty(facilityName).GetValue(tempSelectedLocation) % 2 == 0){
+                            property.SetValue(tempLocation, 2);
+                        }
+                        else property.SetValue(tempLocation, 3);
                     }
                 }
-                
+                if(currentValue >= 2)
+                {
+                    property.SetValue(tempLocation, 0);
+                }                
             }
         }
 
