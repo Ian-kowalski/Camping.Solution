@@ -21,7 +21,7 @@ namespace camping.Core
 
             UpdateLocations();
 
-            Reservations = reservationData.GetReservationInfo();
+            UpdateReservations();
         }
 
         public Area GetAreaFromID(int id) {
@@ -125,6 +125,15 @@ namespace camping.Core
             Sites = siteData.GetSiteInfo();
             Streets = siteData.GetStreetInfo();
             Areas = siteData.GetAreaInfo();
+        }
+
+        public void UpdateReservations()
+        {
+            Reservations = reservationData.GetReservationInfo();
+        }
+        public void UpdateReservations(int siteID, String lastname)
+        {
+            Reservations = reservationData.GetReservationInfo(siteID, lastname);
         }
     }
 }

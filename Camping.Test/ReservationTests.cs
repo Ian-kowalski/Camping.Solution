@@ -47,7 +47,7 @@ namespace Camping.Test
             string startDate, string endDate, int visitorID,
             int result)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
 
             int ID = reservationRepo.getReservationID(visitorID, startDate, endDate);
 
@@ -73,7 +73,7 @@ namespace Camping.Test
             string startDate, string endDate,
             int result)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
             VisitorRepository visiterRepo = new();
 
             int visitorID = visiterRepo.getVisitorID(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
@@ -142,7 +142,7 @@ namespace Camping.Test
             int houseNumber, int phoneNumber,
             string startDate, string endDate)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
 
             if (!reservationRepo.addReservation(campSite, startDate, endDate, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber))
             {
@@ -160,7 +160,7 @@ namespace Camping.Test
         [TestCase(1, "12-05-2023", "12-06-2023", true)]
         public void Reservation_GetAvailableReservation(int campSite, string startDate, string endDate, bool available)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
 
             if (reservationRepo.GetAvailableReservation(campSite, startDate, endDate) == available)
             {
@@ -176,7 +176,7 @@ namespace Camping.Test
         [TestCase(4, "12-15-2023", "11-27-2023", 3)]
         public void Reservation_UpdateReservation_Update(int resID, DateTime startDate, DateTime endDate, int campSiteID)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
 
             Assert.IsTrue(reservationRepo.UpdateReservation(resID, startDate, endDate, campSiteID));
 
@@ -186,7 +186,7 @@ namespace Camping.Test
         [TestCase(2, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678)]
         public void Reservation_UpdateVisitor_Update(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository reservationRepo = new();
 
             Assert.IsTrue(reservationRepo.UpdateVisitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber));
             
@@ -197,7 +197,7 @@ namespace Camping.Test
         [TestCase(2, "12-02-2025", "12-05-2025", "test", "delete", "res", "this Street", "here", "2332XX", 22, 54717700)]
         public void Reservation_DeleteReservation_delete(int campsId, string sDate, string eDate, string fName, string prop, string lName, string adres, string city, string postcode, int huisnummer, int phoneNumber)
         {
-            ReservationData reservationRepo = new();
+            ReservationRepository   reservationRepo = new();
             VisitorRepository visitorRepository = new();
             reservationRepo.addReservation(campsId, sDate, eDate, fName, prop, lName, adres, city, postcode, huisnummer, phoneNumber);
             int visitorID = visitorRepository.getVisitorID(fName, lName, prop, adres, city, postcode, huisnummer, phoneNumber);

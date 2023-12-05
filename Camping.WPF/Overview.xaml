@@ -147,11 +147,11 @@
                     </Grid.ColumnDefinitions>
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
-                    <Label Content="Plaats nr" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="SiteIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap" Text=""  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0"/>
+                    <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
+                    <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" />
 
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap" Text=""  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0"/>
+                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress"/>
                 </Grid>
                 <Grid Margin="0,0,0,0" HorizontalAlignment="Left" Width="859" Height="55" VerticalAlignment="Center" Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -197,11 +197,11 @@
 
                 <Label Content="Reserveringsgegevens" Margin="16,0,16,0" Grid.Row="0"  Grid.ColumnSpan="2" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="top" FontSize="24" FontWeight="Bold"/>
 
-                <Label Content="Plaats nr*" Margin="16,64,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Plaats Nr.*" Margin="16,64,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Begindatum*" Margin="6,96,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Einddatum*" Margin="6,128,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <TextBox x:Name="SiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0"  TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="SiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0"  TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" PreviewTextInput="NumberValidationTextBox" />
                 <DatePicker x:Name="StartDateDatePicker" Grid.Column="1" Height="28" Margin="8,96,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="False" />
                 <DatePicker x:Name="EndDatedatePicker" Grid.Column="1" Height="28" Margin="8,128,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="False"/>
 
@@ -210,15 +210,15 @@
                 <Label Content="Voornaam*" Margin="16,16,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Tussenvoegsel" Margin="6,48,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Achternaam*" Margin="6,80,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-                <Label Content="Telefoon nr*" Margin="6,112,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Telefoon Nr.*" Margin="6,112,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Woonplaats*" Margin="6,144,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
-                <Label Content="Huis nr*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
                 <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" />
+                <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="PhoneNumberValidation"/>
                 <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
@@ -227,9 +227,9 @@
                         <ColumnDefinition Width="11*"/>
                         <ColumnDefinition Width="20*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox x:Name="HouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="False"/>
+                    <TextBox x:Name="HouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="False" TextChanged="HouseNumberValidation"/>
                     <Label Content="Postcode*" Height="32" HorizontalContentAlignment="Center" Grid.Column="1" VerticalContentAlignment="Center"/>
-                    <TextBox x:Name="PostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="False"/>
+                    <TextBox x:Name="PostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="False" TextChanged="PostalCodeValidation"/>
                 </Grid>
 
                 <Button x:Name="EditReservationButton" Content="Aanpassen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="EditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>

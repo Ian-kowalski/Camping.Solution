@@ -22,7 +22,7 @@ namespace camping.Database
         {
             string sql = "SELECT reservation.reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
             + "FROM reservation "
-            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID"
+            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID " 
             + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID;";
             using (var connection = new SqlConnection(connectionString))
             {
@@ -37,7 +37,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 reservationID, 1 startDate, 3 endDate, visitor(2 visitorID, 5 firstName, 6 lastName, 7 preposition, 8 adress, 9 city, 10 postalcode, 11 houseNumber, 12 phoneNumber)
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty :reader.GetString(6)) , reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11)), reader.GetInt32(11)));
+                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty :reader.GetString(6)) , reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11)), reader.GetInt32(12)));
                     }
                 }
                 connection.Close();
@@ -77,6 +77,42 @@ namespace camping.Database
                 connection.Close();
                 return result;
             }
+        }
+
+
+        public List<Reservation> GetReservationInfo(int ReservetionID, string lastname)
+        {
+            string sql = "SELECT distinct(reservation.reservationID), startDate, endDate,\r\n" +
+                "visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber,\r\n" +
+                "campSiteID\r\n" +
+                "FROM reservation\r\n" +
+                "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID\r\n" +
+                "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID\r\n" +
+                "where reservation.reservationID = @ReservetionID or lastName like @lastname;";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                SqlDataReader reader;
+                List<Reservation> result = new List<Reservation>();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("ReservetionID", ReservetionID);
+                    command.Parameters.AddWithValue("lastname", "%"+lastname+"%");
+
+                    reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+
+                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetInt32(10), reader.GetInt32(11)), reader.GetInt32(12)));
+                    }
+                }
+                connection.Close();
+                return result;
+            }
+            throw new NotImplementedException();
         }
 
         // adds a new reservation to the database
@@ -344,5 +380,6 @@ namespace camping.Database
                 return (result > 0);
             }
         }
+
     }
 }

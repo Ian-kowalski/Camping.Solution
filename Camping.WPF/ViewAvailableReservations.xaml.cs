@@ -22,13 +22,13 @@ namespace camping.WPF
     /// </summary>
     public partial class ViewAvailableReservations : Window
     {
-        private ReservationData resData;
+        private ReservationRepository resData;
         private SiteData siteData;
         public ViewAvailableReservations(DateTime startDate, DateTime endDate)
         {
             InitializeComponent();
             siteData = new SiteData();
-            resData = new ReservationData();
+            resData = new ReservationRepository();
             initiateGrid(startDate, endDate);
         }
 
