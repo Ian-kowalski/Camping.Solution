@@ -23,7 +23,7 @@ namespace Camping.WPF
     public partial class SiteInfo : Window
     {
         private SiteData siteData;
-        private ReservationData reservationData;
+        private ReservationRepository reservationData;
         private RetrieveData retrieveData;
         private bool checkboxesEnabled = false;
         private int campsiteID;
@@ -33,7 +33,7 @@ namespace Camping.WPF
             InitializeComponent();
             InitializeCheckBoxCollection();
             siteData = new SiteData();
-            reservationData = new ReservationData();
+            reservationData = new ReservationRepository();
             retrieveData = new RetrieveData(siteData, reservationData);
             this.campsiteID = campsiteID;
             DisableCheckboxes();

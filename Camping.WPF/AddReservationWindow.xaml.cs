@@ -40,7 +40,7 @@ namespace camping.WPF
 
         private void AddReservationButton_Click(object sender, RoutedEventArgs e)
         {
-            ReservationData resData = new();
+            ReservationRepository resData = new();
 
 
 
