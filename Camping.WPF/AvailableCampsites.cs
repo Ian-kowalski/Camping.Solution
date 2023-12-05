@@ -29,6 +29,9 @@ namespace camping.WPF
         public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData, DateTime startDate, DateTime endDate) {
             this.grid = grid;
 
+            grid.Background = Brushes.White;
+            
+
             grid.Children.Clear();
             grid.RowDefinitions.Clear();
 

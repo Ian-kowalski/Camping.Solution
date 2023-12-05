@@ -33,7 +33,7 @@ namespace camping.WPF
             this.siteData = siteData;
             this.resData = resData;
             this.availableSitesGrid = availableSitesGrid;
-            grid.Background = Brushes.Gray;
+            grid.Background = Brushes.LightGray;
 
             StartDateLabel = new Label();
             StartDateLabel.Content = "Begindatum";
@@ -41,7 +41,6 @@ namespace camping.WPF
             Grid.SetRow(StartDateLabel, 1);
             StartDateLabel.Width = 128;
             StartDateLabel.Height = 32;
-            StartDateLabel.FontWeight = FontWeights.Bold;
             StartDateLabel.FontSize = 18;
             StartDateLabel.Margin = new Thickness(0,0,0,0);
             StartDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
@@ -54,7 +53,6 @@ namespace camping.WPF
             Grid.SetRow(EndDateLabel, 1);
             EndDateLabel.Width = 128;
             EndDateLabel.Height = 32;
-            EndDateLabel.FontWeight = FontWeights.Bold;
             EndDateLabel.FontSize = 18;
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
@@ -68,7 +66,7 @@ namespace camping.WPF
             StartDateButton.FontSize = 12;
             StartDateButton.BorderBrush = Brushes.Black;
             StartDateButton.Background = Brushes.White;
-            StartDateButton.BorderThickness = new Thickness(3);
+            StartDateButton.BorderThickness = new Thickness(2);
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             StartDateButton.HorizontalAlignment = HorizontalAlignment.Left;
             StartDateButton.VerticalAlignment = VerticalAlignment.Top;
@@ -83,7 +81,7 @@ namespace camping.WPF
             EndDateButton.FontSize = 12;
             EndDateButton.BorderBrush = Brushes.Black;
             EndDateButton.Background = Brushes.White;
-            EndDateButton.BorderThickness = new Thickness(3);
+            EndDateButton.BorderThickness = new Thickness(2);
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateButton.HorizontalAlignment = HorizontalAlignment.Left;
             EndDateButton.VerticalAlignment = VerticalAlignment.Bottom;
