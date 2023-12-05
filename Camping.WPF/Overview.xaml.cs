@@ -707,10 +707,12 @@ namespace camping.WPF
 
             if (result == MessageBoxResult.Yes)
             {
-                string statusmsg = "Er ging iets mis.";
+                Label errorMsg = new Label();
+                string statusMsg = "";
                 try
                 {
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
+                    errorMsg = SiteIDLabel;
                     if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
                     {
                         MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
@@ -718,19 +720,23 @@ namespace camping.WPF
                     }
                     else reservation.SiteID = int.Parse(SiteIDBox.Text);
 
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
-                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
+                    errorMsg = PhoneNumberLabel;
 
-                    reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
+                    errorMsg = HouseNumberLabel;
+
+                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
                 }
                 catch
                 {
-                    MessageBox.Show(statusmsg);
+                    errorMsg.Content = statusMsg;
+                    errorMsg.Foreground = Brushes.Red;
                     return false;
                 }
                 
-            
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
