@@ -13,8 +13,12 @@ public class Site : Location
     public int CampSiteID { get; set; }
     public int Size { get; set; }
     public bool HasResevation { get; set; }
-    public int StreetID { get; set; }  
-    public bool Inherits {  get; set; }
+    public int StreetID { get; set; }
+    public bool InheritsHasWaterSupply {  get; set; }
+    public bool InheritsOutletPresent { get; set; }
+    public bool InheritsPetsAllowed { get; set; }
+    public bool InheritsHasShadow { get; set; }
+    public bool InheritsAtWater { get; set; }
 
     public bool Visible = false;
 }
