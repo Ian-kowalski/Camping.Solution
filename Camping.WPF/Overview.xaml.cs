@@ -411,25 +411,25 @@ namespace camping.WPF
             Color color = Colors.OrangeRed;
 
             foreach (string facilityName in facilityNames)
+            {
+                if (facilityName == facility.Name)
                 {
-                    if (facilityName == facility.Name)
+                    if (tempLocation is Area area)
                     {
-                        if (tempLocation is Area area)
+                        var property = area.GetType().GetProperty(facilityName);
+                        if (property != null)
                         {
-                            var property = area.GetType().GetProperty(facilityName);
-                            if (property != null)
-                            {
-                                var value = (bool)property.GetValue(area);
-                                color = value ? Colors.DarkGreen : Colors.DarkRed;
-                            }
-                        }
-                        else if (tempLocation is Street street || tempLocation is Site site)
-                        {
-                            var inherits = GetInheritanceVariable(facilityName);
-                            color = InheritsColor(inherits, facilityName, tempLocation);
+                            var value = (bool)property.GetValue(area);
+                            color = value ? Colors.DarkGreen : Colors.DarkRed;
                         }
                     }
+                    else if (tempLocation is Street street || tempLocation is Site site)
+                    {
+                        var inherits = GetInheritanceVariable(facilityName);
+                        color = InheritsColor(inherits, facilityName, tempLocation);
+                    }
                 }
+            }
             return color;
         }
         private Color InheritsColor(bool inherits, string facilityName, object location)
