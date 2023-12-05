@@ -695,44 +695,36 @@ namespace camping.WPF
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
         }
 
+
         private bool saveReservation(Reservation reservation)
         {
-
+            
             var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)
             {
+                string statusmsg = "Er ging iets mis.";
                 try
                 {
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
                     if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
                     {
                         MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
                         return false;
                     }
                     else reservation.SiteID = int.Parse(SiteIDBox.Text);
-                } catch
-                {
-                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.");
-                }
-                try
-                {
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
                     reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
-                }
-                catch
-                {
-                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.");
-                    return false;
-                }
-                try
-                {
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
                     reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
                 }
                 catch
                 {
-                    MessageBox.Show("Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.");
+                    MessageBox.Show(statusmsg);
                     return false;
                 }
-
+                
+            
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
                 {
