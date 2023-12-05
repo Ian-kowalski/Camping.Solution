@@ -486,6 +486,12 @@ namespace camping.WPF
 
         private void displayAllReservations()
         {
+            // zorgt ervoor dat de annuleerlijst weer null wordt wanneer
+            // er opnieuw een reservering geselecteerd wordt
+            // (anders bevat de lisjt reserveringen die niet zijn aangeklikt!)
+            toBeCancel.Clear();
+            AnnulerenButton.IsEnabled = false;
+
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
                 int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
@@ -654,11 +660,13 @@ namespace camping.WPF
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            string combinedString = "";
+            string combinedString = "\n";
+
             foreach (var reservation in toBeCancel)
             {
-                combinedString += reservation.ReservationID.ToString();
+                combinedString += $"{reservation.ReservationID}, ";
             }
+            combinedString.Remove(combinedString.Length-2);
             string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
@@ -676,14 +684,13 @@ namespace camping.WPF
                         retrieveData.DeleteReservation(reservation.ReservationID);
                     }
                     toBeCancel.Clear();
+                    displayAllReservations();
                     break;
                 case MessageBoxResult.No:
                     // User pressed No button
                     // ...Nothing
-                    toBeCancel.Clear();
                     break;
             }
-            displayAllReservations();
         }
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
