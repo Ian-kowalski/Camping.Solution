@@ -261,7 +261,7 @@ namespace camping.Database
                                 "((@startDate >= startDate AND @startDate <= endDate) OR " +
                                 "(@endDate >= startDate AND @endDate <= endDate) OR " +
                                 "(@startDate <= startDate AND @endDate >= endDate) AND " +
-                                "(startDate <= endDate) AND (reservation.reservationID != @reservationID))";
+                                "(startDate <= endDate)) AND (reservation.reservationID != @reservationID)";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -286,8 +286,7 @@ namespace camping.Database
 
         public bool UpdateReservation(int reservationID, DateTime startDate, DateTime endDate, int campSiteID)
         {
-            string sql = $"UPDATE reservation SET startDate = @startDate, endDate = @endDate, campSiteID = @campSiteID WHERE reservation.reservationID = @reservationID" +
-                $"LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID";
+            string sql = $"UPDATE reservation SET startDate = @startDate, endDate = @endDate WHERE reservationID = @reservationID";
 
             using (var connection = new SqlConnection(connectionString))
             {
