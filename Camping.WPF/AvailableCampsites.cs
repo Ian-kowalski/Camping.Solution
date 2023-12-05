@@ -107,6 +107,10 @@ namespace camping.WPF
                 reserveButton.Background = new SolidColorBrush(Color.FromRgb(200, 200, 200));
                 reserveButton.FontSize = 20;
                 reserveButton.Content = "Reserveren";
+                reserveButton.BorderBrush = Brushes.Black;
+                reserveButton.BorderThickness = new Thickness(2);
+                reserveButton.Height = 40;
+                reserveButton.Width = 120;
                 Grid.SetColumn(reserveButton, 7);
                 Grid.SetRow(reserveButton, rowNumber);
                 reserveButton.Click += (sender, RoutedEventArgs) => { ReserveButton_Click(sender, RoutedEventArgs, site.CampSiteID, startDate, endDate); };

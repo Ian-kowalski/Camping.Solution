@@ -25,7 +25,8 @@ namespace camping.WPF
         public string StartDate;
         public string EndDate;
 
-        public AddReservationWindow(int campSiteID, string startDate, string endDate) {
+        public AddReservationWindow(int campSiteID, string startDate, string endDate)
+        {
             InitializeComponent();
 
             CampSiteID = campSiteID;
@@ -45,11 +46,13 @@ namespace camping.WPF
 
 
             int houseNumber = 0;
-            if (!int.TryParse(HouseNumberBox.Text, out houseNumber)) {
+            if (!int.TryParse(HouseNumberBox.Text, out houseNumber))
+            {
                 MessageBox.Show("Het huisnummer is geen nummer!");
                 return;
             }
-            if (houseNumber < 0 || houseNumber > 9999) {
+            if (houseNumber < 0 || houseNumber > 9999)
+            {
                 MessageBox.Show("Het huisnummer moet tussen 0 en 9999 zijn!");
                 return;
             }
@@ -85,7 +88,8 @@ namespace camping.WPF
                 ReservationAdded?.Invoke(this, new EventArgs());
                 Close();
             }
-            else {
+            else
+            {
                 MessageBox.Show("Reservering kon niet worden toegevoegd. Incorrecte veldwaarde?");
             }
         }
