@@ -20,7 +20,7 @@ namespace camping.Database
 
         public List<Reservation> GetReservationInfo()
         {
-            string sql = "SELECT reservation.reservationID, startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
+            string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
             + "FROM reservation "
             + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID " 
             + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID;";
