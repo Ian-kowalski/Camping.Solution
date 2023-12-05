@@ -43,6 +43,8 @@ namespace camping.WPF
         private Location selectedLocation;
         private Button changeFacilitiesButton;
 
+        private AddReservation addReservation;
+
         public Overview()
         {
             InitializeComponent();
@@ -56,6 +58,7 @@ namespace camping.WPF
 
             displayAllReservations();
 
+            addReservation = new AddReservation(AddReservationGrid, siteData, resData);
 
             Closing += onWindowClosing;
         }
@@ -887,20 +890,9 @@ namespace camping.WPF
             }
         }
 
-        private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
-        }
+        
 
-        private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
-        }
-
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
-        {
-            AvailableCampsites availableCampsites = new AvailableCampsites(AddReservationGridList, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
-        }
+        
 
         private void FilterZoekenEnterPress(object sender, KeyEventArgs e)
         {
