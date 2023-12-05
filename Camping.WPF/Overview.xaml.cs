@@ -1,10 +1,10 @@
 ﻿using camping.Core;
 using camping.Database;
-using DevExpress.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DevExpress.Utils;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,7 +43,7 @@ namespace camping.WPF
         private Location selectedLocation;
         private Button changeFacilitiesButton;
 
-        private AddReservation addReservation;
+        private SearchAvailableCampsites addReservation;
 
         public Overview()
         {
@@ -58,7 +58,7 @@ namespace camping.WPF
 
             displayAllReservations();
 
-            addReservation = new AddReservation(AddReservationGrid, siteData, resData);
+            addReservation = new SearchAvailableCampsites(AddReservationGrid, siteData, resData, AddReservationGridList);
 
             Closing += onWindowClosing;
         }
@@ -432,7 +432,6 @@ namespace camping.WPF
             }
             return color;
         }
-
         private Color InheritsColor(bool inherits, string facilityName, object location)
         {
             if (inherits)
@@ -455,7 +454,7 @@ namespace camping.WPF
             {
                 if (facilityName == facility.Name)
                 {
-                    var currentValue = GetFacilityValue(selectedLocation ,facilityName);
+                    var currentValue = GetFacilityValue(selectedLocation, facilityName);
                     var inherits = GetInheritanceVariable(facilityName);
 
                     MessageBox.Show($"{facilityName}: Current Value - {currentValue}, Inherits - {inherits}");
@@ -492,26 +491,26 @@ namespace camping.WPF
             var property = tempLocation.GetType().GetProperty(facilityName);
             if (property != null)
             {
-               
+
                 var currentValue = (bool)property.GetValue(tempLocation);
                 if (inherits)
                 {
                     SetInheritanceVariable(facilityName, false);
                     property.SetValue(tempLocation, false);
                 }
-                else if(tempLocation is Area && currentValue == true) property.SetValue(tempLocation, false);
+                else if (tempLocation is Area && currentValue == true) property.SetValue(tempLocation, false);
 
                 else
                 {
                     if (currentValue == false) property.SetValue(tempLocation, true);
-                    else if(tempLocation is not Area)
+                    else if (tempLocation is not Area)
                     {
                         object tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
                         SetInheritanceVariable(facilityName, true);
                         property.SetValue(tempLocation, GetFacilityValue(tempSelectedLocation, facilityName));
                     }
                 }
-                
+
             }
         }
 
@@ -562,6 +561,12 @@ namespace camping.WPF
 
         private void displayAllReservations()
         {
+            // zorgt ervoor dat de annuleerlijst weer null wordt wanneer
+            // er opnieuw een reservering geselecteerd wordt
+            // (anders bevat de lisjt reserveringen die niet zijn aangeklikt!)
+            toBeCancel.Clear();
+            AnnulerenButton.IsEnabled = false;
+
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
                 int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
@@ -730,11 +735,13 @@ namespace camping.WPF
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            string combinedString = "";
+            string combinedString = "\n";
+
             foreach (var reservation in toBeCancel)
             {
-                combinedString += reservation.ReservationID.ToString();
+                combinedString += $"{reservation.ReservationID}, ";
             }
+            combinedString.Remove(combinedString.Length-2);
             string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
@@ -752,14 +759,13 @@ namespace camping.WPF
                         retrieveData.DeleteReservation(reservation.ReservationID);
                     }
                     toBeCancel.Clear();
+                    displayAllReservations();
                     break;
                 case MessageBoxResult.No:
                     // User pressed No button
                     // ...Nothing
-                    toBeCancel.Clear();
                     break;
             }
-            displayAllReservations();
         }
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
@@ -786,12 +792,10 @@ namespace camping.WPF
 
             if (result == MessageBoxResult.Yes)
             {
-                Label errorMsg = new Label();
-                string statusMsg = "";
+                string statusmsg = "Er ging iets mis.";
                 try
                 {
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
-                    errorMsg = SiteIDLabel;
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
                     if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
                     {
                         MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
@@ -799,23 +803,19 @@ namespace camping.WPF
                     }
                     else reservation.SiteID = int.Parse(SiteIDBox.Text);
 
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
-                    errorMsg = PhoneNumberLabel;
-
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
                     reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+                    statusmsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
 
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
-                    errorMsg = HouseNumberLabel;
-
-                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
+                    reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
                 }
                 catch
                 {
-                    errorMsg.Content = statusMsg;
-                    errorMsg.Foreground = Brushes.Red;
+                    MessageBox.Show(statusmsg);
                     return false;
                 }
                 
+            
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
