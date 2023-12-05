@@ -9,14 +9,6 @@
         SiteID = site;
     }
 
-    public Reservation()
-    {
-        ReservationID = -1;
-        StartDate = DateTime.MinValue;
-        Guest = new Visitor();
-        EndDate = DateTime.MaxValue;
-        SiteID = -1;
-    }
     public int ReservationID { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

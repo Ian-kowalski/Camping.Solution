@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using DevExpress.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -406,37 +407,112 @@ namespace camping.WPF
 
         private Color GetFacilityColor(Ellipse facility)
         {
+            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             Color color = Colors.OrangeRed;
 
-            if (tempLocation is Area)
+            foreach (string facilityName in facilityNames)
             {
-                if (facility.Name == "HasWaterSupply" && tempLocation.HasWaterSupply) color = Colors.Green;
-                else if (facility.Name == "OutletPresent" && tempLocation.OutletPresent) color = Colors.Green;
-                else if (facility.Name == "PetsAllowed" && tempLocation.PetsAllowed) color = Colors.Green;
-                else if (facility.Name == "HasShadow" && tempLocation.HasShadow) color = Colors.Green;
-                else if (facility.Name == "AtWater" && tempLocation.AtWater) color = Colors.Green;
-            }
-            /*            if(tempLocation is Street or Site)
+                if (facilityName == facility.Name)
+                {
+                    if (tempLocation is Area area)
+                    {
+                        var property = area.GetType().GetProperty(facilityName);
+                        if (property != null)
                         {
-                            Site siteorstreet = tempLocation as Site;
-                            if(facility.Name == "HasWaterSupply")
-                            {
-                                color = Colors.LightGreen;
-                                if (siteorstreet.Inherits && SelectedStreet.HasWaterSupply) color = Colors.Green;
-                                else color = Colors.Red;
-                            }
-                        }*/
-
+                            var value = (bool)property.GetValue(area);
+                            color = value ? Colors.DarkGreen : Colors.DarkRed;
+                        }
+                    }
+                    else if (tempLocation is Street street || tempLocation is Site site)
+                    {
+                        var inherits = GetInheritanceVariable(facilityName);
+                        color = InheritsColor(inherits, facilityName, tempLocation);
+                    }
+                }
+            }
             return color;
+        }
+
+        private Color InheritsColor(bool inherits, string facilityName, object location)
+        {
+            if (inherits)
+            {
+                var property = location.GetType().GetProperty(facilityName);
+                return property != null && (bool)property.GetValue(location) ? Colors.DarkGreen : Colors.DarkRed;
+            }
+            else
+            {
+                var property = location.GetType().GetProperty(facilityName);
+                return property != null && (bool)property.GetValue(location) ? Colors.LightGreen : Colors.OrangeRed;
+            }
         }
 
         private void ChangeFacilityColor(Ellipse facility)
         {
-            if (facility.Name == "HasWaterSupply") tempLocation.HasWaterSupply = !tempLocation.HasWaterSupply;
-            else if (facility.Name == "OutletPresent") tempLocation.OutletPresent = !tempLocation.OutletPresent;
-            else if (facility.Name == "PetsAllowed") tempLocation.PetsAllowed = !tempLocation.PetsAllowed;
-            else if (facility.Name == "HasShadow") tempLocation.HasShadow = !tempLocation.HasShadow;
-            else if (facility.Name == "AtWater") tempLocation.AtWater = !tempLocation.AtWater;
+            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
+
+            foreach (string facilityName in facilityNames)
+            {
+                if (facilityName == facility.Name)
+                {
+                    var currentValue = GetFacilityValue(selectedLocation ,facilityName);
+                    var inherits = GetInheritanceVariable(facilityName);
+
+                    MessageBox.Show($"{facilityName}: Current Value - {currentValue}, Inherits - {inherits}");
+
+                    ToggleFacilityValue(facilityName);
+                }
+            }
+        }
+
+        private bool GetFacilityValue(object location, string facilityName)
+        {
+            var property = location.GetType().GetProperty(facilityName);
+            return property != null && (bool)property.GetValue(location);
+        }
+
+
+        private bool GetInheritanceVariable(string facilityName)
+        {
+            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
+            return inheritanceVariable != null && (bool)inheritanceVariable.GetValue(tempLocation);
+        }
+        private void SetInheritanceVariable(string facilityName, bool value)
+        {
+            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
+            if (inheritanceVariable != null && inheritanceVariable.PropertyType == typeof(bool))
+            {
+                inheritanceVariable.SetValue(tempLocation, value);
+            }
+        }
+
+        private void ToggleFacilityValue(string facilityName)
+        {
+            bool inherits = GetInheritanceVariable(facilityName);
+            var property = tempLocation.GetType().GetProperty(facilityName);
+            if (property != null)
+            {
+               
+                var currentValue = (bool)property.GetValue(tempLocation);
+                if (inherits)
+                {
+                    SetInheritanceVariable(facilityName, false);
+                    property.SetValue(tempLocation, false);
+                }
+                else if(tempLocation is Area && currentValue == true) property.SetValue(tempLocation, false);
+
+                else
+                {
+                    if (currentValue == false) property.SetValue(tempLocation, true);
+                    else if(tempLocation is not Area)
+                    {
+                        object tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
+                        SetInheritanceVariable(facilityName, true);
+                        property.SetValue(tempLocation, GetFacilityValue(tempSelectedLocation, facilityName));
+                    }
+                }
+                
+            }
         }
 
         private void ChangeFacilitiesButtonClick(Button button)
@@ -710,10 +786,12 @@ namespace camping.WPF
 
             if (result == MessageBoxResult.Yes)
             {
-                string statusmsg = "Er ging iets mis.";
+                Label errorMsg = new Label();
+                string statusMsg = "";
                 try
                 {
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
+                    errorMsg = SiteIDLabel;
                     if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
                     {
                         MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
@@ -721,19 +799,23 @@ namespace camping.WPF
                     }
                     else reservation.SiteID = int.Parse(SiteIDBox.Text);
 
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
-                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
-                    statusmsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
+                    errorMsg = PhoneNumberLabel;
 
-                    reservation.Guest.PhoneNumber = Int32.Parse(HouseNumberBox.Text);
+                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
+
+                    statusMsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
+                    errorMsg = HouseNumberLabel;
+
+                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
                 }
                 catch
                 {
-                    MessageBox.Show(statusmsg);
+                    errorMsg.Content = statusMsg;
+                    errorMsg.Foreground = Brushes.Red;
                     return false;
                 }
                 
-            
                 Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
                 
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
