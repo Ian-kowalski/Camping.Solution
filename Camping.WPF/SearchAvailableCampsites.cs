@@ -72,6 +72,7 @@ namespace camping.WPF
             StartDateButton.VerticalAlignment = VerticalAlignment.Top;
             StartDateButton.SelectedDateChanged += StartDateButton_SelectedDateChanged;
             StartDateButton.DisplayDateStart = DateTime.Today;
+            StartDateButton.Focusable = false;
 
             EndDateButton = new DatePicker();
             Grid.SetColumn(EndDateButton, 2);
@@ -87,6 +88,7 @@ namespace camping.WPF
             EndDateButton.VerticalAlignment = VerticalAlignment.Bottom;
             EndDateButton.SelectedDateChanged += EndDateButton_SelectedDateChanged;
             EndDateButton.DisplayDateStart = DateTime.Today;
+            EndDateButton.Focusable = false;
 
             SearchButton = new Button();
             SearchButton.Content = "Zoeken";

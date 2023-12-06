@@ -8,5 +8,6 @@ namespace camping.WPF
 {
     public class AddReservation
     {
+
     }
 }
