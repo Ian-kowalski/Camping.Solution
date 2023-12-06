@@ -183,8 +183,8 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase(2, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678)]
-        public void Reservation_UpdateVisitor_Update(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        [TestCase(2, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678)]
+        public void Reservation_UpdateVisitor_Update(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
             ReservationRepository reservationRepo = new();
 
