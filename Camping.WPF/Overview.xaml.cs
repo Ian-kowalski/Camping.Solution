@@ -982,7 +982,7 @@ namespace camping.WPF
         {
             
                 string houseNumber = ((TextBox)sender).Text;
-                if (Regex.IsMatch(houseNumber.Trim(), "^\\+?[1-9]\\d{1,14}$"))
+                if (Regex.IsMatch(houseNumber.Trim(), "^[1-9]\\d{1,15}$"))
                 {
                     ((TextBox)sender).Foreground = Brushes.Black;
                 }
