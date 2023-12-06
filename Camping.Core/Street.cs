@@ -16,11 +16,6 @@ public class Street : Location
 
     public int StreetID { get; set; }
     public int AreaID { get; set; }
-    public bool InheritsHasWaterSupply { get; set; }
-    public bool InheritsOutletPresent { get; set; }
-    public bool InheritsPetsAllowed { get; set; }
-    public bool InheritsHasShadow { get; set; }
-    public bool InheritsAtWater { get; set; }
 
     public bool Visible = false;
 }
