@@ -54,13 +54,11 @@
             </Grid>
         </Border>
 
-        <Border x:Name="AddReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,256" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="AddReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,256" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
 
             <Grid x:Name="AddReservationGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="1*"/>
