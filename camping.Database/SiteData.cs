@@ -150,13 +150,14 @@ namespace camping.Database
 
         public void UpdateFacilities(Location location)
         {
+            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
-            List<int> facilities = new List<int>();
-            if(location is Area)
+/*            List<int> facilities = new List<int>();
+*/            if(location is Area)
             {
                 Area area = location as Area;
-                facilities = updateArea(area);
-                sql = $"UPDATE area " +
+/*                facilities = updateArea(area);
+*/                sql = $"UPDATE area " +
           $"SET powerSupply = @powerSupply, " +
           $"    waterFront = @waterFront, " +
           $"    pets = @pets, " +
@@ -167,8 +168,8 @@ namespace camping.Database
             if (location is Street)
             {
                 Street street = location as Street;
-                facilities = updateStreet(street);
-                sql = $"UPDATE street " +
+/*                facilities = updateStreet(street);
+*/                sql = $"UPDATE street " +
           $"SET powerSupply = @powerSupply, " +
           $"    waterFront = @waterFront, " +
           $"    pets = @pets, " +
@@ -179,8 +180,8 @@ namespace camping.Database
             if (location is Site)
             {
                 Site site = location as Site;
-                facilities = updateSite(site);
-                sql = $"UPDATE campSite " +
+/*                facilities = updateSite(site);
+*/                sql = $"UPDATE campSite " +
           $"SET powerSupply = @powerSupply, " +
           $"    waterFront = @waterFront, " +
           $"    pets = @pets, " +
@@ -189,12 +190,15 @@ namespace camping.Database
           $"WHERE campSiteID = {site.CampSiteID}";
             }
 
+            List<int> facilities = new List<int>();
+            foreach (string facilityName in facilityNames)
+            {
+                facilities.Add((int)location.GetType().GetProperty(facilityName).GetValue(location));
+            }
 
             using (var connection = new SqlConnection(connectionString))
             {                    
-
-
-                connection.Open();
+            connection.Open();
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@powerSupply", facilities[1]);
@@ -206,44 +210,6 @@ namespace camping.Database
 
                 }
             }
-            
-        }
-
-        private List<int> updateArea(Area area)
-        {
-            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
-            List<int> facilities = new List<int>();
-            foreach(string facilityName in facilityNames)
-            {
-                facilities.Add((int)area.GetType().GetProperty(facilityName).GetValue(area));
-            }
-            return facilities;
-        }
-
-        private List<int> updateStreet(Street street)
-        {
-            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
-            List<int> facilities = new List<int>();
-
-            foreach(string facilityName in facilityNames)
-            {
-                int facility = (int)street.GetType().GetProperty($"{facilityName}").GetValue(street);
-                facilities.Add((facility));
-            }
-            return facilities;
-        }
-
-        private List<int> updateSite(Site site)
-        {
-            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
-            List<int> facilities = new List<int>();
-
-            foreach (string facilityName in facilityNames)
-            {
-                int facility = (int)site.GetType().GetProperty($"{facilityName}").GetValue(site);
-                facilities.Add((facility));
-            }
-            return facilities;
         }
     }
 }
