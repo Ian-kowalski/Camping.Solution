@@ -61,9 +61,16 @@ namespace camping.WPF
             displayAllReservations();
 
             addReservation = new SearchAvailableCampsites(AddReservationGrid, siteData, resData, AddReservationGridList);
+            addReservation.SearchSites += (sender, e) => { 
+                AddReservationGridHeader.Visibility = Visibility.Visible;
+                AvailableCampsitesScrollViewer.Visibility = Visibility.Visible;
+            };
+
 
             Closing += onWindowClosing;
         }
+
+        
 
 
         private void displayAllLocations()
