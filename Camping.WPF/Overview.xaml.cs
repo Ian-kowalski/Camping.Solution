@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DevExpress.Utils;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,8 +22,7 @@ namespace camping.WPF
         private SiteData siteData { get; set; }
         private ReservationRepository resData { get; set; }
         private RetrieveData retrieveData { get; set; }
-        private Location tempLocation;
-        private Site currentSelected { get; set; }
+        private Location tempLocation { get; set; }
         private bool isUpdating { get; set; }
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
@@ -352,7 +350,8 @@ namespace camping.WPF
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
         }
-        private void CreateAndAddLabel(string content, int fontSize, int column, int row)
+        //add label to LocationInfoGrid
+        private Label CreateAndAddLabel(string content, int fontSize, int column, int row) 
         {
             Label dynamicLabel = new Label
             {
@@ -365,8 +364,10 @@ namespace camping.WPF
             Grid.SetRow(dynamicLabel, row);
 
             LocationInfoGrid.Children.Add(dynamicLabel);
+            return dynamicLabel;
         }
 
+        //Add facility (elipse) to LocationInfoGrid
         private void CreateAndAddFacility(string name, int diameter, int column, int row, Location location)
         {
             Ellipse facility = new Ellipse
@@ -375,9 +376,11 @@ namespace camping.WPF
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Width = diameter,
-                Height = diameter
+                Height = diameter,
+                
             };
-
+            Label label = CreateAndAddLabel(facility.Name, 10, column, row);
+            label.VerticalAlignment = VerticalAlignment.Bottom;
 
             Grid.SetColumn(facility, column);
             Grid.SetRow(facility, row);
@@ -391,20 +394,21 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(facility);
         }
 
+        //triggered when clicking a facility ellipse
         private void facilityClick(object sender, MouseButtonEventArgs e)
         {
             if (isUpdating)
             {
                 Ellipse clickedEllipse = (Ellipse)sender;
                 SolidColorBrush solidColorBrush = new SolidColorBrush();
-
+                
                 ChangeFacilityColor(clickedEllipse);
                 solidColorBrush.Color = GetFacilityColor(clickedEllipse);
                 clickedEllipse.Fill = solidColorBrush;
             }
         }
 
-
+        //retrieves the color of a specific facility
         private Color GetFacilityColor(Ellipse facility)
         {
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
@@ -414,36 +418,16 @@ namespace camping.WPF
             {
                 if (facilityName == facility.Name)
                 {
-                    if (tempLocation is Area area)
-                    {
-                        var property = area.GetType().GetProperty(facilityName);
-                        if (property != null)
-                        {
-                            var value = (bool)property.GetValue(area);
-                            color = value ? Colors.DarkGreen : Colors.DarkRed;
-                        }
-                    }
-                    else if (tempLocation is Street street || tempLocation is Site site)
-                    {
-                        var inherits = GetInheritanceVariable(facilityName);
-                        color = InheritsColor(inherits, facilityName, tempLocation);
-                    }
+                    int value = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
+                        if (value == 0) return Colors.OrangeRed;
+                        if (value == 1) return Colors.LightGreen;
+                        if (value == 2) return Colors.DarkRed;
+                        if (value == 3) return Colors.DarkGreen;
+
+                    
                 }
             }
             return color;
-        }
-        private Color InheritsColor(bool inherits, string facilityName, object location)
-        {
-            if (inherits)
-            {
-                var property = location.GetType().GetProperty(facilityName);
-                return property != null && (bool)property.GetValue(location) ? Colors.DarkGreen : Colors.DarkRed;
-            }
-            else
-            {
-                var property = location.GetType().GetProperty(facilityName);
-                return property != null && (bool)property.GetValue(location) ? Colors.LightGreen : Colors.OrangeRed;
-            }
         }
 
         private void ChangeFacilityColor(Ellipse facility)
@@ -454,66 +438,40 @@ namespace camping.WPF
             {
                 if (facilityName == facility.Name)
                 {
-                    var currentValue = GetFacilityValue(selectedLocation, facilityName);
-                    var inherits = GetInheritanceVariable(facilityName);
-
-                    MessageBox.Show($"{facilityName}: Current Value - {currentValue}, Inherits - {inherits}");
-
+                    int currentValue = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
                     ToggleFacilityValue(facilityName);
                 }
             }
         }
 
-        private bool GetFacilityValue(object location, string facilityName)
-        {
-            var property = location.GetType().GetProperty(facilityName);
-            return property != null && (bool)property.GetValue(location);
-        }
-
-
-        private bool GetInheritanceVariable(string facilityName)
-        {
-            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
-            return inheritanceVariable != null && (bool)inheritanceVariable.GetValue(tempLocation);
-        }
-        private void SetInheritanceVariable(string facilityName, bool value)
-        {
-            var inheritanceVariable = tempLocation.GetType().GetProperty($"Inherits{facilityName}");
-            if (inheritanceVariable != null && inheritanceVariable.PropertyType == typeof(bool))
-            {
-                inheritanceVariable.SetValue(tempLocation, value);
-            }
-        }
-
+        //toggles the temporary value of a facility
         private void ToggleFacilityValue(string facilityName)
         {
-            bool inherits = GetInheritanceVariable(facilityName);
             var property = tempLocation.GetType().GetProperty(facilityName);
             if (property != null)
             {
-
-                var currentValue = (bool)property.GetValue(tempLocation);
-                if (inherits)
+                int currentValue = (int)property.GetValue(tempLocation);
+                if (currentValue == 0) property.SetValue(tempLocation, 1);
+                if (currentValue == 1)
                 {
-                    SetInheritanceVariable(facilityName, false);
-                    property.SetValue(tempLocation, false);
-                }
-                else if (tempLocation is Area && currentValue == true) property.SetValue(tempLocation, false);
-
-                else
-                {
-                    if (currentValue == false) property.SetValue(tempLocation, true);
-                    else if (tempLocation is not Area)
+                    if (tempLocation is Area) property.SetValue(tempLocation, 0);
+                    else
                     {
-                        object tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
-                        SetInheritanceVariable(facilityName, true);
-                        property.SetValue(tempLocation, GetFacilityValue(tempSelectedLocation, facilityName));
+                        Location tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
+                        if((int)tempSelectedLocation.GetType().GetProperty(facilityName).GetValue(tempSelectedLocation) % 2 == 0){
+                            property.SetValue(tempLocation, 2);
+                        }
+                        else property.SetValue(tempLocation, 3);
                     }
                 }
-
+                if(currentValue >= 2)
+                {
+                    property.SetValue(tempLocation, 0);
+                }                
             }
         }
 
+        //triggered when pressing the change facilities button
         private void ChangeFacilitiesButtonClick(Button button)
         {
             // Toggle the updating state
@@ -527,8 +485,36 @@ namespace camping.WPF
             {
                 button.Content = "Faciliteiten aanpassen";
                 siteData.UpdateFacilities(tempLocation);
-                retrieveData.UpdateLocations();
-
+                if(tempLocation is Area)
+                {   
+                    Area tempArea = (Area)tempLocation;
+                    Area area = retrieveData.GetAreaFromID(tempArea.AreaID);
+                    area.AtWater = tempArea.AtWater;
+                    area.HasWaterSupply = tempArea.HasWaterSupply;
+                    area.OutletPresent = tempArea.OutletPresent;
+                    area.HasShadow= tempArea.HasShadow;
+                    area.PetsAllowed = tempArea.PetsAllowed;
+                }
+                if (tempLocation is Street)
+                {
+                    Street tempstreet = (Street)tempLocation;
+                    Street street = retrieveData.GetStreetFromID(tempstreet.StreetID);
+                    street.AtWater = tempstreet.AtWater;
+                    street.HasWaterSupply = tempstreet.HasWaterSupply;
+                    street.OutletPresent = tempstreet.OutletPresent;
+                    street.HasShadow = tempstreet.HasShadow;
+                    street.PetsAllowed = tempstreet.PetsAllowed;
+                }
+                if (tempLocation is Site)
+                {
+                    Site tempSite = (Site)tempLocation;
+                    Site site = retrieveData.GetSiteFromID(tempSite.CampSiteID);
+                    site.AtWater = tempSite.AtWater;
+                    site.HasWaterSupply = tempSite.HasWaterSupply;
+                    site.OutletPresent = tempSite.OutletPresent;
+                    site.HasShadow = tempSite.HasShadow;
+                    site.PetsAllowed = tempSite.PetsAllowed;
+                }
             }
         }
 
