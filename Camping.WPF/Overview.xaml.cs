@@ -960,6 +960,16 @@ namespace camping.WPF
             e.Handled = regex.IsMatch(e.Text);
         }
 
+        private void NumberValidationTextBox(object sender, TextChangedEventArgs e)
+        {
+            string PostcodeHoofdletters = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(PostcodeHoofdletters.Trim(), "^[0-9]"))
+            {
+                ((TextBox)sender).Text = "";
+            }
+
+        }
+
         private void PostalCodeValidation(object sender, TextChangedEventArgs e)
         {
             string PostcodeHoofdletters = ((TextBox)sender).Text;

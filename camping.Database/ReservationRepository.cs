@@ -82,13 +82,16 @@ namespace camping.Database
 
         public List<Reservation> GetReservationInfo(int ReservetionID, string lastname)
         {
+            string andOr = "AND";
+            if (ReservetionID<0) { andOr = "OR"; }
+
             string sql = "SELECT distinct(reservation.reservationID), startDate, endDate,\r\n" +
                 "visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber,\r\n" +
                 "campSiteID\r\n" +
                 "FROM reservation\r\n" +
                 "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID\r\n" +
                 "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID\r\n" +
-                "where reservation.reservationID = @ReservetionID or lastName like @lastname;";
+                "where lastName like @lastname "+ andOr + " reservation.reservationID = @ReservetionID;";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -98,8 +101,8 @@ namespace camping.Database
 
                 using (var command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("ReservetionID", ReservetionID);
-                    command.Parameters.AddWithValue("lastname", "%"+lastname+"%");
+                    command.Parameters.AddWithValue("@ReservetionID", ReservetionID);
+                    command.Parameters.AddWithValue("@lastname", "%"+lastname+"%");
 
                     reader = command.ExecuteReader();
 

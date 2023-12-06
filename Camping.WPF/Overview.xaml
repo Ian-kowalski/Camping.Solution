@@ -141,7 +141,7 @@
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
                     <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" />
+                    <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" TextChanged="NumberValidationTextBox"/>
 
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
                     <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress"/>
