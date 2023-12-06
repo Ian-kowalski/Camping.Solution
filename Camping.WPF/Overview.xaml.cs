@@ -24,7 +24,7 @@ namespace camping.WPF
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
         private bool isUpdating { get; set; }
-        private bool reservationUpdated { get; set; } = true;
+        private bool resInfoVisible { get; set; } = false;
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
         private int rowLength;
@@ -672,35 +672,38 @@ namespace camping.WPF
         }
         private void fillReservationInfoGrid(Reservation reservation)
         {
-            if (reservationUpdated)
-            {
-                selectedReservation = reservation;
+            selectedReservation = reservation;
 
 
-                SiteIDBox.Text = reservation.SiteID.ToString();
-                StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
-                EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+            SiteIDBox.Text = reservation.SiteID.ToString();
+            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
 
-                FirstNameBox.Text = reservation.Guest.FirstName;
-                PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
-                LastNameBox.Text = reservation.Guest.LastName;
-                PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
-                CityBox.Text = reservation.Guest.City.ToString();
-                AdressBox.Text = reservation.Guest.Adress;
+            FirstNameBox.Text = reservation.Guest.FirstName;
+            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+            LastNameBox.Text = reservation.Guest.LastName;
+            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+            CityBox.Text = reservation.Guest.City.ToString();
+            AdressBox.Text = reservation.Guest.Adress;
 
-                HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
-                PostalCodeBox.Text = reservation.Guest.PostalCode;
-            }
+            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Guest.PostalCode;
         }
         private void RowClick(Reservation reservation)
         {
-            if (reservationUpdated)
-            {
-                selectedReservation = reservation;
-                ReservationInfoGrid.Visibility = Visibility.Visible;
+            resInfoVisible = false;
 
-                displayAllReservations();
-            }
+            selectedReservation = reservation;
+            ReservationInfoGrid.Visibility = Visibility.Visible;
+
+            displayAllReservations();
+
+
+            chanceAanpassenOrSaveButtonContent(resInfoVisible);
+            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
+            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
+
+            hideErrors();
         }
 
         private void Un_Checkt(Reservation reservation, object sender)
@@ -771,10 +774,11 @@ namespace camping.WPF
                 }
                 displayAllReservations();
             }
-            reservationUpdated = !reservationUpdated;
-            chanceAanpassenOrSaveButtonContent(sender);
-            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox });
-            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
+
+            resInfoVisible = !resInfoVisible;
+            chanceAanpassenOrSaveButtonContent(resInfoVisible);
+            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
+            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
         }
 
 
@@ -794,7 +798,7 @@ namespace camping.WPF
                     SiteIDLabel.Content = "Moet een getal zijn.";
                     SiteIDLabel.Foreground = Brushes.Red;
                     errorsFound = true;
-                } else if (siteID > retrieveData.GetCampSiteID().Count())
+                } else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
                 {
                     SiteIDLabel.Visibility = Visibility.Visible;
                     SiteIDLabel.Content = "Deze plek bestaat niet.";
@@ -903,30 +907,40 @@ namespace camping.WPF
             return false;
         }
 
+        private void hideErrors()
+        {
+            SiteIDLabel.Visibility = Visibility.Hidden;
+            StartDateLabel.Visibility = Visibility.Hidden;
+            EndDateLabel.Visibility = Visibility.Hidden;
+            PhoneNumberLabel.Visibility = Visibility.Hidden;
+            HouseNumberLabel.Visibility = Visibility.Hidden;
+            PostalCodeLabel.Visibility = Visibility.Hidden;
+        }
+
         private void Checkfields()
         {
             throw new NotImplementedException();
         }
 
-        private void chanceAanpassenOrSaveButtonContent(object sender)
+        private void chanceAanpassenOrSaveButtonContent(bool buttonState)
         {
-            ReservationAanpassenButtonState = !ReservationAanpassenButtonState;
-            ((Button)sender).Content = ReservationAanpassenButtonState ? "save" : "Aanpassen Resevering";
+            ReservationAanpassenButtonState = buttonState;
+            EditReservationButton.Content = ReservationAanpassenButtonState ? "save" : "Aanpassen Resevering";
         }
 
-        private void enabledReservationInfoTextBoxes(TextBox[] TextBoxElements)
+        private void enabledReservationInfoTextBoxes(TextBox[] TextBoxElements, bool isVisible)
         {
             foreach (UIElement element in TextBoxElements)
             {
-                element.IsEnabled = !element.IsEnabled;
+                element.IsEnabled = isVisible;
             }
         }
 
-        private void enabledReservationInfodatePicker(DatePicker[] TextBoxElements)
+        private void enabledReservationInfodatePicker(DatePicker[] TextBoxElements, bool isVisible)
         {
             foreach (UIElement element in TextBoxElements)
             {
-                element.IsEnabled = !element.IsEnabled;
+                element.IsEnabled = isVisible;
             }
         }
 
