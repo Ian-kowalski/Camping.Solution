@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -675,12 +676,59 @@ namespace camping.WPF
                 }
 
 
-                reservation.Guest.FirstName = FirstNameBox.Text;
-                reservation.Guest.Preposition = PrepositionBox.Text;
-                reservation.Guest.LastName = LastNameBox.Text;
-                reservation.Guest.City = CityBox.Text;
-                reservation.Guest.Adress = AdressBox.Text;
+                if (FirstNameBox.Text.IsNullOrEmpty())
+                {
+                    FirstNameLabel.Visibility = Visibility.Visible;
+                    FirstNameLabel.Content = "Mag niet leeg zijn.";
+                    FirstNameLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.FirstName = FirstNameBox.Text;
+                    FirstNameLabel.Visibility = Visibility.Hidden;
+                }
+                
 
+                if (LastNameBox.Text.IsNullOrEmpty())
+                {
+                    LastNameLabel.Visibility = Visibility.Visible;
+                    LastNameLabel.Content = "Mag niet leeg zijn";
+                    LastNameLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.LastName = LastNameBox.Text;
+                    LastNameLabel.Visibility = Visibility.Hidden;
+                }
+
+                if (CityBox.Text.IsNullOrEmpty())
+                {
+                    CityLabel.Visibility = Visibility.Visible;
+                    CityLabel.Content = "Mag niet leeg zijn";
+                    CityLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.City = CityBox.Text;
+                    CityLabel.Visibility = Visibility.Hidden;
+                }
+                if (AdressBox.Text.IsNullOrEmpty())
+                {
+                    AdressLabel.Visibility = Visibility.Visible;
+                    AdressLabel.Content = "Mag niet leeg zijn";
+                    AdressLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.Adress = AdressBox.Text;
+                    AdressLabel.Visibility = Visibility.Hidden;
+                }
+
+                reservation.Guest.Preposition = PrepositionBox.Text;
 
                 if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
                 {
