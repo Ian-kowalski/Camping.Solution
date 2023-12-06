@@ -368,6 +368,7 @@ namespace camping.WPF
                 int resID;
                 if (!int.TryParse(reservationIDFilterBox.Text,out resID))
                 {
+                    reservationIDFilterBox.Text = string.Empty;
                     resID = -1;
                 }
                 retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim()); ;
