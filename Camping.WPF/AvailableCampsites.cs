@@ -148,7 +148,7 @@ namespace camping.WPF
             grid.RowDefinitions.Clear();
         }
 
-        private Rectangle createRectangle(bool color, Rectangle rect)
+        private Rectangle createRectangle(int color, Rectangle rect)
         {
             rect.Height = 30;
             rect.Width = 30;
@@ -156,7 +156,7 @@ namespace camping.WPF
             rect.Stroke = Brushes.Black;
             rect.StrokeThickness = 2;
 
-            if (color)
+            if (color % 2 == 1)
             {
                 rect.Fill = new SolidColorBrush(Color.FromRgb(100, 255, 100));
             }

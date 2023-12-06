@@ -9,6 +9,8 @@ using Microsoft.Data.SqlClient;
 using Camping.Core;
 using System.Runtime.CompilerServices;
 using camping.Core;
+using System.Drawing;
+using System.IO;
 
 namespace camping.Database
 {
@@ -36,7 +38,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size, 7 streetID
-                        result.Add(new Site(reader.GetInt32(0), Convert.ToBoolean(reader.GetInt32(1)), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5)), reader.GetInt32(6), reader.GetInt32(7)));
+                        result.Add(new Site(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7)));
                     }
                 }
                 connection.Close();
@@ -62,7 +64,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     {                       // streetID
-                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5)), Convert.ToBoolean(reader.GetInt32(6))));
+                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6)));
                     }
                 }
                 connection.Close();
@@ -88,7 +90,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
-                        result.Add(new Area(reader.GetInt32(0), Convert.ToBoolean(reader.GetInt32(1)), Convert.ToBoolean(reader.GetInt32(2)), Convert.ToBoolean(reader.GetInt32(3)), Convert.ToBoolean(reader.GetInt32(4)), Convert.ToBoolean(reader.GetInt32(5))));
+                        result.Add(new Area(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5)));
                     }
                 }
                 connection.Close();
@@ -148,68 +150,66 @@ namespace camping.Database
 
         public void UpdateFacilities(Location location)
         {
+            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
-            if (location is Site)
+/*            List<int> facilities = new List<int>();
+*/            if(location is Area)
             {
-                Site site = location as Site;
-                sql = $"UPDATE campSite " +
-                      $"SET powerSupply = @powerSupply, " +
-                      $"    waterFront = @waterFront, " +
-                      $"    pets = @pets, " +
-                      $"    shadow = @shadow, " +
-                      $"    waterSupply = @waterSupply " +
-                      $"WHERE campSiteID = {site.CampSiteID}";
+                Area area = location as Area;
+/*                facilities = updateArea(area);
+*/                sql = $"UPDATE area " +
+          $"SET powerSupply = @powerSupply, " +
+          $"    waterFront = @waterFront, " +
+          $"    pets = @pets, " +
+          $"    shadow = @shadow, " +
+          $"    waterSupply = @waterSupply " +
+          $"WHERE areaID = {area.AreaID}";
             }
             if (location is Street)
             {
                 Street street = location as Street;
-                sql = $"UPDATE street " +
-                      $"SET powerSupply = @powerSupply, " +
-                      $"    waterFront = @waterFront, " +
-                      $"    pets = @pets, " +
-                      $"    shadow = @shadow, " +
-                      $"    waterSupply = @waterSupply " +
-                      $"WHERE streetID = {street.StreetID}";
+/*                facilities = updateStreet(street);
+*/                sql = $"UPDATE street " +
+          $"SET powerSupply = @powerSupply, " +
+          $"    waterFront = @waterFront, " +
+          $"    pets = @pets, " +
+          $"    shadow = @shadow, " +
+          $"    waterSupply = @waterSupply " +
+          $"WHERE streetID = {street.StreetID}";
             }
-            if (location is Area)
+            if (location is Site)
             {
-                Area area = location as Area;
-                sql = $"UPDATE area " +
-                      $"SET powerSupply = @powerSupply, " +
-                      $"    waterFront = @waterFront, " +
-                      $"    pets = @pets, " +
-                      $"    shadow = @shadow, " +
-                      $"    waterSupply = @waterSupply " +
-                      $"WHERE areaID = {area.AreaID}";
+                Site site = location as Site;
+/*                facilities = updateSite(site);
+*/                sql = $"UPDATE campSite " +
+          $"SET powerSupply = @powerSupply, " +
+          $"    waterFront = @waterFront, " +
+          $"    pets = @pets, " +
+          $"    shadow = @shadow, " +
+          $"    waterSupply = @waterSupply " +
+          $"WHERE campSiteID = {site.CampSiteID}";
             }
-            using (var connection = new SqlConnection(connectionString))
-            {
-                int outletPresent = 0;
-                if (location.OutletPresent) outletPresent = 1;
-                int atWater = 0;
-                if (location.AtWater) atWater = 1;
-                int petsAllowed = 0;
-                if (location.PetsAllowed) petsAllowed = 1;
-                int hasShadow = 0;
-                if (location.HasShadow) hasShadow = 1;
-                int hasWaterSupply = 0;
-                if (location.HasWaterSupply) hasWaterSupply = 1;
 
-                connection.Open();
+            List<int> facilities = new List<int>();
+            foreach (string facilityName in facilityNames)
+            {
+                facilities.Add((int)location.GetType().GetProperty(facilityName).GetValue(location));
+            }
+
+            using (var connection = new SqlConnection(connectionString))
+            {                    
+            connection.Open();
                 using (var command = new SqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@powerSupply", outletPresent);
-                    command.Parameters.AddWithValue("@waterFront", atWater);
-                    command.Parameters.AddWithValue("@pets", petsAllowed);
-                    command.Parameters.AddWithValue("@shadow", hasShadow);
-                    command.Parameters.AddWithValue("@waterSupply", hasWaterSupply);                    
+                    command.Parameters.AddWithValue("@powerSupply", facilities[1]);
+                    command.Parameters.AddWithValue("@waterFront", facilities[4]);
+                    command.Parameters.AddWithValue("@pets", facilities[2]);
+                    command.Parameters.AddWithValue("@shadow", facilities[3]);
+                    command.Parameters.AddWithValue("@waterSupply", facilities[0]);                    
                     command.ExecuteNonQuery();
 
                 }
             }
-            
         }
-
-
     }
 }

@@ -8,15 +8,15 @@ namespace camping.Core
 {
     public abstract class Location
     {
-        public bool AtWater { get; set; }
-        public bool HasShadow { get; set; }
-        public bool HasWaterSupply { get; set; }
+        public int AtWater { get; set; }
+        public int HasShadow { get; set; }
+        public int HasWaterSupply { get; set; }
 
-        public bool OutletPresent { get; set; }
-        public bool PetsAllowed { get; set; }
+        public int OutletPresent { get; set; }
+        public int PetsAllowed { get; set; }
 
 
-        protected Location(bool atWater, bool hasShadow, bool hasWaterSupply, bool outletPresent, bool petsAllowed)
+        protected Location(int atWater, int hasShadow, int hasWaterSupply, int outletPresent, int petsAllowed)
         {
             AtWater = atWater;
             HasShadow = hasShadow;

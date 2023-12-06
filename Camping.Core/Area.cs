@@ -13,7 +13,7 @@ using camping.Core;
 
 public class Area : Location
 {
-    public Area(int areaID, bool outletPresent, bool atWater, bool petsAllowed, bool hasShadow, bool hasWaterSupply)
+    public Area(int areaID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
         : base(atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
     {
         AreaID = areaID;
