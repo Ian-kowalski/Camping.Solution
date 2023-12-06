@@ -24,6 +24,7 @@ namespace camping.WPF
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
         private bool isUpdating { get; set; }
+        private bool reservationUpdated { get; set; } = true;
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
         private int rowLength;
@@ -671,29 +672,35 @@ namespace camping.WPF
         }
         private void fillReservationInfoGrid(Reservation reservation)
         {
-            selectedReservation = reservation;
+            if (reservationUpdated)
+            {
+                selectedReservation = reservation;
 
 
-            SiteIDBox.Text = reservation.SiteID.ToString();
-            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
-            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
+                SiteIDBox.Text = reservation.SiteID.ToString();
+                StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
+                EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
 
-            FirstNameBox.Text = reservation.Guest.FirstName;
-            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
-            LastNameBox.Text = reservation.Guest.LastName;
-            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
-            CityBox.Text = reservation.Guest.City.ToString();
-            AdressBox.Text = reservation.Guest.Adress;
+                FirstNameBox.Text = reservation.Guest.FirstName;
+                PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
+                LastNameBox.Text = reservation.Guest.LastName;
+                PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
+                CityBox.Text = reservation.Guest.City.ToString();
+                AdressBox.Text = reservation.Guest.Adress;
 
-            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
-            PostalCodeBox.Text = reservation.Guest.PostalCode;
+                HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
+                PostalCodeBox.Text = reservation.Guest.PostalCode;
+            }
         }
         private void RowClick(Reservation reservation)
         {
-            selectedReservation = reservation;
-            ReservationInfoGrid.Visibility = Visibility.Visible;
+            if (reservationUpdated)
+            {
+                selectedReservation = reservation;
+                ReservationInfoGrid.Visibility = Visibility.Visible;
 
-            displayAllReservations();
+                displayAllReservations();
+            }
         }
 
         private void Un_Checkt(Reservation reservation, object sender)
@@ -764,7 +771,7 @@ namespace camping.WPF
                 }
                 displayAllReservations();
             }
-
+            reservationUpdated = !reservationUpdated;
             chanceAanpassenOrSaveButtonContent(sender);
             enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox });
             enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker });
