@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -88,7 +89,8 @@ namespace camping.WPF
                 button.BorderBrush = Brushes.Black;
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
-                button.Click += (sender, e) => { onSitePress(area); };
+                button.MouseDoubleClick += (sender, e) => { onSitePress(area); };
+                button.Click += (sender, e) => { onSiteSelect(area); };
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
@@ -114,7 +116,8 @@ namespace camping.WPF
                     button.BorderBrush = Brushes.Black;
                     button.BorderThickness = new Thickness(2);
                     button.FontSize = 16;
-                    button.Click += (sender, e) => { onSitePress(street); };
+                    button.MouseDoubleClick += (sender, e) => { onSitePress(street); };
+                    button.Click += (sender, e) => { onSiteSelect(street); };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -147,7 +150,8 @@ namespace camping.WPF
                     button.BorderThickness = new Thickness(2);
                     button.FontSize = 16;
 
-                    button.Click += (sender, e) => { onSitePress(site); };
+                    button.MouseDoubleClick += (sender, e) => { onSitePress(site); };
+                    button.Click += (sender, e) => { onSiteSelect(site); };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -192,6 +196,38 @@ namespace camping.WPF
             }
             /*            displayInformation(location); 
             */
+            
+        }
+        public void onSiteSelect(Location location)
+        {
+            if (location is Area && location is not null)
+            {
+                Area area = location as Area;
+                SelectedSite = null;
+                SelectedStreet = null;
+                SelectedArea = area;
+                displayAllLocations();
+            }
+            else
+            if (location is Street && location is not null)
+            {
+                Street street = location as Street;
+                SelectedSite = null;
+                SelectedStreet = street;
+                SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                displayAllLocations();
+
+            }
+            else
+            if (location is Site && location is not null)
+            {
+                Site site = location as Site;
+                SelectedSite = site;
+                SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
+                SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
+                displayAllLocations();
+
+            }
             LocationInformation locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
 
