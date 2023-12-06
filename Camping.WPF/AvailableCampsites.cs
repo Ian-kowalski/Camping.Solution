@@ -133,6 +133,8 @@ namespace camping.WPF
                 rowNumber++;
             }
 
+            grid.Visibility = Visibility.Visible;
+
         }
 
 
