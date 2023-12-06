@@ -319,7 +319,9 @@ namespace camping.WPF
             }
             LocationInfoGrid.Children.Clear();
 
-            CreateAndAddLabel("Gebiedx/straatx/plekx", 16, 0, 0);
+            Label pathLabel = CreateAndAddLabel(getPathText(), 24, 0, 0);
+            Grid.SetColumnSpan(pathLabel, 4);
+            pathLabel.FontWeight = FontWeights.Bold;
             CreateAndAddLabel("Faciliteiten", 24, 0, 2);
             CreateAndAddLabel("Overig", 24, 0, 3);
 
@@ -353,6 +355,14 @@ namespace camping.WPF
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
         }
+
+        private string getPathText()
+        {
+            if(SelectedStreet  == null) return $"Gebied: {SelectedArea.AreaID.ToString()}";
+            if(SelectedSite == null) return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}";
+            return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}, Plaats: {SelectedSite.CampSiteID.ToString()}";
+        }
+
         //add label to LocationInfoGrid
         private Label CreateAndAddLabel(string content, int fontSize, int column, int row) 
         {
@@ -488,37 +498,66 @@ namespace camping.WPF
             else
             {
                 button.Content = "Faciliteiten aanpassen";
-                siteData.UpdateFacilities(tempLocation);
-                if(tempLocation is Area)
-                {   
-                    Area tempArea = (Area)tempLocation;
-                    Area area = retrieveData.GetAreaFromID(tempArea.AreaID);
-                    area.AtWater = tempArea.AtWater;
-                    area.HasWaterSupply = tempArea.HasWaterSupply;
-                    area.OutletPresent = tempArea.OutletPresent;
-                    area.HasShadow= tempArea.HasShadow;
-                    area.PetsAllowed = tempArea.PetsAllowed;
-                }
-                if (tempLocation is Street)
+                UpdateLocation(tempLocation);
+            }
+        }
+
+        private void UpdateLocation(Location location)
+        {
+            siteData.UpdateFacilities(location);
+
+            if (location is Area)
+            {
+                Area tempArea = (Area)location;
+                Area area = retrieveData.GetAreaFromID(tempArea.AreaID);
+                area.AtWater = tempArea.AtWater;
+                area.HasWaterSupply = tempArea.HasWaterSupply;
+                area.OutletPresent = tempArea.OutletPresent;
+                area.HasShadow = tempArea.HasShadow;
+                area.PetsAllowed = tempArea.PetsAllowed;
+                List<Street> streets = retrieveData.Streets.Where(i => i.AreaID == area.AreaID).Select(i => i).ToList();
+                foreach (Street s in streets)
                 {
-                    Street tempstreet = (Street)tempLocation;
-                    Street street = retrieveData.GetStreetFromID(tempstreet.StreetID);
-                    street.AtWater = tempstreet.AtWater;
-                    street.HasWaterSupply = tempstreet.HasWaterSupply;
-                    street.OutletPresent = tempstreet.OutletPresent;
-                    street.HasShadow = tempstreet.HasShadow;
-                    street.PetsAllowed = tempstreet.PetsAllowed;
+                    if (s.HasWaterSupply >= 2) s.HasWaterSupply = area.HasWaterSupply % 2 + 2;
+                    if (s.OutletPresent >= 2) s.OutletPresent = area.OutletPresent % 2 + 2;
+                    if (s.HasShadow >= 2) s.HasShadow = area.HasShadow % 2 + 2;
+                    if (s.PetsAllowed >= 2) s.PetsAllowed = area.HasShadow % 2 + 2;
+                    if (s.AtWater >= 2) s.AtWater = area.AtWater % 2 + 2;
+
+                    UpdateLocation(s);
                 }
-                if (tempLocation is Site)
+            }
+            if (location is Street)
+            {
+                Street tempstreet = (Street)location;
+                Street street = retrieveData.GetStreetFromID(tempstreet.StreetID);
+                street.AtWater = tempstreet.AtWater;
+                street.HasWaterSupply = tempstreet.HasWaterSupply;
+                street.OutletPresent = tempstreet.OutletPresent;
+                street.HasShadow = tempstreet.HasShadow;
+                street.PetsAllowed = tempstreet.PetsAllowed;
+                List<Site> sites = retrieveData.Sites.Where(i => i.StreetID == street.StreetID).Select(i => i).ToList();
+                MessageBox.Show(sites.Count().ToString());
+                foreach (Site s in sites)
                 {
-                    Site tempSite = (Site)tempLocation;
-                    Site site = retrieveData.GetSiteFromID(tempSite.CampSiteID);
-                    site.AtWater = tempSite.AtWater;
-                    site.HasWaterSupply = tempSite.HasWaterSupply;
-                    site.OutletPresent = tempSite.OutletPresent;
-                    site.HasShadow = tempSite.HasShadow;
-                    site.PetsAllowed = tempSite.PetsAllowed;
+                    if (s.HasWaterSupply >= 2) s.HasWaterSupply = street.HasWaterSupply % 2 + 2;
+                    if (s.OutletPresent >= 2) s.OutletPresent = street.OutletPresent % 2 + 2;
+                    if (s.HasShadow >= 2) s.HasShadow = street.HasShadow % 2 + 2;
+                    if (s.PetsAllowed >= 2) s.PetsAllowed = street.HasShadow % 2 + 2;
+                    if (s.AtWater >= 2) s.AtWater = street.AtWater % 2 + 2;
+
+                    UpdateLocation(s);
                 }
+            }
+            if (location is Site)
+            {
+                Site tempSite = (Site)location;
+                Site site = retrieveData.GetSiteFromID(tempSite.CampSiteID);
+                site.AtWater = tempSite.AtWater;
+                site.HasWaterSupply = tempSite.HasWaterSupply;
+                site.OutletPresent = tempSite.OutletPresent;
+                site.HasShadow = tempSite.HasShadow;
+                site.PetsAllowed = tempSite.PetsAllowed;
             }
         }
 
