@@ -365,7 +365,11 @@ namespace camping.WPF
 
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
-                int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
+                int resID;
+                if (!int.TryParse(reservationIDFilterBox.Text,out resID))
+                {
+                    resID = -1;
+                }
                 retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim()); ;
             }
             else
@@ -774,14 +778,14 @@ namespace camping.WPF
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^1-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
         private void NumberValidationTextBox(object sender, TextChangedEventArgs e)
         {
             string PostcodeHoofdletters = ((TextBox)sender).Text;
-            if (!Regex.IsMatch(PostcodeHoofdletters.Trim(), "^[0-9]"))
+            if (!Regex.IsMatch(PostcodeHoofdletters.Trim(), "[0-9]+"))
             {
                 ((TextBox)sender).Text = "";
             }

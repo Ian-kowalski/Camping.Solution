@@ -1,6 +1,5 @@
 ﻿using camping.Core;
 using camping.Database;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +13,7 @@ namespace camping.Test
     public class SiteDataTests
     {
         SshConnection sshConnection;
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             sshConnection = new SshConnection();
@@ -69,7 +68,7 @@ namespace camping.Test
             Assert.IsNotNull(availability);
             Assert.IsInstanceOf<List<ReservationDates>>(availability);
         }
-        [TestCleanup]
-        public void Cleanup() { sshConnection.BreakConnection(); }
+        [OneTimeTearDown]
+        public void TearDown() { sshConnection.BreakConnection(); }
     }
 }
