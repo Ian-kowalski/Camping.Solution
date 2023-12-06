@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.Database", "camping
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "camping.WPF", "Camping.WPF\camping.WPF.csproj", "{D365C956-0117-4E35-B5E9-9BE7846CBEE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{BA972005-6874-4BDE-9800-34CEA3DE8930}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{D365C956-0117-4E35-B5E9-9BE7846CBEE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D365C956-0117-4E35-B5E9-9BE7846CBEE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D365C956-0117-4E35-B5E9-9BE7846CBEE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA972005-6874-4BDE-9800-34CEA3DE8930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA972005-6874-4BDE-9800-34CEA3DE8930}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA972005-6874-4BDE-9800-34CEA3DE8930}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA972005-6874-4BDE-9800-34CEA3DE8930}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
