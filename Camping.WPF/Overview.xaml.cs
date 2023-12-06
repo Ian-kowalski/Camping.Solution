@@ -590,8 +590,6 @@ namespace camping.WPF
             // zorgt ervoor dat de annuleerlijst weer null wordt wanneer
             // er opnieuw een reservering geselecteerd wordt
             // (anders bevat de lisjt reserveringen die niet zijn aangeklikt!)
-            toBeCancel.Clear();
-            AnnulerenButton.IsEnabled = false;
 
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
@@ -602,9 +600,6 @@ namespace camping.WPF
             {
                 retrieveData.UpdateReservations();
             }
-
-
-
 
             List<Reservation> reservations = retrieveData.Reservations;
 
@@ -703,6 +698,11 @@ namespace camping.WPF
             checkBox.Checked += (sender, e) => { Un_Checkt(reservation, sender); };
             checkBox.Unchecked += (sender, e) => { Un_Checkt(reservation, sender); };
 
+            if (toBeCancel.Contains(reservation))
+            {
+                checkBox.IsChecked = true;
+            }
+
             Grid.SetColumn(checkBox, 0);
             Grid.SetRow(checkBox, i);
             checkBox.HorizontalAlignment = HorizontalAlignment.Center;
@@ -748,11 +748,11 @@ namespace camping.WPF
         private void Un_Checkt(Reservation reservation, object sender)
         {
             CheckBox c = (CheckBox)sender;
-            if (c.IsChecked == true)
+            if (c.IsChecked == true && !toBeCancel.Contains(reservation))
             {
                 toBeCancel.Add(reservation);
             }
-            else
+            else if(c.IsChecked == false && toBeCancel.Contains(reservation))
             {
                 toBeCancel.Remove(reservation);
             }
@@ -788,10 +788,15 @@ namespace camping.WPF
             {
                 case MessageBoxResult.Yes:
                     // User pressed Yes button
+                    if (toBeCancel.Contains(selectedReservation))
+                    {
+                        ReservationInfoGrid.Visibility = Visibility.Hidden;
+                    }
                     foreach (var reservation in toBeCancel)
                     {
                         // ...Delete out of database
                         retrieveData.DeleteReservation(reservation.ReservationID);
+                        
                     }
                     toBeCancel.Clear();
                     displayAllReservations();

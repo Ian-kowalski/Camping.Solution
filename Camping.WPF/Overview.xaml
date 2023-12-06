@@ -120,7 +120,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="ReservationList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="ReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20*"/>
@@ -159,7 +159,7 @@
                     <Label Grid.Column="2" Content="Plaats Nr." BorderBrush="Black" BorderThickness="2"/>
                     <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2"/>
                     <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2"/>
-                    <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2"/>
+                    <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="0,0,-17,0"/>
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
