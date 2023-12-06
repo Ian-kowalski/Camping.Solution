@@ -992,7 +992,6 @@ namespace camping.WPF
         }
 
 
-
         private void PhoneNumberValidation(object sender, TextChangedEventArgs e)
         {
             
@@ -1003,6 +1002,15 @@ namespace camping.WPF
                 }
                 else { ((TextBox)sender).Foreground = Brushes.Red; }
             
+        }
+
+        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string LastNameFilterBox = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "^[0-9a-zA-Z]"))
+            {
+                ((TextBox)sender).Text="";
+            }
         }
     }
 }

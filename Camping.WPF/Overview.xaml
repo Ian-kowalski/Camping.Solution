@@ -144,7 +144,7 @@
                     <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" TextChanged="NumberValidationTextBox"/>
 
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress"/>
+                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" TextChanged="StringBox_TextChanged"/>
                 </Grid>
                 <Grid Margin="0,0,17,0" Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -210,7 +210,7 @@
                 <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" />
                 <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="PhoneNumberValidation"/>
