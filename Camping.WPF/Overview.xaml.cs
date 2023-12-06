@@ -23,8 +23,10 @@ namespace camping.WPF
         private ReservationRepository resData { get; set; }
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
+
         private bool isUpdating { get; set; }
         private bool resInfoVisible { get; set; } = false;
+
         private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
         private int rowLength;
@@ -39,8 +41,8 @@ namespace camping.WPF
 
         private Site? SelectedSite;
 
-        private Location selectedLocation;
-        private Button changeFacilitiesButton;
+/*        private Location selectedLocation;
+*/        private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites addReservation;
 
@@ -163,8 +165,8 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = null;
                 SelectedArea = area;
-                selectedLocation = area;
-                toggleChildrenVisibility(area);
+/*                selectedLocation = area;
+*/                toggleChildrenVisibility(area);
                 displayAllLocations();
             }
             else
@@ -174,8 +176,8 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-                selectedLocation = street;
-                toggleChildrenVisibility(street);
+/*                selectedLocation = street;
+*/                toggleChildrenVisibility(street);
                 displayAllLocations();
             }
             else
@@ -185,10 +187,12 @@ namespace camping.WPF
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-                selectedLocation = site;
-                displayAllLocations();
+/*                selectedLocation = site;
+*/                displayAllLocations();
             }
-            displayInformation(location);
+            /*            displayInformation(location); 
+            */
+            LocationInformation locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
 
         // toggled de visibility van de straat van een area
@@ -207,12 +211,8 @@ namespace camping.WPF
                     {
                         hideChildren(street);
                     }
-
                 }
-
             }
-
-
         }
 
         // toggled de visibility van de sites van een straat
@@ -294,270 +294,6 @@ namespace camping.WPF
         {
             connection.BreakConnection();
         }
-
-        private void displayInformation(Location location)
-        {
-            if (location is Area)
-            {
-                Area area = location as Area;
-                Area tempArea = new(area.AreaID, area.OutletPresent, area.AtWater, area.PetsAllowed, area.HasShadow, area.HasWaterSupply);
-                tempLocation = tempArea;
-            }
-            if (location is Street)
-            {
-                Street street = location as Street;
-                Street tempStreet = new(street.StreetID, street.AreaID, street.OutletPresent, street.AtWater, street.PetsAllowed, street.HasShadow, street.HasWaterSupply);
-                tempLocation = tempStreet;
-            }
-            if (location is Site)
-            {
-                Site site = location as Site;
-                Site tempSite = new(site.CampSiteID, site.OutletPresent, site.AtWater, site.PetsAllowed, site.HasShadow, site.HasWaterSupply, site.Size, site.StreetID);
-                tempLocation = tempSite;
-            }
-            LocationInfoGrid.Children.Clear();
-
-            Label pathLabel = CreateAndAddLabel(getPathText(), 24, 0, 0);
-            Grid.SetColumnSpan(pathLabel, 4);
-            pathLabel.FontWeight = FontWeights.Bold;
-            CreateAndAddLabel("Faciliteiten", 24, 0, 2);
-            CreateAndAddLabel("Overig", 24, 0, 3);
-
-            if (location is Site)
-            {
-                CreateAndAddLabel("Oppervlak: ", 24, 0, 1);
-                CreateAndAddLabel(Convert.ToString(((Site)location).Size), 24, 1, 1);
-            }
-
-            CreateAndAddFacility("HasWaterSupply", 60, 1, 2, location);
-            CreateAndAddFacility("OutletPresent", 60, 2, 2, location);
-            CreateAndAddFacility("HasShadow", 60, 1, 3, location);
-            CreateAndAddFacility("AtWater", 60, 2, 3, location);
-            CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
-
-            isUpdating = false;
-            Button ChangeFacilitiesButton = new Button();
-            ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
-            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
-            ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
-
-            ChangeFacilitiesButton.Width = 180;
-            ChangeFacilitiesButton.Height = 60;
-            ChangeFacilitiesButton.BorderBrush = Brushes.Black;
-            ChangeFacilitiesButton.BorderThickness = new Thickness(2);
-            ChangeFacilitiesButton.FontSize = 16;
-
-            ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
-
-            Grid.SetRow(ChangeFacilitiesButton, 3);
-            Grid.SetColumn(ChangeFacilitiesButton, 4);
-            LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
-        }
-
-        private string getPathText()
-        {
-            if(SelectedStreet  == null) return $"Gebied: {SelectedArea.AreaID.ToString()}";
-            if(SelectedSite == null) return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}";
-            return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}, Plaats: {SelectedSite.CampSiteID.ToString()}";
-        }
-
-        //add label to LocationInfoGrid
-        private Label CreateAndAddLabel(string content, int fontSize, int column, int row) 
-        {
-            Label dynamicLabel = new Label
-            {
-                Content = content,
-                FontSize = fontSize,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            Grid.SetColumn(dynamicLabel, column);
-            Grid.SetRow(dynamicLabel, row);
-
-            LocationInfoGrid.Children.Add(dynamicLabel);
-            return dynamicLabel;
-        }
-
-        //Add facility (elipse) to LocationInfoGrid
-        private void CreateAndAddFacility(string name, int diameter, int column, int row, Location location)
-        {
-            Ellipse facility = new Ellipse
-            {
-                Name = name,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Width = diameter,
-                Height = diameter,
-                
-            };
-            Label label = CreateAndAddLabel(facility.Name, 10, column, row);
-            label.VerticalAlignment = VerticalAlignment.Bottom;
-
-            Grid.SetColumn(facility, column);
-            Grid.SetRow(facility, row);
-
-            var color = GetFacilityColor(facility);
-
-            SolidColorBrush solidColorBrush = new SolidColorBrush(color);
-            facility.Fill = solidColorBrush;
-            facility.MouseLeftButtonDown += facilityClick;
-
-            LocationInfoGrid.Children.Add(facility);
-        }
-
-        //triggered when clicking a facility ellipse
-        private void facilityClick(object sender, MouseButtonEventArgs e)
-        {
-            if (isUpdating)
-            {
-                Ellipse clickedEllipse = (Ellipse)sender;
-                SolidColorBrush solidColorBrush = new SolidColorBrush();
-                
-                ChangeFacilityColor(clickedEllipse);
-                solidColorBrush.Color = GetFacilityColor(clickedEllipse);
-                clickedEllipse.Fill = solidColorBrush;
-            }
-        }
-
-        //retrieves the color of a specific facility
-        private Color GetFacilityColor(Ellipse facility)
-        {
-            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
-            Color color = Colors.OrangeRed;
-
-            foreach (string facilityName in facilityNames)
-            {
-                if (facilityName == facility.Name)
-                {
-                    int value = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
-                        if (value == 0) return Colors.OrangeRed;
-                        if (value == 1) return Colors.LightGreen;
-                        if (value == 2) return Colors.DarkRed;
-                        if (value == 3) return Colors.DarkGreen;
-
-                    
-                }
-            }
-            return color;
-        }
-
-        private void ChangeFacilityColor(Ellipse facility)
-        {
-            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
-
-            foreach (string facilityName in facilityNames)
-            {
-                if (facilityName == facility.Name)
-                {
-                    int currentValue = (int)tempLocation.GetType().GetProperty(facilityName).GetValue(tempLocation);
-                    ToggleFacilityValue(facilityName);
-                }
-            }
-        }
-
-        //toggles the temporary value of a facility
-        private void ToggleFacilityValue(string facilityName)
-        {
-            var property = tempLocation.GetType().GetProperty(facilityName);
-            if (property != null)
-            {
-                int currentValue = (int)property.GetValue(tempLocation);
-                if (currentValue == 0) property.SetValue(tempLocation, 1);
-                if (currentValue == 1)
-                {
-                    if (tempLocation is Area) property.SetValue(tempLocation, 0);
-                    else
-                    {
-                        Location tempSelectedLocation = tempLocation is Site ? SelectedStreet : tempLocation is Street ? SelectedArea : null;
-                        if((int)tempSelectedLocation.GetType().GetProperty(facilityName).GetValue(tempSelectedLocation) % 2 == 0){
-                            property.SetValue(tempLocation, 2);
-                        }
-                        else property.SetValue(tempLocation, 3);
-                    }
-                }
-                if(currentValue >= 2)
-                {
-                    property.SetValue(tempLocation, 0);
-                }                
-            }
-        }
-
-        //triggered when pressing the change facilities button
-        private void ChangeFacilitiesButtonClick(Button button)
-        {
-            // Toggle the updating state
-            isUpdating = !isUpdating;
-
-            if (isUpdating)
-            {
-                button.Content = "Opslaan";
-            }
-            else
-            {
-                button.Content = "Faciliteiten aanpassen";
-                UpdateLocation(tempLocation);
-            }
-        }
-
-        private void UpdateLocation(Location location)
-        {
-            siteData.UpdateFacilities(location);
-
-            if (location is Area)
-            {
-                Area tempArea = (Area)location;
-                Area area = retrieveData.GetAreaFromID(tempArea.AreaID);
-                area.AtWater = tempArea.AtWater;
-                area.HasWaterSupply = tempArea.HasWaterSupply;
-                area.OutletPresent = tempArea.OutletPresent;
-                area.HasShadow = tempArea.HasShadow;
-                area.PetsAllowed = tempArea.PetsAllowed;
-                List<Street> streets = retrieveData.Streets.Where(i => i.AreaID == area.AreaID).Select(i => i).ToList();
-                foreach (Street s in streets)
-                {
-                    if (s.HasWaterSupply >= 2) s.HasWaterSupply = area.HasWaterSupply % 2 + 2;
-                    if (s.OutletPresent >= 2) s.OutletPresent = area.OutletPresent % 2 + 2;
-                    if (s.HasShadow >= 2) s.HasShadow = area.HasShadow % 2 + 2;
-                    if (s.PetsAllowed >= 2) s.PetsAllowed = area.HasShadow % 2 + 2;
-                    if (s.AtWater >= 2) s.AtWater = area.AtWater % 2 + 2;
-
-                    UpdateLocation(s);
-                }
-            }
-            if (location is Street)
-            {
-                Street tempstreet = (Street)location;
-                Street street = retrieveData.GetStreetFromID(tempstreet.StreetID);
-                street.AtWater = tempstreet.AtWater;
-                street.HasWaterSupply = tempstreet.HasWaterSupply;
-                street.OutletPresent = tempstreet.OutletPresent;
-                street.HasShadow = tempstreet.HasShadow;
-                street.PetsAllowed = tempstreet.PetsAllowed;
-                List<Site> sites = retrieveData.Sites.Where(i => i.StreetID == street.StreetID).Select(i => i).ToList();
-                MessageBox.Show(sites.Count().ToString());
-                foreach (Site s in sites)
-                {
-                    if (s.HasWaterSupply >= 2) s.HasWaterSupply = street.HasWaterSupply % 2 + 2;
-                    if (s.OutletPresent >= 2) s.OutletPresent = street.OutletPresent % 2 + 2;
-                    if (s.HasShadow >= 2) s.HasShadow = street.HasShadow % 2 + 2;
-                    if (s.PetsAllowed >= 2) s.PetsAllowed = street.HasShadow % 2 + 2;
-                    if (s.AtWater >= 2) s.AtWater = street.AtWater % 2 + 2;
-
-                    UpdateLocation(s);
-                }
-            }
-            if (location is Site)
-            {
-                Site tempSite = (Site)location;
-                Site site = retrieveData.GetSiteFromID(tempSite.CampSiteID);
-                site.AtWater = tempSite.AtWater;
-                site.HasWaterSupply = tempSite.HasWaterSupply;
-                site.OutletPresent = tempSite.OutletPresent;
-                site.HasShadow = tempSite.HasShadow;
-                site.PetsAllowed = tempSite.PetsAllowed;
-            }
-        }
-
 
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
