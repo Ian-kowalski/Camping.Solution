@@ -1,8 +1,5 @@
 ﻿using camping.Core;
 using camping.Database;
-using DevExpress.DirectX.Common;
-using DevExpress.Utils;
-using DevExpress.Utils.Svg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,7 +41,7 @@ namespace camping.WPF
         private Location selectedLocation;
         private Button changeFacilitiesButton;
 
-        private AddReservation addReservation;
+        private SearchAvailableCampsites addReservation;
 
         public Overview()
         {
@@ -59,7 +56,7 @@ namespace camping.WPF
 
             displayAllReservations();
 
-            addReservation = new AddReservation(AddReservationGrid, siteData, resData);
+            addReservation = new SearchAvailableCampsites(AddReservationGrid, siteData, resData, AddReservationGridList);
 
             Closing += onWindowClosing;
         }
@@ -443,7 +440,6 @@ namespace camping.WPF
             return color;
         }
 
-        //sets the temporary value of a facility
         private void ChangeFacilityColor(Ellipse facility)
         {
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
@@ -590,6 +586,12 @@ namespace camping.WPF
 
         private void displayAllReservations()
         {
+            // zorgt ervoor dat de annuleerlijst weer null wordt wanneer
+            // er opnieuw een reservering geselecteerd wordt
+            // (anders bevat de lisjt reserveringen die niet zijn aangeklikt!)
+            toBeCancel.Clear();
+            AnnulerenButton.IsEnabled = false;
+
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
                 int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
@@ -758,11 +760,13 @@ namespace camping.WPF
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
         {
-            string combinedString = "";
+            string combinedString = "\n";
+
             foreach (var reservation in toBeCancel)
             {
-                combinedString += reservation.ReservationID.ToString();
+                combinedString += $"{reservation.ReservationID}, ";
             }
+            combinedString.Remove(combinedString.Length-2);
             string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
@@ -780,14 +784,13 @@ namespace camping.WPF
                         retrieveData.DeleteReservation(reservation.ReservationID);
                     }
                     toBeCancel.Clear();
+                    displayAllReservations();
                     break;
                 case MessageBoxResult.No:
                     // User pressed No button
                     // ...Nothing
-                    toBeCancel.Clear();
                     break;
             }
-            displayAllReservations();
         }
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
@@ -810,51 +813,79 @@ namespace camping.WPF
         private bool saveReservation(Reservation reservation)
         {
             
-            var result = MessageBox.Show("Weet je zeker dat je de reservatie gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+            var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+
+            bool errorsFound = false;
 
             if (result == MessageBoxResult.Yes)
             {
-                Label errorMsg = new Label();
-                string statusMsg = "";
-                try
+                int siteID;
+                if (!int.TryParse(SiteIDBox.Text, out siteID))
                 {
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Plaats nr'.\nMoet een getal zijn.";
-                    errorMsg = SiteIDLabel;
-                    if (int.Parse(SiteIDBox.Text) > retrieveData.GetCampSiteID().Count())
-                    {
-                        MessageBox.Show("Deze plek bestaat niet.\nKies een ID tussen 1 en " + retrieveData.GetCampSiteID().Count() + ".");
-                        return false;
-                    }
-                    else reservation.SiteID = int.Parse(SiteIDBox.Text);
-
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Telefoonnummer'.\nMoet een getal zijn.";
-                    errorMsg = PhoneNumberLabel;
-
-                    reservation.Guest.PhoneNumber = Int32.Parse(PhoneNumberBox.Text);
-
-                    statusMsg = "Verkeerde waarde ingevuld bij 'Huisnummer'.\nMoet een getal zijn.";
-                    errorMsg = HouseNumberLabel;
-
-                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
-                }
-                catch
+                    SiteIDLabel.Visibility = Visibility.Visible;
+                    SiteIDLabel.Content = "Moet een getal zijn.";
+                    SiteIDLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                } else if (siteID > retrieveData.GetCampSiteID().Count())
                 {
-                    errorMsg.Content = statusMsg;
-                    errorMsg.Foreground = Brushes.Red;
-                    return false;
-                }
-                
-                Regex regex = new("[1-9][0-9]{3}[A-Z]{2}");
-                
-                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
-                {
-                    reservation.Guest.PostalCode = PostalCodeBox.Text;
+                    SiteIDLabel.Visibility = Visibility.Visible;
+                    SiteIDLabel.Content = "Deze plek bestaat niet.";
+                    SiteIDLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
                 }
                 else
                 {
-                    MessageBox.Show("Onjuiste formaat bij postcode ingevuld. Moet vier getallen en twee letters zijn, bijv: '1234AB'.");
-                    return false;
+                    reservation.SiteID = siteID;
+                    SiteIDLabel.Visibility = Visibility.Hidden;
                 }
+
+
+                int phoneNumber;
+                if (int.TryParse(PhoneNumberBox.Text, out phoneNumber))
+                {
+                    reservation.Guest.PhoneNumber = phoneNumber;
+                    PhoneNumberLabel.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    PhoneNumberLabel.Visibility = Visibility.Visible;
+                    PhoneNumberLabel.Content = "Moet een getal zijn";
+                    PhoneNumberLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                
+
+                Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
+                if (reg.IsMatch(HouseNumberBox.Text))
+                {
+                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
+                    HouseNumberLabel.Visibility = Visibility.Hidden;
+
+                }
+                else
+                {
+                    HouseNumberLabel.Visibility = Visibility.Visible;
+                    HouseNumberLabel.Content = "2 letters max.";
+                    HouseNumberLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+
+               
+                Regex regex = new("^[1-9][0-9]{3}\\s?[a-zA-Z]{2}$");
+
+                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
+                {
+                    reservation.Guest.PostalCode = PostalCodeBox.Text.ToUpper();
+                    PostalCodeLabel.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    PostalCodeLabel.Visibility= Visibility.Visible;
+                    PostalCodeLabel.Content = "Onjuiste formaat.";
+                    PostalCodeLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+
 
                 reservation.Guest.FirstName = FirstNameBox.Text;
                 reservation.Guest.Preposition = PrepositionBox.Text;
@@ -865,28 +896,41 @@ namespace camping.WPF
 
                 if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
                 {
-                    MessageBox.Show("De ingevulde datums zijn niet beschikbaar.");
-                    return false;
+                    StartDateLabel.Visibility = Visibility.Visible;
+                    StartDateLabel.Content = "De ingevulde datums zijn niet beschikbaar.";
+                    StartDateLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
                 }
                 else if (Convert.ToDateTime(EndDatedatePicker.Text) < DateTime.Today)
                 {
-                    MessageBox.Show("Einddatum kan niet in het verleden zijn.");
-                    return false;
+                    EndDateLabel.Visibility = Visibility.Visible;
+                    EndDateLabel.Content = "Einddatum kan niet in het verleden zijn.";
+                    EndDateLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
                 }
-                else if (Convert.ToDateTime(StartDateDatePicker.Text) <= Convert.ToDateTime(EndDatedatePicker.Text))
+                else if (Convert.ToDateTime(EndDatedatePicker.Text) < Convert.ToDateTime(StartDateDatePicker.Text))
                 {
-                    reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
-                    reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+                    EndDateLabel.Visibility = Visibility.Visible;
+                    EndDateLabel.Content = "Einddatum kan niet voor de begindatum.";
+                    EndDateLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
                 }
                 else
                 {
-                    MessageBox.Show("Begindatum kan niet voor de einddatum komen.");
-                    return false;
+                    reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                    reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
+
+                    StartDateLabel.Visibility = Visibility.Hidden;
+                    EndDateLabel.Visibility = Visibility.Hidden;
                 }
+                
+                
 
-                retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Guest, reservation.EndDate, reservation.SiteID);
-
-                return true;
+                if (!errorsFound)
+                {
+                    retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Guest, reservation.EndDate, reservation.SiteID);
+                    return true;
+                }
             }
             return false;
         }
@@ -963,7 +1007,7 @@ namespace camping.WPF
         {
             
                 string houseNumber = ((TextBox)sender).Text;
-                if (Regex.IsMatch(houseNumber.Trim(), "^\\+?[1-9]\\d{1,14}$"))
+                if (Regex.IsMatch(houseNumber.Trim(), "^[1-9]\\d{1,15}$"))
                 {
                     ((TextBox)sender).Foreground = Brushes.Black;
                 }

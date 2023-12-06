@@ -10,10 +10,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Media3D;
+using Renci.SshNet.Common;
 
 namespace camping.WPF
 {
-    public class AddReservation
+    public class SearchAvailableCampsites
     {
         Label StartDateLabel;
         Label EndDateLabel;
@@ -21,9 +22,18 @@ namespace camping.WPF
         DatePicker EndDateButton;
         Button SearchButton;
         Grid grid;
-        public AddReservation(Grid dateGrid, SiteData siteData, IReservationData resData) {
+        Grid availableSitesGrid;
+
+        SiteData siteData;
+        IReservationData resData;
+
+
+        public SearchAvailableCampsites(Grid dateGrid, SiteData siteData, IReservationData resData, Grid availableSitesGrid) {
             grid = dateGrid;
-            grid.Background = Brushes.Gray;
+            this.siteData = siteData;
+            this.resData = resData;
+            this.availableSitesGrid = availableSitesGrid;
+            grid.Background = Brushes.LightGray;
 
             StartDateLabel = new Label();
             StartDateLabel.Content = "Begindatum";
@@ -31,7 +41,6 @@ namespace camping.WPF
             Grid.SetRow(StartDateLabel, 1);
             StartDateLabel.Width = 128;
             StartDateLabel.Height = 32;
-            StartDateLabel.FontWeight = FontWeights.Bold;
             StartDateLabel.FontSize = 18;
             StartDateLabel.Margin = new Thickness(0,0,0,0);
             StartDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
@@ -44,7 +53,6 @@ namespace camping.WPF
             Grid.SetRow(EndDateLabel, 1);
             EndDateLabel.Width = 128;
             EndDateLabel.Height = 32;
-            EndDateLabel.FontWeight = FontWeights.Bold;
             EndDateLabel.FontSize = 18;
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
@@ -55,27 +63,30 @@ namespace camping.WPF
             Grid.SetRow(StartDateButton, 1);
             StartDateButton.Width = 150;
             StartDateButton.Height = 32;
-            StartDateButton.FontSize = 18;
+            StartDateButton.FontSize = 12;
             StartDateButton.BorderBrush = Brushes.Black;
+            StartDateButton.Background = Brushes.White;
             StartDateButton.BorderThickness = new Thickness(2);
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             StartDateButton.HorizontalAlignment = HorizontalAlignment.Left;
             StartDateButton.VerticalAlignment = VerticalAlignment.Top;
             StartDateButton.SelectedDateChanged += StartDateButton_SelectedDateChanged;
-
+            StartDateButton.DisplayDateStart = DateTime.Today;
 
             EndDateButton = new DatePicker();
             Grid.SetColumn(EndDateButton, 2);
             Grid.SetRow(EndDateButton, 1);
             EndDateButton.Width = 150;
             EndDateButton.Height = 32;
-            EndDateButton.FontSize = 18;
+            EndDateButton.FontSize = 12;
             EndDateButton.BorderBrush = Brushes.Black;
+            EndDateButton.Background = Brushes.White;
             EndDateButton.BorderThickness = new Thickness(2);
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateButton.HorizontalAlignment = HorizontalAlignment.Left;
             EndDateButton.VerticalAlignment = VerticalAlignment.Bottom;
             EndDateButton.SelectedDateChanged += EndDateButton_SelectedDateChanged;
+            EndDateButton.DisplayDateStart = DateTime.Today;
 
             SearchButton = new Button();
             SearchButton.Content = "Zoeken";
@@ -83,6 +94,7 @@ namespace camping.WPF
             SearchButton.BorderBrush = Brushes.Black;
             SearchButton.BorderThickness = new Thickness(2);
             SearchButton.Background = new SolidColorBrush(Color.FromRgb(153, 255, 153));
+            SearchButton.Click += SearchButton_Click;
             Grid.SetColumn(SearchButton, 4);
             Grid.SetRow(SearchButton, 1);
 
@@ -116,6 +128,11 @@ namespace camping.WPF
         private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            AvailableCampsites availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
         }
     }
 }
