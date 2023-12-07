@@ -108,7 +108,7 @@ namespace camping.WPF
                 CampSiteList.Children.Add(button);
                 rowLength++;
 
-                displayStreets(area.AreaID);
+                displayStreets(area.LocationID);
             }
         }
 
@@ -136,7 +136,7 @@ namespace camping.WPF
 
                     rowLength++;
 
-                    displaySites(street.StreetID);
+                    displaySites(street.LocationID);
                 }
 
 
@@ -250,7 +250,7 @@ namespace camping.WPF
 
             foreach (Street street in retrieveData.Streets)
             {
-                if (street.AreaID == area.AreaID)
+                if (street.AreaID == area.LocationID)
                 {
                     street.Visible = !street.Visible;
 
@@ -270,7 +270,7 @@ namespace camping.WPF
 
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = !site.Visible;
                 }
@@ -285,7 +285,7 @@ namespace camping.WPF
         {
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = false;
                 }
@@ -302,7 +302,7 @@ namespace camping.WPF
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
-            button.Content = $"Plek {site.CampSiteID}";
+            button.Content = $"Plek {site.LocationID}";
             button.Margin = new Thickness(272, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -315,7 +315,7 @@ namespace camping.WPF
         private Button createLocationButton(Street street)
         {
             Button button = new Button();
-            button.Content = $"Straat {street.StreetID}";
+            button.Content = $"Straat {street.LocationID}";
             button.Margin = new Thickness(144, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -328,7 +328,7 @@ namespace camping.WPF
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
-            button.Content = $"Gebied {area.AreaID}";
+            button.Content = $"Gebied {area.LocationID}";
             button.Margin = new Thickness(16, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -377,7 +377,12 @@ namespace camping.WPF
 
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
-                int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
+                int resID;
+                if (!int.TryParse(reservationIDFilterBox.Text,out resID))
+                {
+                    reservationIDFilterBox.Text = string.Empty;
+                    resID = -1;
+                }
                 retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim()); ;
             }
             else
@@ -833,8 +838,18 @@ namespace camping.WPF
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^1-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void NumberValidationTextBox(object sender, TextChangedEventArgs e)
+        {
+            string PostcodeHoofdletters = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(PostcodeHoofdletters.Trim(), "[0-9]+"))
+            {
+                ((TextBox)sender).Text = "";
+            }
+
         }
 
         private void PostalCodeValidation(object sender, TextChangedEventArgs e)
@@ -857,7 +872,6 @@ namespace camping.WPF
             }
             else { ((TextBox)sender).Foreground = Brushes.Red; }
         }
-
 
 
         private void PhoneNumberValidation(object sender, TextChangedEventArgs e)
@@ -1012,6 +1026,13 @@ namespace camping.WPF
                 {}
             }
             
+        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string LastNameFilterBox = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
+            {
+                ((TextBox)sender).Text="";
+            }
         }
     }
 }

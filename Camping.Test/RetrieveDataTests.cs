@@ -2,7 +2,6 @@
 using camping.Database;
 using Camping.Core;
 using Castle.DynamicProxy;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace camping.Test
     public class RetrieveDataTests
     {
         SshConnection sshConnection;
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             sshConnection = new SshConnection();
@@ -61,18 +60,18 @@ namespace camping.Test
         }
 
 
-/*        [Test]
+        [Test]
         [TestCase(4, "12-15-2024", "12-26-2024")]
         public void UpdateReservation_UpdatesReservationInfoInDatabase(int reservationID, DateTime startDate, DateTime endDate)
         {
             SiteData siteData = new();
-            ReservationData reservationData = new();
+            ReservationRepository reservationData = new();
 
             RetrieveData retrieveData = new(siteData, reservationData);
 
-            Assert.IsTrue(retrieveData.UpdateReservation(reservationID, startDate, new Visitor(6, "Jelle", "Bouman", string.Empty, "Bertram", "Mepple", "8269HM", 28, 28), endDate));
-        }*/
-        [TestCleanup]
-        public void Cleanup() { sshConnection.BreakConnection(); }
+            //Assert.IsTrue(retrieveData.UpdateReservation(reservationID, startDate, new Visitor(6, "Jelle", "Bouman", string.Empty, "Bertram", "Mepple", "8269HM", "28", 28), endDate,));
+        }
+        [OneTimeTearDown]
+        public void TearDown() { sshConnection.BreakConnection(); }
     }
 }

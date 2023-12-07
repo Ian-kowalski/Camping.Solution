@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Camping.Core\Camping.Core.csproj" />
     <ProjectReference Include="..\camping.Database\camping.Database.csproj" />
+    <ProjectReference Include="..\Camping.WPF\camping.WPF.csproj" />
   </ItemGroup>
 
 </Project>
