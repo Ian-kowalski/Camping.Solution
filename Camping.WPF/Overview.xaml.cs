@@ -838,7 +838,7 @@ namespace camping.WPF
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^1-9]+");
+            Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
@@ -1021,11 +1021,13 @@ namespace camping.WPF
                     AddResFirstNameBox.Text, AddResPrepositionBox.Text, AddResLastNameBox.Text,
                     AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
                     AddResHouseNumberBox.Text, phoneNumber))
-                {}
+                { }
                 else
-                {}
+                { }
             }
-            
+
+        }
+
         private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string LastNameFilterBox = ((TextBox)sender).Text;
