@@ -189,6 +189,9 @@ namespace camping.WPF
 
         private void checkDates(Reservation reservation)
         {
+            StartDateLabel.Visibility = Visibility.Hidden;
+            EndDateLabel.Visibility = Visibility.Hidden;
+
             if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
             {
                 StartDateLabel.Visibility = Visibility.Visible;
@@ -210,39 +213,34 @@ namespace camping.WPF
                 EndDateLabel.Foreground = solidColorBrush;
                 errorsFound = true;
             }
-            else
-            {
-                reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
-                reservation.EndDate = Convert.ToDateTime(EndDateDatePicker.Text);
-
-                StartDateLabel.Visibility = Visibility.Hidden;
-                EndDateLabel.Visibility = Visibility.Hidden;
-            }
         }
 
 
         public bool saveReservation(Reservation reservation)
         {
 
-            var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+            
+            checkSiteID(reservation);
+            checkPhoneNumber(reservation);
+            checkHouseNumber(reservation);
+            checkPostalCode(reservation);
 
-            if (result == MessageBoxResult.Yes)
+            notEmpty(reservation, FirstNameBox, FirstNameLabel);
+            notEmpty(reservation, LastNameBox, LastNameLabel);
+            notEmpty(reservation, CityBox, CityLabel);
+            notEmpty(reservation, StreetBox, StreetLabel);
+
+            reservation.Visitor.Preposition = PrepositionBox.Text;
+
+            checkDates(reservation);
+            
+            
+            
+            if (!errorsFound)
             {
-                checkSiteID(reservation);
-                checkPhoneNumber(reservation);
-                checkHouseNumber(reservation);
-                checkPostalCode(reservation);
-
-                notEmpty(reservation, FirstNameBox, FirstNameLabel);
-                notEmpty(reservation, LastNameBox, LastNameLabel);
-                notEmpty(reservation, CityBox, CityLabel);
-                notEmpty(reservation, StreetBox, StreetLabel);
-
-                reservation.Visitor.Preposition = PrepositionBox.Text;
-
-                checkDates(reservation);
-
-                if (!errorsFound)
+                var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+                
+                if (result == MessageBoxResult.Yes)
                 {
                     retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
                     return true;
