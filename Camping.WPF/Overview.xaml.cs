@@ -866,7 +866,7 @@ namespace camping.WPF
         private void HouseNumberValidation(object sender, TextChangedEventArgs e)
         {
             string houseNumber = ((TextBox)sender).Text;
-            if (Regex.IsMatch(houseNumber.Trim(), "^[1-9]*[a-z]{0,2}$"))
+            if (Regex.IsMatch(houseNumber.Trim(), "^[1-9][0-9]*[a-z]{0,2}$"))
             {
                 ((TextBox)sender).Foreground = Brushes.Black;
             }
@@ -878,7 +878,7 @@ namespace camping.WPF
         {
             
                 string houseNumber = ((TextBox)sender).Text;
-                if (Regex.IsMatch(houseNumber.Trim(), "^[1-9]\\d{1,15}$"))
+                if (Regex.IsMatch(houseNumber.Trim(), "^[0-9]\\d{1,15}$"))
                 {
                     ((TextBox)sender).Foreground = Brushes.Black;
                 }
@@ -934,7 +934,7 @@ namespace camping.WPF
             }
 
 
-            Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
+            Regex reg = new Regex("^[1-9][0-9]*[a-z]{0,2}$");
             if (reg.IsMatch(AddResHouseNumberBox.Text))
             {
                 AddResHouseNumberLabel.Visibility = Visibility.Hidden;
