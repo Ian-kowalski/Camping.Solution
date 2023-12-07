@@ -54,7 +54,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="SearchCampsiteList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="SearchCampsiteList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
 
             <Grid x:Name="SearchCampsiteGrid">
                 <Grid.RowDefinitions>
@@ -89,7 +89,7 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Plek Nr" FontWeight="Bold"  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <TextBlock Text="Grotte" FontWeight="Bold" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Grootte" FontWeight="Bold" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Schaduw" FontWeight="Bold" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Kraan" FontWeight="Bold" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Water" FontWeight="Bold" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
@@ -135,7 +135,7 @@
                 <Label Content="Begindatum*" Margin="6,96,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Einddatum*" Margin="6,128,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <Label x:Name="AddResSiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0"  Background="LightGray" VerticalAlignment="Top" IsEnabled="true" />
+                <Label x:Name="AddResSiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0" VerticalAlignment="Top" IsEnabled="true" />
                 <Label x:Name="AddResSiteIDLabel" Grid.Column="2" Height="28" Margin="8,64,16,0" VerticalAlignment="Top" IsEnabled="true"/>
                 <Label x:Name="AddResStartDateDatePicker" Grid.Column="1" Height="28" Margin="8,96,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="true" />
                 <Label x:Name="AddResStartDateLabel" Grid.Column="2" Height="28" Margin="8,96,16,0" VerticalAlignment="Top" IsEnabled="true"/>
