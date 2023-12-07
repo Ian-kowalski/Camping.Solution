@@ -169,13 +169,19 @@
                         <ColumnDefinition Width="11*"/>
                         <ColumnDefinition Width="20*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <TextBox x:Name="AddResHouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="true" TextChanged="HouseNumberValidation"/>
                     <Label Content="Postcode*" Height="32" HorizontalContentAlignment="Center" Grid.Column="1" VerticalContentAlignment="Center"/>
                     <TextBox x:Name="AddResPostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="true" TextChanged="PostalCodeValidation"/>
+
+                    <Label x:Name="AddResHouseNumberLabel" Height="28" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
+                    <Label x:Name="AddResPostalCodeLabel"  Height="28" Grid.Column="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                 </Grid>
-                <Label x:Name="AddResHouseNumberLabel" Margin="8,240,286,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="true" VerticalAlignment="Top"/>
-                <Label x:Name="AddResPostalCodeLabel" Margin="192,240,16,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="true" VerticalAlignment="Top"/>
                 <Button x:Name="AddResSaveReservationButton" Content="Toevoegen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="AddReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
+                
             </Grid>
         </Border>
 
@@ -197,6 +203,7 @@
                         <ColumnDefinition/>
 
                     </Grid.ColumnDefinitions>
+                    
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
                     <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
@@ -287,13 +294,18 @@
                         <ColumnDefinition Width="11*"/>
                         <ColumnDefinition Width="20*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <TextBox x:Name="HouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="False" TextChanged="HouseNumberValidation"/>
                     <Label Content="Postcode*" Height="32" HorizontalContentAlignment="Center" Grid.Column="1" VerticalContentAlignment="Center"/>
                     <TextBox x:Name="PostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="False" TextChanged="PostalCodeValidation"/>
+                    <Label x:Name="HouseNumberLabel" Height="28" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
+                    <Label x:Name="PostalCodeLabel"  Height="28" Grid.Column="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
 
                 </Grid>
-                <Label x:Name="HouseNumberLabel" Margin="8,240,286,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top"/>
-                <Label x:Name="PostalCodeLabel" Margin="192,240,16,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top"/>
+
                 <Button x:Name="EditReservationButton" Content="Aanpassen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="EditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
             </Grid>
         </Border>

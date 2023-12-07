@@ -4,7 +4,7 @@
     {
         ReservationID = reservationID;
         StartDate = startDate;
-        Guest = visitor;
+        Visitor = visitor;
         EndDate = endDate;
         SiteID = site;
     }
@@ -12,7 +12,7 @@
     public int ReservationID { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public Visitor Guest { get; set; }
+    public Visitor Visitor { get; set; }
     public int AmountPeople { get; set; }
     public int SiteID { get; set; }
 

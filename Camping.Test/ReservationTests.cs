@@ -1,5 +1,4 @@
 ﻿using camping.Database;
-using Assert = NUnit.Framework.Assert;
 
 namespace Camping.Test
 {
@@ -15,12 +14,12 @@ namespace Camping.Test
 
 
         [Test]
-        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, 2)]
-        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", 26, 12345678, -1)]
+        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678, 2)]
+        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", "26", 12345678, -1)]
         public void Reservation_GetVisitor_ID(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
-            int houseNumber, int phoneNumber,
+            string houseNumber, int phoneNumber,
             int result)
         {
             VisitorRepository visiterRepo = new();
@@ -64,12 +63,12 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, "12-15-2023", "11-26-2023", 2)]
-        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", 26, 12345678, "12-15-2024", "11-26-2024", -1)]
+        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678, "12-15-2023", "11-26-2023", 2)]
+        [TestCase("Jelle", "Bouman", "de", "bertram", "Mepple", "7944NS", "26", 12345678, "12-15-2024", "11-26-2024", -1)]
         public void Reservation_Visitor_GetReservation_ID(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
-            int houseNumber, int phoneNumber,
+            string houseNumber, int phoneNumber,
             string startDate, string endDate,
             int result)
         {
@@ -92,12 +91,12 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678)] // bestaat al, dus false
-        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", 51, 12345678)] // bestaat al, dus false
+        [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678)] // bestaat al, dus false
+        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD","51", 12345678)] // bestaat al, dus false
         public void Reservation_AddVisitor_AlreadyExists(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
-            int houseNumber, int phoneNumber)
+            string houseNumber, int phoneNumber)
         {
             VisitorRepository visiterRepo = new();
 
@@ -122,7 +121,7 @@ namespace Camping.Test
             Random random = new Random();
 
 
-            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, random.Next(1, 99), random.Next(10000000, 99999999)))
+            if (visiterRepo.addVisitor(firstName, lastName, preposition, adress, city, postalcode, random.Next(1, 99).ToString(), random.Next(10000000, 99999999)))
             {
                 Assert.Pass();
             }
@@ -134,12 +133,12 @@ namespace Camping.Test
         }
 
         [Test]
-        [TestCase(1, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", 26, 12345678, "12-02-2023", "12-06-2023")]
+        [TestCase(1, "Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678, "12-02-2023", "12-06-2023")]
         public void Reservation_AddReservation_Unavailable(
             int campSite,
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
-            int houseNumber, int phoneNumber,
+            string houseNumber, int phoneNumber,
             string startDate, string endDate)
         {
             ReservationRepository reservationRepo = new();
@@ -194,8 +193,8 @@ namespace Camping.Test
 
 
         [Test]
-        [TestCase(2, "12-02-2025", "12-05-2025", "test", "delete", "res", "this Street", "here", "2332XX", 22, 54717700)]
-        public void Reservation_DeleteReservation_delete(int campsId, string sDate, string eDate, string fName, string prop, string lName, string adres, string city, string postcode, int huisnummer, int phoneNumber)
+        [TestCase(2, "12-02-2025", "12-05-2025", "test", "delete", "res", "this Street", "here", "2332XX", "22", 54717700)]
+        public void Reservation_DeleteReservation_delete(int campsId, string sDate, string eDate, string fName, string prop, string lName, string adres, string city, string postcode, string huisnummer, int phoneNumber)
         {
             ReservationRepository   reservationRepo = new();
             VisitorRepository visitorRepository = new();
