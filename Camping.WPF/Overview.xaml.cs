@@ -46,7 +46,7 @@ namespace camping.WPF
 /*        private Location selectedLocation;
 */        private Button changeFacilitiesButton;
 
-        private SearchAvailableCampsites addReservation;
+        private SearchAvailableCampsites SearchCampsites;
 
         public Overview()
         {
@@ -61,10 +61,14 @@ namespace camping.WPF
 
             displayAllReservations();
 
-            addReservation = new SearchAvailableCampsites(AddReservationGrid, siteData, resData, AddReservationGridList);
-            addReservation.SearchSites += (sender, e) => { 
-                AddReservationGridHeader.Visibility = Visibility.Visible;
+            SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            SearchCampsites.SearchSites += (sender, e) => { 
+                SearchCampsiteGridHeader.Visibility = Visibility.Visible;
                 AvailableCampsitesScrollViewer.Visibility = Visibility.Visible;
+            };
+            SearchCampsites.AddReservation += (sender, e) =>
+            {
+                fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
 
 
@@ -342,7 +346,7 @@ namespace camping.WPF
         private void tabButtonClick(object sender, RoutedEventArgs e)
         {
             setTabButtonState((Button)sender,
-                new[] { SiteOverview, LocationInfo, AddReservationList, AddReservationInfo, ReservationList, ReservationInfo },
+                new[] { SiteOverview, LocationInfo, SearchCampsiteList, AddReservationInfo, ReservationList, ReservationInfo },
                 new[] { SiteControlButton, AddReservationButton, ReservationsButton }
                 );
         }
@@ -865,6 +869,148 @@ namespace camping.WPF
                     ((TextBox)sender).Foreground = Brushes.Black;
                 }
                 else { ((TextBox)sender).Foreground = Brushes.Red; }
+            
+        }
+
+
+        private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
+        {
+            AddReservationInfoGrid.Visibility = Visibility.Visible;
+
+            AddResSiteIDBox.Content = campSiteID.ToString();
+            AddResStartDateDatePicker.Content = startDate.ToString("MM-dd-yyyy");
+            AddResEndDateDatePicker.Content = endDate.ToString("MM-dd-yyyy");
+
+            AddResFirstNameBox.Text = "";
+            AddResPrepositionBox.Text = "";
+            AddResLastNameBox.Text = "";
+            AddResPhoneNumberBox.Text = "";
+            AddResCityBox.Text = "";
+            AddResAdressBox.Text = "";
+
+            AddResHouseNumberBox.Text = "";
+            AddResPostalCodeBox.Text = "";
+        }
+
+        private void AddReservationButtonClick(object sender, EventArgs e)
+        {
+
+
+            bool errorsFound = false;
+
+            if (!int.TryParse(AddResSiteIDBox.Content.ToString(), out int siteID))
+            {
+                AddResSiteIDBox.Visibility = Visibility.Visible;
+                AddResSiteIDBox.Content = "Moet een getal zijn";
+                AddResSiteIDBox.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+
+
+            if (int.TryParse(AddResPhoneNumberBox.Text, out int phoneNumber))
+            {
+                AddResPhoneNumberLabel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                AddResPhoneNumberLabel.Visibility = Visibility.Visible;
+                AddResPhoneNumberLabel.Content = "Moet een getal zijn";
+                AddResPhoneNumberLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+
+
+            Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
+            if (reg.IsMatch(AddResHouseNumberBox.Text))
+            {
+                AddResHouseNumberLabel.Visibility = Visibility.Hidden;
+
+            }
+            else
+            {
+                AddResHouseNumberLabel.Visibility = Visibility.Visible;
+                AddResHouseNumberLabel.Content = "2 letters max.";
+                AddResHouseNumberLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+
+
+            Regex regex = new("^[1-9][0-9]{3}\\s?[a-zA-Z]{2}$");
+
+            if (regex.IsMatch(AddResPostalCodeBox.Text) && AddResPostalCodeBox.Text.Length <= 6)
+            {
+                AddResPostalCodeLabel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                AddResPostalCodeLabel.Visibility = Visibility.Visible;
+                AddResPostalCodeLabel.Content = "Onjuiste formaat.";
+                AddResPostalCodeLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+
+
+            if (AddResFirstNameBox.Text.IsNullOrEmpty())
+            {
+                AddResFirstNameLabel.Visibility = Visibility.Visible;
+                AddResFirstNameLabel.Content = "Mag niet leeg zijn.";
+                AddResFirstNameLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+            else
+            {
+                AddResFirstNameLabel.Visibility = Visibility.Hidden;
+            }
+
+
+            if (AddResLastNameBox.Text.IsNullOrEmpty())
+            {
+                AddResLastNameLabel.Visibility = Visibility.Visible;
+                AddResLastNameLabel.Content = "Mag niet leeg zijn";
+                AddResLastNameLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+            else
+            {
+                AddResLastNameLabel.Visibility = Visibility.Hidden;
+            }
+
+            if (AddResCityBox.Text.IsNullOrEmpty())
+            {
+                AddResCityLabel.Visibility = Visibility.Visible;
+                AddResCityLabel.Content = "Mag niet leeg zijn";
+                AddResCityLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+            else
+            {
+                AddResCityLabel.Visibility = Visibility.Hidden;
+            }
+            if (AddResAdressBox.Text.IsNullOrEmpty())
+            {
+                AddResAdressLabel.Visibility = Visibility.Visible;
+                AddResAdressLabel.Content = "Mag niet leeg zijn";
+                AddResAdressLabel.Foreground = Brushes.Red;
+                errorsFound = true;
+            }
+            else
+            {
+                AddResAdressLabel.Visibility = Visibility.Hidden;
+            }
+
+
+
+
+            if (!errorsFound)
+            {
+                if (resData.addReservation(siteID, AddResStartDateDatePicker.Content.ToString(), AddResEndDateDatePicker.Content.ToString(),
+                    AddResFirstNameBox.Text, AddResPrepositionBox.Text, AddResLastNameBox.Text,
+                    AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
+                    AddResHouseNumberBox.Text, phoneNumber))
+                {}
+                else
+                {}
+            }
             
         }
     }

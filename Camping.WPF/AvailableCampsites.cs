@@ -172,9 +172,10 @@ namespace camping.WPF
 
         private void ReserveButton_Click(object sender, RoutedEventArgs e, int campSiteID, DateTime startDate, DateTime endDate)
         {
-            AddReservationWindow ars = new(campSiteID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"));
-            ars.ShowDialog();
+            ReserveCampsite?.Invoke(sender, new AddReservationEventArgs(campSiteID, startDate, endDate));
 
         }
+
+        public event EventHandler<AddReservationEventArgs> ReserveCampsite;
     }
 }

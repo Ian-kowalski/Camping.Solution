@@ -82,7 +82,7 @@ namespace camping.WPF
             if (resData.addReservation(CampSiteID, StartDate, EndDate,
                 NameBox.Text, PrepositionBox.Text, SurnameBox.Text,
                 AdressBox.Text, CityBox.Text, postalCode,
-                houseNumber, phoneNumber))
+                houseNumber.ToString(), phoneNumber))
             {
                 MessageBox.Show("Reservering is toegevoegd!");
                 ReservationAdded?.Invoke(this, new EventArgs());

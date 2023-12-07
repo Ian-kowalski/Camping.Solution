@@ -116,7 +116,7 @@ namespace camping.Database
         }
 
         // adds a new reservation to the database
-        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
             if (!GetAvailableReservation(campSiteID, startDate, endDate))
             {
