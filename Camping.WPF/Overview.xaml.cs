@@ -692,7 +692,7 @@ namespace camping.WPF
                 }
 
 
-                if (FirstNameBox.Text.IsNullOrEmpty())
+                if (FirstNameBox.Text.Trim().IsNullOrEmpty())
                 {
                     FirstNameLabel.Visibility = Visibility.Visible;
                     FirstNameLabel.Content = "Mag niet leeg zijn.";
@@ -706,7 +706,7 @@ namespace camping.WPF
                 }
                 
 
-                if (LastNameBox.Text.IsNullOrEmpty())
+                if (LastNameBox.Text.Trim().IsNullOrEmpty())
                 {
                     LastNameLabel.Visibility = Visibility.Visible;
                     LastNameLabel.Content = "Mag niet leeg zijn";
@@ -719,7 +719,7 @@ namespace camping.WPF
                     LastNameLabel.Visibility = Visibility.Hidden;
                 }
 
-                if (CityBox.Text.IsNullOrEmpty())
+                if (CityBox.Text.Trim().IsNullOrEmpty())
                 {
                     CityLabel.Visibility = Visibility.Visible;
                     CityLabel.Content = "Mag niet leeg zijn";
@@ -731,7 +731,7 @@ namespace camping.WPF
                     reservation.Visitor.City = CityBox.Text;
                     CityLabel.Visibility = Visibility.Hidden;
                 }
-                if (AdressBox.Text.IsNullOrEmpty())
+                if (AdressBox.Text.Trim().IsNullOrEmpty())
                 {
                     AdressLabel.Visibility = Visibility.Visible;
                     AdressLabel.Content = "Mag niet leeg zijn";
@@ -795,11 +795,6 @@ namespace camping.WPF
             PhoneNumberLabel.Visibility = Visibility.Hidden;
             HouseNumberLabel.Visibility = Visibility.Hidden;
             PostalCodeLabel.Visibility = Visibility.Hidden;
-        }
-
-        private void Checkfields()
-        {
-            throw new NotImplementedException();
         }
 
         private void chanceAanpassenOrSaveButtonContent(bool buttonState)
@@ -964,7 +959,7 @@ namespace camping.WPF
             }
 
 
-            if (AddResFirstNameBox.Text.IsNullOrEmpty())
+            if (AddResFirstNameBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResFirstNameLabel.Visibility = Visibility.Visible;
                 AddResFirstNameLabel.Content = "Mag niet leeg zijn.";
@@ -977,7 +972,7 @@ namespace camping.WPF
             }
 
 
-            if (AddResLastNameBox.Text.IsNullOrEmpty())
+            if (AddResLastNameBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResLastNameLabel.Visibility = Visibility.Visible;
                 AddResLastNameLabel.Content = "Mag niet leeg zijn";
@@ -989,7 +984,7 @@ namespace camping.WPF
                 AddResLastNameLabel.Visibility = Visibility.Hidden;
             }
 
-            if (AddResCityBox.Text.IsNullOrEmpty())
+            if (AddResCityBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResCityLabel.Visibility = Visibility.Visible;
                 AddResCityLabel.Content = "Mag niet leeg zijn";
@@ -1000,7 +995,7 @@ namespace camping.WPF
             {
                 AddResCityLabel.Visibility = Visibility.Hidden;
             }
-            if (AddResAdressBox.Text.IsNullOrEmpty())
+            if (AddResAdressBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResAdressLabel.Visibility = Visibility.Visible;
                 AddResAdressLabel.Content = "Mag niet leeg zijn";
