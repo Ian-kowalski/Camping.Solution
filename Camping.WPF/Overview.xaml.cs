@@ -25,11 +25,10 @@ namespace camping.WPF
         private ReservationRepository resData { get; set; }
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
+        private ChangeReservation changeReservation { get; set; }
 
         private bool isUpdating { get; set; }
         private bool resInfoVisible { get; set; } = false;
-
-        private bool ReservationAanpassenButtonState { get; set; } = false; //true save : false aanpassen
 
         private int rowLength;
 
@@ -60,6 +59,9 @@ namespace camping.WPF
 
 
             displayAllReservations();
+
+            ChangeReservation changeRes = new(retrieveData, SiteIDBox, StartDateDatePicker, EndDatedatePicker, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox, SiteIDLabel, StartDateLabel, EndDateLabel, FirstNameLabel, LastNameLabel, PhoneNumberLabel, CityLabel, AdressLabel, HouseNumberLabel, PostalCodeLabel, EditReservationButton);
+            changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
             SearchCampsites.SearchSites += (sender, e) => { 
@@ -427,8 +429,8 @@ namespace camping.WPF
         {
 
             Grid grid = new Grid();
-            grid.MouseDown += (sender, e) => { fillReservationInfoGrid(reservation); };
-
+            grid.MouseDown += (sender, e) => { changeReservation.fillReservationInfoGrid(reservation); };
+            
             if (selectedReservation is not null)
             {
                 if (reservation.ReservationID == selectedReservation.ReservationID)
@@ -498,40 +500,24 @@ namespace camping.WPF
             checkBox.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(checkBox);
         }
-        private void fillReservationInfoGrid(Reservation reservation)
-        {
-            selectedReservation = reservation;
-
-
-            SiteIDBox.Text = reservation.SiteID.ToString();
-            StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
-            EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
-
-            FirstNameBox.Text = reservation.Visitor.FirstName;
-            PrepositionBox.Text = reservation.Visitor.Preposition == string.Empty ? "" : reservation.Visitor.Preposition;
-            LastNameBox.Text = reservation.Visitor.LastName;
-            PhoneNumberBox.Text = reservation.Visitor.PhoneNumber.ToString();
-            CityBox.Text = reservation.Visitor.City.ToString();
-            AdressBox.Text = reservation.Visitor.Adress;
-
-            HouseNumberBox.Text = reservation.Visitor.HouseNumber.ToString();
-            PostalCodeBox.Text = reservation.Visitor.PostalCode;
-        }
+        
         private void RowClick(Reservation reservation)
         {
             resInfoVisible = false;
 
             selectedReservation = reservation;
+
+
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
 
 
-            chanceAanpassenOrSaveButtonContent(resInfoVisible);
-            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
-            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
+            changeReservation.chanceAanpassenOrSaveButtonContent(resInfoVisible);
+            changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
+            changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
 
-            hideErrors();
+            changeReservation.hideErrors();
         }
 
         private void Un_Checkt(Reservation reservation, object sender)
@@ -599,9 +585,9 @@ namespace camping.WPF
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
-            if (ReservationAanpassenButtonState)
+            if (changeReservation.ReservationAanpassenButtonState)
             {
-                if (!saveReservation(selectedReservation))
+                if (!changeReservation.saveReservation(selectedReservation))
                 {
                     return;
                 }
@@ -609,223 +595,20 @@ namespace camping.WPF
             }
 
             resInfoVisible = !resInfoVisible;
-            chanceAanpassenOrSaveButtonContent(resInfoVisible);
-            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
-            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
+            changeReservation.chanceAanpassenOrSaveButtonContent(resInfoVisible);
+            changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
+            changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
         }
 
 
-        private bool saveReservation(Reservation reservation)
-        {
-            
-            var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
+        
 
-            bool errorsFound = false;
-
-            if (result == MessageBoxResult.Yes)
-            {
-                int siteID;
-                if (!int.TryParse(SiteIDBox.Text, out siteID))
-                {
-                    SiteIDLabel.Visibility = Visibility.Visible;
-                    SiteIDLabel.Content = "Moet een getal zijn.";
-                    SiteIDLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                } else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
-                {
-                    SiteIDLabel.Visibility = Visibility.Visible;
-                    SiteIDLabel.Content = "Deze plek bestaat niet.";
-                    SiteIDLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.SiteID = siteID;
-                    SiteIDLabel.Visibility = Visibility.Hidden;
-                }
-
-
-                int phoneNumber;
-                if (int.TryParse(PhoneNumberBox.Text, out phoneNumber))
-                {
-                    reservation.Visitor.PhoneNumber = phoneNumber;
-                    PhoneNumberLabel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    PhoneNumberLabel.Visibility = Visibility.Visible;
-                    PhoneNumberLabel.Content = "Moet een getal zijn";
-                    PhoneNumberLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                
-
-                Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
-                if (reg.IsMatch(HouseNumberBox.Text))
-                {
-                    reservation.Visitor.HouseNumber = HouseNumberBox.Text;
-                    HouseNumberLabel.Visibility = Visibility.Hidden;
-
-                }
-                else
-                {
-                    HouseNumberLabel.Visibility = Visibility.Visible;
-                    HouseNumberLabel.Content = "2 letters max.";
-                    HouseNumberLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-
-               
-                Regex regex = new("^[1-9][0-9]{3}\\s?[a-zA-Z]{2}$");
-
-                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
-                {
-                    reservation.Visitor.PostalCode = PostalCodeBox.Text.ToUpper();
-                    PostalCodeLabel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    PostalCodeLabel.Visibility= Visibility.Visible;
-                    PostalCodeLabel.Content = "Onjuiste formaat.";
-                    PostalCodeLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-
-
-                if (FirstNameBox.Text.IsNullOrEmpty())
-                {
-                    FirstNameLabel.Visibility = Visibility.Visible;
-                    FirstNameLabel.Content = "Mag niet leeg zijn.";
-                    FirstNameLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.FirstName = FirstNameBox.Text;
-                    FirstNameLabel.Visibility = Visibility.Hidden;
-                }
-                
-
-                if (LastNameBox.Text.IsNullOrEmpty())
-                {
-                    LastNameLabel.Visibility = Visibility.Visible;
-                    LastNameLabel.Content = "Mag niet leeg zijn";
-                    LastNameLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.LastName = LastNameBox.Text;
-                    LastNameLabel.Visibility = Visibility.Hidden;
-                }
-
-                if (CityBox.Text.IsNullOrEmpty())
-                {
-                    CityLabel.Visibility = Visibility.Visible;
-                    CityLabel.Content = "Mag niet leeg zijn";
-                    CityLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.City = CityBox.Text;
-                    CityLabel.Visibility = Visibility.Hidden;
-                }
-                if (AdressBox.Text.IsNullOrEmpty())
-                {
-                    AdressLabel.Visibility = Visibility.Visible;
-                    AdressLabel.Content = "Mag niet leeg zijn";
-                    AdressLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.Adress = AdressBox.Text;
-                    AdressLabel.Visibility = Visibility.Hidden;
-                }
-
-                reservation.Visitor.Preposition = PrepositionBox.Text;
-
-                if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
-                {
-                    StartDateLabel.Visibility = Visibility.Visible;
-                    StartDateLabel.Content = "De ingevulde datums zijn niet beschikbaar.";
-                    StartDateLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else if (Convert.ToDateTime(EndDatedatePicker.Text) < DateTime.Today)
-                {
-                    EndDateLabel.Visibility = Visibility.Visible;
-                    EndDateLabel.Content = "Einddatum kan niet in het verleden zijn.";
-                    EndDateLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else if (Convert.ToDateTime(EndDatedatePicker.Text) < Convert.ToDateTime(StartDateDatePicker.Text))
-                {
-                    EndDateLabel.Visibility = Visibility.Visible;
-                    EndDateLabel.Content = "Einddatum kan niet voor de begindatum.";
-                    EndDateLabel.Foreground = Brushes.Red;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
-                    reservation.EndDate = Convert.ToDateTime(EndDatedatePicker.Text);
-
-                    StartDateLabel.Visibility = Visibility.Hidden;
-                    EndDateLabel.Visibility = Visibility.Hidden;
-                }
-                
-                
-
-                if (!errorsFound)
-                {
-                    retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void hideErrors()
-        {
-            SiteIDLabel.Visibility = Visibility.Hidden;
-            StartDateLabel.Visibility = Visibility.Hidden;
-            EndDateLabel.Visibility = Visibility.Hidden;
-            PhoneNumberLabel.Visibility = Visibility.Hidden;
-            HouseNumberLabel.Visibility = Visibility.Hidden;
-            PostalCodeLabel.Visibility = Visibility.Hidden;
-        }
+        
 
         private void Checkfields()
         {
             throw new NotImplementedException();
         }
-
-        private void chanceAanpassenOrSaveButtonContent(bool buttonState)
-        {
-            ReservationAanpassenButtonState = buttonState;
-            EditReservationButton.Content = ReservationAanpassenButtonState ? "Opslaan" : "Aanpassen";
-        }
-
-        private void enabledReservationInfoTextBoxes(TextBox[] TextBoxElements, bool isVisible)
-        {
-            foreach (UIElement element in TextBoxElements)
-            {
-                element.IsEnabled = isVisible;
-            }
-        }
-
-        private void enabledReservationInfodatePicker(DatePicker[] TextBoxElements, bool isVisible)
-        {
-            foreach (UIElement element in TextBoxElements)
-            {
-                element.IsEnabled = isVisible;
-            }
-        }
-
-        
-
         
 
         private void FilterZoekenEnterPress(object sender, KeyEventArgs e)
