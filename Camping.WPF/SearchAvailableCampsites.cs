@@ -134,7 +134,10 @@ namespace camping.WPF
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
+            SearchSites?.Invoke(this, new EventArgs());
             AvailableCampsites availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
         }
+
+        public event EventHandler<EventArgs> SearchSites;
     }
 }

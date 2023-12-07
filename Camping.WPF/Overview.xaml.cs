@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,9 +62,16 @@ namespace camping.WPF
             displayAllReservations();
 
             addReservation = new SearchAvailableCampsites(AddReservationGrid, siteData, resData, AddReservationGridList);
+            addReservation.SearchSites += (sender, e) => { 
+                AddReservationGridHeader.Visibility = Visibility.Visible;
+                AvailableCampsitesScrollViewer.Visibility = Visibility.Visible;
+            };
+
 
             Closing += onWindowClosing;
         }
+
+        
 
 
         private void displayAllLocations()
@@ -96,7 +104,7 @@ namespace camping.WPF
                 CampSiteList.Children.Add(button);
                 rowLength++;
 
-                displayStreets(area.AreaID);
+                displayStreets(area.LocationID);
             }
         }
 
@@ -124,7 +132,7 @@ namespace camping.WPF
 
                     rowLength++;
 
-                    displaySites(street.StreetID);
+                    displaySites(street.LocationID);
                 }
 
 
@@ -238,7 +246,7 @@ namespace camping.WPF
 
             foreach (Street street in retrieveData.Streets)
             {
-                if (street.AreaID == area.AreaID)
+                if (street.AreaID == area.LocationID)
                 {
                     street.Visible = !street.Visible;
 
@@ -258,7 +266,7 @@ namespace camping.WPF
 
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = !site.Visible;
                 }
@@ -273,7 +281,7 @@ namespace camping.WPF
         {
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = false;
                 }
@@ -290,7 +298,7 @@ namespace camping.WPF
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
-            button.Content = $"Plek {site.CampSiteID}";
+            button.Content = $"Plek {site.LocationID}";
             button.Margin = new Thickness(272, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -303,7 +311,7 @@ namespace camping.WPF
         private Button createLocationButton(Street street)
         {
             Button button = new Button();
-            button.Content = $"Straat {street.StreetID}";
+            button.Content = $"Straat {street.LocationID}";
             button.Margin = new Thickness(144, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -316,7 +324,7 @@ namespace camping.WPF
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
-            button.Content = $"Gebied {area.AreaID}";
+            button.Content = $"Gebied {area.LocationID}";
             button.Margin = new Thickness(16, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -680,12 +688,59 @@ namespace camping.WPF
                 }
 
 
-                reservation.Guest.FirstName = FirstNameBox.Text;
-                reservation.Guest.Preposition = PrepositionBox.Text;
-                reservation.Guest.LastName = LastNameBox.Text;
-                reservation.Guest.City = CityBox.Text;
-                reservation.Guest.Adress = AdressBox.Text;
+                if (FirstNameBox.Text.IsNullOrEmpty())
+                {
+                    FirstNameLabel.Visibility = Visibility.Visible;
+                    FirstNameLabel.Content = "Mag niet leeg zijn.";
+                    FirstNameLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.FirstName = FirstNameBox.Text;
+                    FirstNameLabel.Visibility = Visibility.Hidden;
+                }
+                
 
+                if (LastNameBox.Text.IsNullOrEmpty())
+                {
+                    LastNameLabel.Visibility = Visibility.Visible;
+                    LastNameLabel.Content = "Mag niet leeg zijn";
+                    LastNameLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.LastName = LastNameBox.Text;
+                    LastNameLabel.Visibility = Visibility.Hidden;
+                }
+
+                if (CityBox.Text.IsNullOrEmpty())
+                {
+                    CityLabel.Visibility = Visibility.Visible;
+                    CityLabel.Content = "Mag niet leeg zijn";
+                    CityLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.City = CityBox.Text;
+                    CityLabel.Visibility = Visibility.Hidden;
+                }
+                if (AdressBox.Text.IsNullOrEmpty())
+                {
+                    AdressLabel.Visibility = Visibility.Visible;
+                    AdressLabel.Content = "Mag niet leeg zijn";
+                    AdressLabel.Foreground = Brushes.Red;
+                    errorsFound = true;
+                }
+                else
+                {
+                    reservation.Guest.Adress = AdressBox.Text;
+                    AdressLabel.Visibility = Visibility.Hidden;
+                }
+
+                reservation.Guest.Preposition = PrepositionBox.Text;
 
                 if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
                 {

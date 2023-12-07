@@ -68,6 +68,7 @@ namespace camping.Test
             Assert.IsNotNull(availability);
             Assert.IsInstanceOf<List<ReservationDates>>(availability);
         }
+
         [OneTimeTearDown]
         public void TearDown() { sshConnection.BreakConnection(); }
     }

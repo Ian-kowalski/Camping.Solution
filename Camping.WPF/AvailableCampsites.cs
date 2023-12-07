@@ -40,7 +40,7 @@ namespace camping.WPF
             {
 
                 // if a spot isnt available on those selected dates, prevent it from showing up
-                if (!resData.GetAvailableReservation(site.CampSiteID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
+                if (!resData.GetAvailableReservation(site.LocationID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
 
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
@@ -48,7 +48,7 @@ namespace camping.WPF
 
                 // campSite ID
                 campSiteIDText = new TextBlock();
-                campSiteIDText.Text = $"{site.CampSiteID}"; // campSiteID
+                campSiteIDText.Text = $"{site.LocationID}"; // campSiteID
                 campSiteIDText.FontSize = 20;
                 campSiteIDText.FontWeight = FontWeights.Bold;
                 Grid.SetColumn(campSiteIDText, 0);
@@ -116,7 +116,7 @@ namespace camping.WPF
                 reserveButton.Width = 120;
                 Grid.SetColumn(reserveButton, 7);
                 Grid.SetRow(reserveButton, rowNumber);
-                reserveButton.Click += (sender, RoutedEventArgs) => { ReserveButton_Click(sender, RoutedEventArgs, site.CampSiteID, startDate, endDate); };
+                reserveButton.Click += (sender, RoutedEventArgs) => { ReserveButton_Click(sender, RoutedEventArgs, site.LocationID, startDate, endDate); };
                 reserveButton.HorizontalAlignment = HorizontalAlignment.Center;
                 reserveButton.VerticalAlignment = VerticalAlignment.Center;
                 reserveButton.Margin = new Thickness(0, 0, 0, 0);
@@ -132,6 +132,8 @@ namespace camping.WPF
 
                 rowNumber++;
             }
+
+            grid.Visibility = Visibility.Visible;
 
         }
 

@@ -74,7 +74,7 @@
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Grid Name="AddReservationGridHeader" Margin="24,32,24,24" Grid.Row="2" Grid.ColumnSpan="5">
+                <Grid Name="AddReservationGridHeader" Margin="24,32,24,24" Grid.Row="2" Grid.ColumnSpan="5" Visibility="Hidden">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
@@ -96,7 +96,7 @@
                     <TextBlock Text="Dier" FontWeight="Bold" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Stroom" FontWeight="Bold" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 </Grid>
-                <ScrollViewer Margin="24,64,24,10" Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5">
+                <ScrollViewer x:Name="AvailableCampsitesScrollViewer"  Margin="24,64,24,10" Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5" Visibility="Hidden">
                     <Grid Name ="AddReservationGridList">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
@@ -212,12 +212,17 @@
                 <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
                 <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="FirstNameLabel" Grid.Column="2" Height="28" Margin="8,16,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="LastNameLabel" Grid.Column="2" Height="28" Margin="8,80,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="PhoneNumberValidation"/>
-                <Label x:Name="PhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" />
+                <Label x:Name="PhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="CityLabel" Grid.Column="2" Height="28" Margin="8,144,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="AdressLabel" Grid.Column="2" Height="28" Margin="8,176,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
+
                 <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>
