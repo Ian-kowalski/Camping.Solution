@@ -1,13 +1,13 @@
 ﻿using camping.Database;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Assert = NUnit.Framework.Assert;
 
 namespace Camping.Test
 {
     public class ReservationTests
     {
+
         SshConnection sshConnection;
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             sshConnection = new SshConnection();
@@ -214,8 +214,8 @@ namespace Camping.Test
             
         }
 
-        [TestCleanup]
-        public void Cleanup() { sshConnection.BreakConnection(); }
+        [OneTimeTearDown]
+        public void TearDown() { sshConnection.BreakConnection(); }
 
     }
 }
