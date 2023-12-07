@@ -26,7 +26,7 @@ namespace camping.Core
 
         public Area GetAreaFromID(int id) {
             foreach (Area area in Areas) {
-                if (area.AreaID == id) {
+                if (area.LocationID == id) {
                     return area;
                 }
             }
@@ -36,7 +36,7 @@ namespace camping.Core
         {
             foreach (Street street in Streets)
             {
-                if (street.StreetID == id)
+                if (street.LocationID == id)
                 {
                     return street;
                 }
@@ -47,7 +47,7 @@ namespace camping.Core
         {
             foreach (Site site in Sites)
             {
-                if (site.CampSiteID == id)
+                if (site.LocationID == id)
                 {
                     return site;
                 }
@@ -61,7 +61,7 @@ namespace camping.Core
             List<int> list = new();
             foreach (Site s in Sites)
             {
-                list.Add(s.CampSiteID);
+                list.Add(s.LocationID);
             }
             return list;
         }

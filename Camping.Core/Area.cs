@@ -13,13 +13,12 @@ using camping.Core;
 
 public class Area : Location
 {
-    public Area(int areaID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
-        : base(atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
+    public Area(int locationID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
+        : base(locationID, atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
     {
-        AreaID = areaID;
+        LocationID = locationID;
     }
 
-    public int AreaID { get; set; }
 
 }
 

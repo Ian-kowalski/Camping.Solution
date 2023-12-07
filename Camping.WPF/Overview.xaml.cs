@@ -96,7 +96,7 @@ namespace camping.WPF
                 CampSiteList.Children.Add(button);
                 rowLength++;
 
-                displayStreets(area.AreaID);
+                displayStreets(area.LocationID);
             }
         }
 
@@ -124,7 +124,7 @@ namespace camping.WPF
 
                     rowLength++;
 
-                    displaySites(street.StreetID);
+                    displaySites(street.LocationID);
                 }
 
 
@@ -238,7 +238,7 @@ namespace camping.WPF
 
             foreach (Street street in retrieveData.Streets)
             {
-                if (street.AreaID == area.AreaID)
+                if (street.AreaID == area.LocationID)
                 {
                     street.Visible = !street.Visible;
 
@@ -258,7 +258,7 @@ namespace camping.WPF
 
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = !site.Visible;
                 }
@@ -273,7 +273,7 @@ namespace camping.WPF
         {
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == street.StreetID)
+                if (site.StreetID == street.LocationID)
                 {
                     site.Visible = false;
                 }
@@ -290,7 +290,7 @@ namespace camping.WPF
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
-            button.Content = $"Plek {site.CampSiteID}";
+            button.Content = $"Plek {site.LocationID}";
             button.Margin = new Thickness(272, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -303,7 +303,7 @@ namespace camping.WPF
         private Button createLocationButton(Street street)
         {
             Button button = new Button();
-            button.Content = $"Straat {street.StreetID}";
+            button.Content = $"Straat {street.LocationID}";
             button.Margin = new Thickness(144, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -316,7 +316,7 @@ namespace camping.WPF
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
-            button.Content = $"Gebied {area.AreaID}";
+            button.Content = $"Gebied {area.LocationID}";
             button.Margin = new Thickness(16, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
