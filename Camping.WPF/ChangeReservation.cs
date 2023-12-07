@@ -153,7 +153,7 @@ namespace camping.WPF
         }
         private void checkHouseNumber(Reservation reservation)
         {
-            Regex regex = new Regex("^[1-9]*[a-z]{0,2}$");
+            Regex regex = new Regex("^[1-9][1-9]*[a-z]{0,2}$");
             if (regex.IsMatch(HouseNumberBox.Text))
             {
                 reservation.Visitor.HouseNumber = HouseNumberBox.Text;
@@ -163,7 +163,7 @@ namespace camping.WPF
             else
             {
                 HouseNumberLabel.Visibility = Visibility.Visible;
-                HouseNumberLabel.Content = "2 letters max.";
+                HouseNumberLabel.Content = "Ongeldig huisnummer.";
                 HouseNumberLabel.Foreground = solidColorBrush;
                 errorsFound = true;
             }
