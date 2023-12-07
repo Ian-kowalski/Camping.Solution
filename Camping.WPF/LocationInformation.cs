@@ -43,19 +43,19 @@ namespace camping.WPF
             if (location is Area)
             {
                 Area area = location as Area;
-                Area tempArea = new(area.AreaID, area.OutletPresent, area.AtWater, area.PetsAllowed, area.HasShadow, area.HasWaterSupply);
+                Area tempArea = new(area.LocationID, area.OutletPresent, area.AtWater, area.PetsAllowed, area.HasShadow, area.HasWaterSupply);
                 tempLocation = tempArea;
             }
             if (location is Street)
             {
                 Street street = location as Street;
-                Street tempStreet = new(street.StreetID, street.AreaID, street.OutletPresent, street.AtWater, street.PetsAllowed, street.HasShadow, street.HasWaterSupply);
+                Street tempStreet = new(street.LocationID, street.AreaID, street.OutletPresent, street.AtWater, street.PetsAllowed, street.HasShadow, street.HasWaterSupply);
                 tempLocation = tempStreet;
             }
             if (location is Site)
             {
                 Site site = location as Site;
-                Site tempSite = new(site.CampSiteID, site.OutletPresent, site.AtWater, site.PetsAllowed, site.HasShadow, site.HasWaterSupply, site.Size, site.StreetID);
+                Site tempSite = new(site.LocationID, site.OutletPresent, site.AtWater, site.PetsAllowed, site.HasShadow, site.HasWaterSupply, site.Size, site.StreetID);
                 tempLocation = tempSite;
             }
             LocationInfoGrid.Children.Clear();
@@ -83,7 +83,6 @@ namespace camping.WPF
             ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
             ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
             ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
-
             ChangeFacilitiesButton.Width = 180;
             ChangeFacilitiesButton.Height = 60;
             ChangeFacilitiesButton.BorderBrush = Brushes.Black;
@@ -99,9 +98,9 @@ namespace camping.WPF
 
         private string getPathText()
         {
-            if (SelectedStreet == null) return $"Gebied: {SelectedArea.AreaID.ToString()}";
-            if (SelectedSite == null) return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}";
-            return $"Gebied: {SelectedArea.AreaID.ToString()}, Straat: {SelectedStreet.StreetID.ToString()}, Plaats: {SelectedSite.CampSiteID.ToString()}";
+            if (SelectedStreet == null) return $"Gebied: {SelectedArea.LocationID.ToString()}";
+            if (SelectedSite == null) return $"Gebied: {SelectedArea.LocationID.ToString()}, Straat: {SelectedStreet.LocationID.ToString()}";
+            return $"Gebied: {SelectedArea.LocationID.ToString()}, Straat: {SelectedStreet.LocationID.ToString()}, Plaats: {SelectedSite.LocationID.ToString()}";
         }
 
         //add label to LocationInfoGrid
@@ -133,7 +132,7 @@ namespace camping.WPF
                 Height = diameter,
 
             };
-            Label label = CreateAndAddLabel(getFacilityName(facility), 10, column, row);
+            Label label = CreateAndAddLabel(getFacilityName(facility.Name), 10, column, row);
             label.VerticalAlignment = VerticalAlignment.Bottom;
             label.HorizontalAlignment = HorizontalAlignment.Center;
 
@@ -149,17 +148,13 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(facility);
         }
 
-        private string getFacilityName(Ellipse facility)
+        private string getFacilityName(string facility)
         {
-            if (facility.Name == "HasWaterSupply") return "Kraan";
-            if (facility.Name == "OutletPresent") return "Stroom";
-            if (facility.Name == "HasShadow") return "Schaduw";
-            if (facility.Name == "AtWater") return "Aan water";
-            if (facility.Name == "PetsAllowed") return "Huisdieren";
-
-
-
-
+            if (facility == "HasWaterSupply") return "Kraan";
+            if (facility == "OutletPresent") return "Stroom";
+            if (facility == "HasShadow") return "Schaduw";
+            if (facility == "AtWater") return "Aan water";
+            if (facility == "PetsAllowed") return "Huisdieren";
             return "";
 
         }
@@ -266,13 +261,13 @@ namespace camping.WPF
             if (location is Area)
             {
                 Area tempArea = (Area)location;
-                Area area = retrieveData.GetAreaFromID(tempArea.AreaID);
+                Area area = retrieveData.GetAreaFromID(tempArea.LocationID);
                 area.AtWater = tempArea.AtWater;
                 area.HasWaterSupply = tempArea.HasWaterSupply;
                 area.OutletPresent = tempArea.OutletPresent;
                 area.HasShadow = tempArea.HasShadow;
                 area.PetsAllowed = tempArea.PetsAllowed;
-                List<Street> streets = retrieveData.Streets.Where(i => i.AreaID == area.AreaID).Select(i => i).ToList();
+                List<Street> streets = retrieveData.Streets.Where(i => i.AreaID == area.LocationID).Select(i => i).ToList();
                 foreach (Street s in streets)
                 {
                     if (s.HasWaterSupply >= 2) s.HasWaterSupply = area.HasWaterSupply % 2 + 2;
@@ -287,13 +282,13 @@ namespace camping.WPF
             if (location is Street)
             {
                 Street tempstreet = (Street)location;
-                Street street = retrieveData.GetStreetFromID(tempstreet.StreetID);
+                Street street = retrieveData.GetStreetFromID(tempstreet.LocationID);
                 street.AtWater = tempstreet.AtWater;
                 street.HasWaterSupply = tempstreet.HasWaterSupply;
                 street.OutletPresent = tempstreet.OutletPresent;
                 street.HasShadow = tempstreet.HasShadow;
                 street.PetsAllowed = tempstreet.PetsAllowed;
-                List<Site> sites = retrieveData.Sites.Where(i => i.StreetID == street.StreetID).Select(i => i).ToList();
+                List<Site> sites = retrieveData.Sites.Where(i => i.StreetID == street.LocationID).Select(i => i).ToList();
                 foreach (Site s in sites)
                 {
                     if (s.HasWaterSupply >= 2) s.HasWaterSupply = street.HasWaterSupply % 2 + 2;
@@ -308,7 +303,7 @@ namespace camping.WPF
             if (location is Site)
             {
                 Site tempSite = (Site)location;
-                Site site = retrieveData.GetSiteFromID(tempSite.CampSiteID);
+                Site site = retrieveData.GetSiteFromID(tempSite.LocationID);
                 site.AtWater = tempSite.AtWater;
                 site.HasWaterSupply = tempSite.HasWaterSupply;
                 site.OutletPresent = tempSite.OutletPresent;

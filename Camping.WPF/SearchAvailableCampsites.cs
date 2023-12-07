@@ -27,6 +27,8 @@ namespace camping.WPF
         SiteData siteData;
         IReservationData resData;
 
+        public AvailableCampsites availableCampsites;
+
 
         public SearchAvailableCampsites(Grid dateGrid, SiteData siteData, IReservationData resData, Grid availableSitesGrid) {
             grid = dateGrid;
@@ -134,7 +136,16 @@ namespace camping.WPF
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            AvailableCampsites availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
+            SearchSites?.Invoke(this, new EventArgs());
+            availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(DateTime.Today));
+            availableCampsites.ReserveCampsite += ShowAddReservation;
         }
+
+        public void ShowAddReservation(object sender, AddReservationEventArgs e) {
+            AddReservation?.Invoke(this, e);
+        }
+
+        public event EventHandler<EventArgs> SearchSites;
+        public event EventHandler<AddReservationEventArgs> AddReservation;
     }
 }

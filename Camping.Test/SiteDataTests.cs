@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Assert = NUnit.Framework.Assert;
 
 namespace camping.Test
 {
@@ -68,6 +67,7 @@ namespace camping.Test
             Assert.IsNotNull(availability);
             Assert.IsInstanceOf<List<ReservationDates>>(availability);
         }
+
         [OneTimeTearDown]
         public void TearDown() { sshConnection.BreakConnection(); }
     }

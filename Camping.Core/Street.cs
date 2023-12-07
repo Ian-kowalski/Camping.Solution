@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 public class Street : Location
 {
-    public Street(int streetID, int areaID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
-        : base(atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
+    public Street(int locationID, int areaID, int outletPresent, int atWater, int petsAllowed, int hasShadow, int hasWaterSupply)
+        : base(locationID, atWater, hasShadow, hasWaterSupply, outletPresent, petsAllowed)
     {
-        StreetID = streetID;
+        LocationID = locationID;
         AreaID = areaID;
     }
 
-    public int StreetID { get; set; }
     public int AreaID { get; set; }
 
     public bool Visible = false;

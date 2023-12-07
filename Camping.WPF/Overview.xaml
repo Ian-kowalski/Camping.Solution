@@ -54,9 +54,9 @@
             </Grid>
         </Border>
 
-        <Border x:Name="AddReservationList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="SearchCampsiteList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
 
-            <Grid x:Name="AddReservationGrid">
+            <Grid x:Name="SearchCampsiteGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="2*"/>
@@ -74,7 +74,7 @@
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Grid Name="AddReservationGridHeader" Margin="24,32,24,24" Grid.Row="2" Grid.ColumnSpan="5">
+                <Grid Name="SearchCampsiteGridHeader" Margin="24,32,24,24" Grid.Row="2" Grid.ColumnSpan="5" Visibility="Hidden">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
@@ -89,15 +89,15 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Plek Nr" FontWeight="Bold"  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <TextBlock Text="Grotte" FontWeight="Bold" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="Grootte" FontWeight="Bold" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Schaduw" FontWeight="Bold" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Kraan" FontWeight="Bold" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Water" FontWeight="Bold" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Dier" FontWeight="Bold" Grid.Column="5" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Stroom" FontWeight="Bold" Grid.Column="6" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 </Grid>
-                <ScrollViewer Margin="24,64,24,10" Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5">
-                    <Grid Name ="AddReservationGridList">
+                <ScrollViewer x:Name="AvailableCampsitesScrollViewer"  Margin="24,64,24,10" Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="5" Visibility="Hidden">
+                    <Grid Name ="AvailableCampsitesGridList">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
@@ -117,7 +117,65 @@
         </Border>
 
         <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
-            <Grid>
+            <Grid x:Name="AddReservationInfoGrid" Visibility="Hidden" Margin="16,16,16,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="15*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <Label Content="Reserveringsgegevens" Margin="16,0,16,0" Grid.Row="0"  Grid.ColumnSpan="2" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="top" FontSize="24" FontWeight="Bold"/>
+
+                <Label Content="Plaats Nr.*" Margin="16,64,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Begindatum*" Margin="6,96,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Einddatum*" Margin="6,128,8,0" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+
+                <Label x:Name="AddResSiteIDBox" Grid.Column="1" Height="28" Margin="8,64,16,0" VerticalAlignment="Top" IsEnabled="true" />
+                <Label x:Name="AddResSiteIDLabel" Grid.Column="2" Height="28" Margin="8,64,16,0" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResStartDateDatePicker" Grid.Column="1" Height="28" Margin="8,96,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="true" />
+                <Label x:Name="AddResStartDateLabel" Grid.Column="2" Height="28" Margin="8,96,16,0" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResEndDateDatePicker" Grid.Column="1" Height="28" Margin="8,128,16,0" Background="Transparent" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResEndDateLabel" Grid.Column="2" Height="28" Margin="8,128,16,0" VerticalAlignment="Top" IsEnabled="true"/>
+
+                <Label Content="Klant gegevens" Margin="16,0,16,0" Grid.Row="0"  Grid.ColumnSpan="2" Height="48" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Bottom" FontSize="24" FontWeight="Bold"/>
+
+                <Label Content="Voornaam*" Margin="16,16,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Tussenvoegsel" Margin="6,48,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Achternaam*" Margin="6,80,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Telefoon Nr.*" Margin="6,112,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Woonplaats*" Margin="6,144,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+                <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
+
+                <TextBox x:Name="AddResFirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResFirstNameLabel" Grid.Column="2" Height="28" Margin="8,16,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="true"/>
+                <TextBox x:Name="AddResPrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true"/>
+                <TextBox x:Name="AddResLastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true" />
+                <Label x:Name="AddResLastNameLabel" Grid.Column="2" Height="28" Margin="8,80,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="true"/>
+                <TextBox x:Name="AddResPhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true" TextChanged="PhoneNumberValidation"/>
+                <Label x:Name="AddResPhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="true"/>
+                <TextBox x:Name="AddResCityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResCityLabel" Grid.Column="2" Height="28" Margin="8,144,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="true"/>
+                <TextBox x:Name="AddResAdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="true"/>
+                <Label x:Name="AddResAdressLabel" Grid.Column="2" Height="28" Margin="8,176,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="true"/>
+                <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="11*"/>
+                        <ColumnDefinition Width="20*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="AddResHouseNumberBox" Height="28" TextWrapping="Wrap" Grid.Column="0" Background="LightGray" IsEnabled="true" TextChanged="HouseNumberValidation"/>
+                    <Label Content="Postcode*" Height="32" HorizontalContentAlignment="Center" Grid.Column="1" VerticalContentAlignment="Center"/>
+                    <TextBox x:Name="AddResPostalCodeBox"  Height="28" TextWrapping="Wrap" Grid.Column="2" Background="LightGray" IsEnabled="true" TextChanged="PostalCodeValidation"/>
+                </Grid>
+                <Label x:Name="AddResHouseNumberLabel" Margin="8,240,286,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="true" VerticalAlignment="Top"/>
+                <Label x:Name="AddResPostalCodeLabel" Margin="192,240,16,0" Height="28" Grid.Column="1" Grid.Row="1" IsEnabled="true" VerticalAlignment="Top"/>
+                <Button x:Name="AddResSaveReservationButton" Content="Toevoegen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="AddReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
             </Grid>
         </Border>
 
@@ -212,12 +270,17 @@
                 <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
                 <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="FirstNameLabel" Grid.Column="2" Height="28" Margin="8,16,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="LastNameLabel" Grid.Column="2" Height="28" Margin="8,80,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="PhoneNumberValidation"/>
-                <Label x:Name="PhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False" />
+                <Label x:Name="PhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="CityLabel" Grid.Column="2" Height="28" Margin="8,144,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <Label x:Name="AdressLabel" Grid.Column="2" Height="28" Margin="8,176,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
+
                 <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>

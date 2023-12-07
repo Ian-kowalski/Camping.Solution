@@ -163,7 +163,7 @@ namespace camping.Database
           $"    pets = @pets, " +
           $"    shadow = @shadow, " +
           $"    waterSupply = @waterSupply " +
-          $"WHERE areaID = {area.AreaID}";
+          $"WHERE areaID = {area.LocationID}";
             }
             if (location is Street)
             {
@@ -175,7 +175,7 @@ namespace camping.Database
           $"    pets = @pets, " +
           $"    shadow = @shadow, " +
           $"    waterSupply = @waterSupply " +
-          $"WHERE streetID = {street.StreetID}";
+          $"WHERE streetID = {street.LocationID}";
             }
             if (location is Site)
             {
@@ -187,7 +187,7 @@ namespace camping.Database
           $"    pets = @pets, " +
           $"    shadow = @shadow, " +
           $"    waterSupply = @waterSupply " +
-          $"WHERE campSiteID = {site.CampSiteID}";
+          $"WHERE campSiteID = {site.LocationID}";
             }
 
             List<int> facilities = new List<int>();

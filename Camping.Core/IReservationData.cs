@@ -12,7 +12,7 @@ namespace camping.Core
         public List<Reservation> GetReservationInfo();
         public List<Reservation> GetReservationInfo(DateTime dateTime);
         public List<Reservation> GetReservationInfo(int SiteID, string lastname);
-        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, int houseNumber, int phoneNumber);
+        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber);
         public bool addReservationLine(int campSiteID, int reservationID);
         public int getReservationID(int visitorID, string startDate, string endDate);
         public bool GetAvailableReservation(int campSite, string startDate, string endDate);
