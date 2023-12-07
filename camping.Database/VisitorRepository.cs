@@ -13,7 +13,7 @@ namespace camping.Database
         private string connectionString = "Data Source=127.0.0.1;Initial Catalog=Camping;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
         
         
-        public bool addVisitor(string firstName, string lastName, string preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        public bool addVisitor(string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
             // checks if that visitor already exists in the database
             // will return -1 if it does not exist
@@ -49,7 +49,7 @@ namespace camping.Database
             }
         }
 
-        public int getVisitorID(string firstName, string lastName, string? preposition, string adress, string city, string postalcode, int houseNumber, int phoneNumber)
+        public int getVisitorID(string firstName, string lastName, string? preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
 
             string sql = "SELECT visitorID FROM visitor WHERE " +
