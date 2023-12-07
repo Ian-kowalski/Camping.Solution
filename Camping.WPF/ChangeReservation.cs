@@ -191,7 +191,6 @@ namespace camping.WPF
         {
             StartDateLabel.Visibility = Visibility.Hidden;
             EndDateLabel.Visibility = Visibility.Hidden;
-
             if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
             {
                 StartDateLabel.Visibility = Visibility.Visible;
@@ -213,13 +212,16 @@ namespace camping.WPF
                 EndDateLabel.Foreground = solidColorBrush;
                 errorsFound = true;
             }
+            else
+            {
+                reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                reservation.EndDate = Convert.ToDateTime(EndDateDatePicker.Text);
+            }
         }
 
 
         public bool saveReservation(Reservation reservation)
         {
-
-            
             checkSiteID(reservation);
             checkPhoneNumber(reservation);
             checkHouseNumber(reservation);
