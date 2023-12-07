@@ -805,7 +805,7 @@ namespace camping.WPF
         private void chanceAanpassenOrSaveButtonContent(bool buttonState)
         {
             ReservationAanpassenButtonState = buttonState;
-            EditReservationButton.Content = ReservationAanpassenButtonState ? "save" : "Aanpassen Resevering";
+            EditReservationButton.Content = ReservationAanpassenButtonState ? "Opslaan" : "Aanpassen";
         }
 
         private void enabledReservationInfoTextBoxes(TextBox[] TextBoxElements, bool isVisible)
@@ -1025,6 +1025,7 @@ namespace camping.WPF
                     AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
                     SearchCampsiteGridHeader.Visibility = Visibility.Hidden;
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                    displayAllReservations();
                 }
                 else
                 { }
