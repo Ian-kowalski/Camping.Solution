@@ -221,11 +221,11 @@
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="1" Content="Reserv. Nr." BorderBrush="Black" BorderThickness="2"/>
-                    <Label Grid.Column="2" Content="Plaats Nr." BorderBrush="Black" BorderThickness="2"/>
-                    <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2"/>
-                    <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2"/>
-                    <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="0,0,-17,0"/>
+                    <Label Grid.Column="1" Content="Reserv. Nr." BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Grid.Column="2" Content="Plaats Nr." BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Grid.Column="3" Content="Achternaam" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Grid.Column="4" Content="Begin datum" BorderBrush="Black" BorderThickness="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Grid.Column="5" Content="Eind datum" BorderBrush="Black" BorderThickness="2" Margin="0,0,-17,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
