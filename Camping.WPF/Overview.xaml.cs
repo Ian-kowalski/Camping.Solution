@@ -446,7 +446,7 @@ namespace camping.WPF
                         grid.ColumnDefinitions.Add(new ColumnDefinition());
                         break;
                     case 2:
-                        label.Content = reservation.Guest.LastName.ToString();
+                        label.Content = reservation.Visitor.LastName.ToString();
                         grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
                         break;
                     case 3:
@@ -495,15 +495,15 @@ namespace camping.WPF
             StartDateDatePicker.Text = reservation.StartDate.ToShortDateString();
             EndDatedatePicker.Text = reservation.EndDate.ToShortDateString();
 
-            FirstNameBox.Text = reservation.Guest.FirstName;
-            PrepositionBox.Text = reservation.Guest.Preposition == string.Empty ? "" : reservation.Guest.Preposition;
-            LastNameBox.Text = reservation.Guest.LastName;
-            PhoneNumberBox.Text = reservation.Guest.PhoneNumber.ToString();
-            CityBox.Text = reservation.Guest.City.ToString();
-            AdressBox.Text = reservation.Guest.Adress;
+            FirstNameBox.Text = reservation.Visitor.FirstName;
+            PrepositionBox.Text = reservation.Visitor.Preposition == string.Empty ? "" : reservation.Visitor.Preposition;
+            LastNameBox.Text = reservation.Visitor.LastName;
+            PhoneNumberBox.Text = reservation.Visitor.PhoneNumber.ToString();
+            CityBox.Text = reservation.Visitor.City.ToString();
+            AdressBox.Text = reservation.Visitor.Adress;
 
-            HouseNumberBox.Text = reservation.Guest.HouseNumber.ToString();
-            PostalCodeBox.Text = reservation.Guest.PostalCode;
+            HouseNumberBox.Text = reservation.Visitor.HouseNumber.ToString();
+            PostalCodeBox.Text = reservation.Visitor.PostalCode;
         }
         private void RowClick(Reservation reservation)
         {
@@ -636,7 +636,7 @@ namespace camping.WPF
                 int phoneNumber;
                 if (int.TryParse(PhoneNumberBox.Text, out phoneNumber))
                 {
-                    reservation.Guest.PhoneNumber = phoneNumber;
+                    reservation.Visitor.PhoneNumber = phoneNumber;
                     PhoneNumberLabel.Visibility = Visibility.Hidden;
                 }
                 else
@@ -651,7 +651,7 @@ namespace camping.WPF
                 Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
                 if (reg.IsMatch(HouseNumberBox.Text))
                 {
-                    reservation.Guest.HouseNumber = HouseNumberBox.Text;
+                    reservation.Visitor.HouseNumber = HouseNumberBox.Text;
                     HouseNumberLabel.Visibility = Visibility.Hidden;
 
                 }
@@ -668,7 +668,7 @@ namespace camping.WPF
 
                 if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
                 {
-                    reservation.Guest.PostalCode = PostalCodeBox.Text.ToUpper();
+                    reservation.Visitor.PostalCode = PostalCodeBox.Text.ToUpper();
                     PostalCodeLabel.Visibility = Visibility.Hidden;
                 }
                 else
@@ -680,11 +680,11 @@ namespace camping.WPF
                 }
 
 
-                reservation.Guest.FirstName = FirstNameBox.Text;
-                reservation.Guest.Preposition = PrepositionBox.Text;
-                reservation.Guest.LastName = LastNameBox.Text;
-                reservation.Guest.City = CityBox.Text;
-                reservation.Guest.Adress = AdressBox.Text;
+                reservation.Visitor.FirstName = FirstNameBox.Text;
+                reservation.Visitor.Preposition = PrepositionBox.Text;
+                reservation.Visitor.LastName = LastNameBox.Text;
+                reservation.Visitor.City = CityBox.Text;
+                reservation.Visitor.Adress = AdressBox.Text;
 
 
                 if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDatedatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
@@ -721,7 +721,7 @@ namespace camping.WPF
 
                 if (!errorsFound)
                 {
-                    retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Guest, reservation.EndDate, reservation.SiteID);
+                    retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
                     return true;
                 }
             }
