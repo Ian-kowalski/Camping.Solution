@@ -1025,6 +1025,7 @@ namespace camping.WPF
                     AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
                     SearchCampsiteGridHeader.Visibility = Visibility.Hidden;
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                    displayAllReservations();
                 }
                 else
                 { }
