@@ -16,8 +16,11 @@ namespace camping.WPF
     public class ChangeReservation
     {
         private RetrieveData retrieveData;
-
+        
         public bool ReservationAanpassenButtonState { get; set; } //true save : false aanpassen
+        private bool errorsFound;
+
+        SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
 
         private TextBox SiteIDBox;
         private DatePicker StartDateDatePicker;
@@ -91,171 +94,153 @@ namespace camping.WPF
             PostalCodeBox.Text = reservation.Visitor.PostalCode;
         }
 
+        private void notEmpty(Reservation reservation, TextBox text, Label label)
+        {
+            if (text.Text.IsNullOrEmpty())
+            {
+                label.Visibility = Visibility.Visible;
+                label.Content = "Mag niet leeg zijn.";
+                label.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else
+            {
+                reservation.Visitor.FirstName = text.Text;
+                label.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void checkSiteID(Reservation reservation)
+        {
+            int siteID;
+            if (!int.TryParse(SiteIDBox.Text, out siteID))
+            {
+                SiteIDLabel.Visibility = Visibility.Visible;
+                SiteIDLabel.Content = "Moet een getal zijn.";
+
+                SiteIDLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
+            {
+                SiteIDLabel.Visibility = Visibility.Visible;
+                SiteIDLabel.Content = "Deze plek bestaat niet.";
+                SiteIDLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else
+            {
+                reservation.SiteID = siteID;
+                SiteIDLabel.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void checkPhoneNumber(Reservation reservation)
+        {
+            int phoneNumber;
+            if (int.TryParse(PhoneNumberBox.Text, out phoneNumber))
+            {
+                reservation.Visitor.PhoneNumber = phoneNumber;
+                PhoneNumberLabel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                PhoneNumberLabel.Visibility = Visibility.Visible;
+                PhoneNumberLabel.Content = "Moet een getal zijn";
+                PhoneNumberLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+        }
+        private void checkHouseNumber(Reservation reservation)
+        {
+            Regex regex = new Regex("^[1-9]*[a-z]{0,2}$");
+            if (regex.IsMatch(HouseNumberBox.Text))
+            {
+                reservation.Visitor.HouseNumber = HouseNumberBox.Text;
+                HouseNumberLabel.Visibility = Visibility.Hidden;
+
+            }
+            else
+            {
+                HouseNumberLabel.Visibility = Visibility.Visible;
+                HouseNumberLabel.Content = "2 letters max.";
+                HouseNumberLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+        }
+
+        private void checkPostalCode(Reservation reservation)
+        {
+            Regex regex = new("^[1-9][0-9]{3}\\s?[a-zA-Z]{2}$");
+
+            if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
+            {
+                reservation.Visitor.PostalCode = PostalCodeBox.Text.ToUpper();
+                PostalCodeLabel.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                PostalCodeLabel.Visibility = Visibility.Visible;
+                PostalCodeLabel.Content = "Onjuiste formaat.";
+                PostalCodeLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+        }
+
+        private void checkDates(Reservation reservation)
+        {
+            if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
+            {
+                StartDateLabel.Visibility = Visibility.Visible;
+                StartDateLabel.Content = "De ingevulde datums zijn niet beschikbaar.";
+                StartDateLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else if (Convert.ToDateTime(EndDateDatePicker.Text) < DateTime.Today)
+            {
+                EndDateLabel.Visibility = Visibility.Visible;
+                EndDateLabel.Content = "Einddatum kan niet in het verleden zijn.";
+                EndDateLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else if (Convert.ToDateTime(EndDateDatePicker.Text) < Convert.ToDateTime(StartDateDatePicker.Text))
+            {
+                EndDateLabel.Visibility = Visibility.Visible;
+                EndDateLabel.Content = "Einddatum kan niet voor de begindatum.";
+                EndDateLabel.Foreground = solidColorBrush;
+                errorsFound = true;
+            }
+            else
+            {
+                reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
+                reservation.EndDate = Convert.ToDateTime(EndDateDatePicker.Text);
+
+                StartDateLabel.Visibility = Visibility.Hidden;
+                EndDateLabel.Visibility = Visibility.Hidden;
+            }
+        }
+
+
         public bool saveReservation(Reservation reservation)
         {
 
             var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
 
-            bool errorsFound = false;
-
-            SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
-
             if (result == MessageBoxResult.Yes)
             {
-                int siteID;
-                if (!int.TryParse(SiteIDBox.Text, out siteID))
-                {
-                    SiteIDLabel.Visibility = Visibility.Visible;
-                    SiteIDLabel.Content = "Moet een getal zijn.";
+                checkSiteID(reservation);
+                checkPhoneNumber(reservation);
+                checkHouseNumber(reservation);
+                checkPostalCode(reservation);
 
-                    SiteIDLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
-                {
-                    SiteIDLabel.Visibility = Visibility.Visible;
-                    SiteIDLabel.Content = "Deze plek bestaat niet.";
-                    SiteIDLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.SiteID = siteID;
-                    SiteIDLabel.Visibility = Visibility.Hidden;
-                }
+                notEmpty(reservation, FirstNameBox, FirstNameLabel);
+                notEmpty(reservation, LastNameBox, LastNameLabel);
+                notEmpty(reservation, CityBox, CityLabel);
+                notEmpty(reservation, StreetBox, StreetLabel);
 
-
-                int phoneNumber;
-                if (int.TryParse(PhoneNumberBox.Text, out phoneNumber))
-                {
-                    reservation.Visitor.PhoneNumber = phoneNumber;
-                    PhoneNumberLabel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    PhoneNumberLabel.Visibility = Visibility.Visible;
-                    PhoneNumberLabel.Content = "Moet een getal zijn";
-                    PhoneNumberLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-
-
-                Regex reg = new Regex("^[1-9]*[a-z]{0,2}$");
-                if (reg.IsMatch(HouseNumberBox.Text))
-                {
-                    reservation.Visitor.HouseNumber = HouseNumberBox.Text;
-                    HouseNumberLabel.Visibility = Visibility.Hidden;
-
-                }
-                else
-                {
-                    HouseNumberLabel.Visibility = Visibility.Visible;
-                    HouseNumberLabel.Content = "2 letters max.";
-                    HouseNumberLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-
-
-                Regex regex = new("^[1-9][0-9]{3}\\s?[a-zA-Z]{2}$");
-
-                if (regex.IsMatch(PostalCodeBox.Text) && PostalCodeBox.Text.Length <= 6)
-                {
-                    reservation.Visitor.PostalCode = PostalCodeBox.Text.ToUpper();
-                    PostalCodeLabel.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    PostalCodeLabel.Visibility = Visibility.Visible;
-                    PostalCodeLabel.Content = "Onjuiste formaat.";
-                    PostalCodeLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-
-
-                if (FirstNameBox.Text.IsNullOrEmpty())
-                {
-                    FirstNameLabel.Visibility = Visibility.Visible;
-                    FirstNameLabel.Content = "Mag niet leeg zijn.";
-                    FirstNameLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.FirstName = FirstNameBox.Text;
-                    FirstNameLabel.Visibility = Visibility.Hidden;
-                }
-
-
-                if (LastNameBox.Text.IsNullOrEmpty())
-                {
-                    LastNameLabel.Visibility = Visibility.Visible;
-                    LastNameLabel.Content = "Mag niet leeg zijn";
-                    LastNameLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.LastName = LastNameBox.Text;
-                    LastNameLabel.Visibility = Visibility.Hidden;
-                }
-
-                if (CityBox.Text.IsNullOrEmpty())
-                {
-                    CityLabel.Visibility = Visibility.Visible;
-                    CityLabel.Content = "Mag niet leeg zijn";
-                    CityLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.City = CityBox.Text;
-                    CityLabel.Visibility = Visibility.Hidden;
-                }
-                if (StreetBox.Text.IsNullOrEmpty())
-                {
-                    StreetLabel.Visibility = Visibility.Visible;
-                    StreetLabel.Content = "Mag niet leeg zijn";
-                    StreetLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.Visitor.Adress = StreetBox.Text;
-                    StreetLabel.Visibility = Visibility.Hidden;
-                }
                 reservation.Visitor.Preposition = PrepositionBox.Text;
 
-                if (!retrieveData.GetOtherAvailableReservations(reservation.SiteID, StartDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), EndDateDatePicker.SelectedDate.GetValueOrDefault().ToString("MM-dd-yyyy"), reservation.ReservationID))
-                {
-                    StartDateLabel.Visibility = Visibility.Visible;
-                    StartDateLabel.Content = "De ingevulde datums zijn niet beschikbaar.";
-                    StartDateLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else if (Convert.ToDateTime(EndDateDatePicker.Text) < DateTime.Today)
-                {
-                    EndDateLabel.Visibility = Visibility.Visible;
-                    EndDateLabel.Content = "Einddatum kan niet in het verleden zijn.";
-                    EndDateLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else if (Convert.ToDateTime(EndDateDatePicker.Text) < Convert.ToDateTime(StartDateDatePicker.Text))
-                {
-                    EndDateLabel.Visibility = Visibility.Visible;
-                    EndDateLabel.Content = "Einddatum kan niet voor de begindatum.";
-                    EndDateLabel.Foreground = solidColorBrush;
-                    errorsFound = true;
-                }
-                else
-                {
-                    reservation.StartDate = Convert.ToDateTime(StartDateDatePicker.Text);
-                    reservation.EndDate = Convert.ToDateTime(EndDateDatePicker.Text);
-
-                    StartDateLabel.Visibility = Visibility.Hidden;
-                    EndDateLabel.Visibility = Visibility.Hidden;
-                }
-
-
+                checkDates(reservation);
 
                 if (!errorsFound)
                 {
@@ -263,8 +248,11 @@ namespace camping.WPF
                     return true;
                 }
             }
+            errorsFound = false;
             return false;
         }
+
+
 
         public void hideErrors()
         {
