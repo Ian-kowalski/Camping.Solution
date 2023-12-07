@@ -1021,7 +1021,11 @@ namespace camping.WPF
                     AddResFirstNameBox.Text, AddResPrepositionBox.Text, AddResLastNameBox.Text,
                     AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
                     AddResHouseNumberBox.Text, phoneNumber))
-                { }
+                {
+                    AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
+                    SearchCampsiteGridHeader.Visibility = Visibility.Hidden;
+                    AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                }
                 else
                 { }
             }
