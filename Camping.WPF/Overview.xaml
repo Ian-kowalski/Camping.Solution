@@ -142,10 +142,10 @@
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
                     <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" />
+                    <TextBox x:Name="reservationIDFilterBox" Grid.Column="1" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" PreviewTextInput="NumberValidationTextBox" TextChanged="NumberValidationTextBox"/>
 
                     <Label Content="Achternaam" Grid.Column="2"  HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
-                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress"/>
+                    <TextBox x:Name="LastNameFilterBox" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap"  VerticalAlignment="Center" FontSize="22" Margin="16,0,16,0" KeyDown="FilterZoekenEnterPress" TextChanged="StringBox_TextChanged"/>
                 </Grid>
                 <Grid Margin="0,0,17,0" Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -175,7 +175,7 @@
                 <ScrollViewer x:Name="ReservationListScrollViewer" Grid.Row="2" BorderBrush="#000000" BorderThickness="3"/>
             </Grid>
         </Border>
-        <Border x:Name="ReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,0" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="ReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid x:Name="ReservationInfoGrid" Visibility="Hidden" Margin="16,16,16,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3*"/>
@@ -211,17 +211,18 @@
                 <Label Content="Adres*" Margin="6,176,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
                 <Label Content="Huis Nr.*" Margin="6,208,8,0" Grid.Row="1" Height="32" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Top"/>
 
-                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="FirstNameBox" Grid.Column="1" Height="28" Margin="8,16,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <Label x:Name="FirstNameLabel" Grid.Column="2" Height="28" Margin="8,16,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" />
+                <TextBox x:Name="PrepositionBox" Grid.Column="1" Height="28" Margin="8,48,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
+                <TextBox x:Name="LastNameBox" Grid.Column="1" Height="28" Margin="8,80,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <Label x:Name="LastNameLabel" Grid.Column="2" Height="28" Margin="8,80,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
                 <TextBox x:Name="PhoneNumberBox" Grid.Column="1" Height="28" Margin="8,112,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="PhoneNumberValidation"/>
                 <Label x:Name="PhoneNumberLabel" Grid.Column="2" Height="28" Margin="8,112,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="CityBox" Grid.Column="1" Height="28" Margin="8,144,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <Label x:Name="CityLabel" Grid.Column="2" Height="28" Margin="8,144,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
-                <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False"/>
+                <TextBox x:Name="AdressBox" Grid.Column="1" Height="28" Margin="8,176,16,0" Grid.Row="1" TextWrapping="Wrap" Background="LightGray" VerticalAlignment="Top" IsEnabled="False" TextChanged="StringBox_TextChanged"/>
                 <Label x:Name="AdressLabel" Grid.Column="2" Height="28" Margin="8,176,16,0" Grid.Row="1" VerticalAlignment="Top" IsEnabled="False"/>
+
                 <Grid Grid.Row="1" Grid.Column="1" Margin="8,208,16,0" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10*"/>

@@ -373,7 +373,12 @@ namespace camping.WPF
 
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
-                int resID = reservationIDFilterBox.Text == string.Empty ? -1 : int.Parse(reservationIDFilterBox.Text);
+                int resID;
+                if (!int.TryParse(reservationIDFilterBox.Text,out resID))
+                {
+                    reservationIDFilterBox.Text = string.Empty;
+                    resID = -1;
+                }
                 retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim()); ;
             }
             else
@@ -829,8 +834,18 @@ namespace camping.WPF
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^1-9]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void NumberValidationTextBox(object sender, TextChangedEventArgs e)
+        {
+            string PostcodeHoofdletters = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(PostcodeHoofdletters.Trim(), "[0-9]+"))
+            {
+                ((TextBox)sender).Text = "";
+            }
+
         }
 
         private void PostalCodeValidation(object sender, TextChangedEventArgs e)
@@ -855,7 +870,6 @@ namespace camping.WPF
         }
 
 
-
         private void PhoneNumberValidation(object sender, TextChangedEventArgs e)
         {
             
@@ -866,6 +880,15 @@ namespace camping.WPF
                 }
                 else { ((TextBox)sender).Foreground = Brushes.Red; }
             
+        }
+
+        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string LastNameFilterBox = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
+            {
+                ((TextBox)sender).Text="";
+            }
         }
     }
 }
