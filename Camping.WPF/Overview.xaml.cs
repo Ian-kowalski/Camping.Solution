@@ -367,7 +367,7 @@ namespace camping.WPF
             }
 
             AnnulerenButton.Visibility = selectedButton == ReservationsButton ? Visibility.Visible : Visibility.Hidden;
-
+            if (selectedButton == ReservationsButton) displayAllReservations();
         }
 
 
