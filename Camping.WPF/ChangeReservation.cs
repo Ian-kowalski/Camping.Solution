@@ -15,10 +15,14 @@ namespace camping.WPF
 {
     public class ChangeReservation
     {
+
         private RetrieveData retrieveData;
-        
-        public bool ReservationAanpassenButtonState { get; set; } //true save : false aanpassen
+        public Reservation selectedReservation { get; set; }
+
+        public bool ReservationAanpassenButtonState; //true save : false aanpassen
         private bool errorsFound;
+        public bool isUpdating { get; set; }
+        private string[] visitorData;
 
         SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
 
@@ -77,6 +81,24 @@ namespace camping.WPF
             EditReservationButton = editReservationButton;
         }
 
+        public void editReservationButton(object sender, ChangeReservationEventArgs e)
+        {
+            if (ReservationAanpassenButtonState)
+            {
+                if (!saveReservation(e.Reservation))
+                {
+                    return;
+                }
+            }
+
+            isUpdating = !isUpdating;
+
+            chanceAanpassenOrSaveButtonContent(isUpdating);
+            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, StreetBox, HouseNumberBox, PostalCodeBox }, isUpdating);
+            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDateDatePicker }, isUpdating);
+        }
+
+
         public void fillReservationInfoGrid(Reservation reservation)
         {
             SiteIDBox.Text = reservation.SiteID.ToString();
@@ -94,19 +116,23 @@ namespace camping.WPF
             PostalCodeBox.Text = reservation.Visitor.PostalCode;
         }
 
-        private void notEmpty(Reservation reservation, TextBox text, Label label)
+        private void notEmpty(Reservation reservation, TextBox[] text, Label[] label)
         {
-            if (text.Text.IsNullOrEmpty())
+            visitorData = new string[4];
+            for (int i = 0; i < text.Length; i++)
             {
-                label.Visibility = Visibility.Visible;
-                label.Content = "Mag niet leeg zijn.";
-                label.Foreground = solidColorBrush;
-                errorsFound = true;
-            }
-            else
-            {
-                reservation.Visitor.FirstName = text.Text;
-                label.Visibility = Visibility.Hidden;
+                if (text[i].Text.IsNullOrEmpty())
+                {
+                    label[i].Visibility = Visibility.Visible;
+                    label[i].Content = "Mag niet leeg zijn.";
+                    label[i].Foreground = solidColorBrush;
+                    errorsFound = true;
+                }
+                else
+                {
+                    visitorData[i] = text[i].Text;
+                    label[i].Visibility = Visibility.Hidden;
+                }
             }
         }
 
@@ -227,10 +253,12 @@ namespace camping.WPF
             checkHouseNumber(reservation);
             checkPostalCode(reservation);
 
-            notEmpty(reservation, FirstNameBox, FirstNameLabel);
-            notEmpty(reservation, LastNameBox, LastNameLabel);
-            notEmpty(reservation, CityBox, CityLabel);
-            notEmpty(reservation, StreetBox, StreetLabel);
+            notEmpty(reservation, new[] { FirstNameBox, LastNameBox, CityBox, StreetBox }, new[] { FirstNameLabel, LastNameLabel, CityLabel, StreetLabel });
+            reservation.Visitor.FirstName = visitorData[0];
+            reservation.Visitor.LastName = visitorData[1];
+            reservation.Visitor.City = visitorData[2];
+            reservation.Visitor.Adress = visitorData[3];
+            
 
             reservation.Visitor.Preposition = PrepositionBox.Text;
 
@@ -259,7 +287,11 @@ namespace camping.WPF
             SiteIDLabel.Visibility = Visibility.Hidden;
             StartDateLabel.Visibility = Visibility.Hidden;
             EndDateLabel.Visibility = Visibility.Hidden;
+            FirstNameLabel.Visibility = Visibility.Hidden;
+            LastNameLabel.Visibility = Visibility.Hidden;
             PhoneNumberLabel.Visibility = Visibility.Hidden;
+            CityLabel.Visibility = Visibility.Hidden;
+            StreetLabel.Visibility = Visibility.Hidden;
             HouseNumberLabel.Visibility = Visibility.Hidden;
             PostalCodeLabel.Visibility = Visibility.Hidden;
         }
