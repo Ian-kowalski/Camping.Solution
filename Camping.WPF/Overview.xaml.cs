@@ -507,7 +507,6 @@ namespace camping.WPF
             changeReservation.isUpdating = false;
 
             selectedReservation = reservation;
-            changeReservation.selectedReservation = reservation;
 
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
