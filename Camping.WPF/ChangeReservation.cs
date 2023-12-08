@@ -17,7 +17,6 @@ namespace camping.WPF
     {
 
         private RetrieveData retrieveData;
-        public Reservation selectedReservation { get; set; }
 
         public bool ReservationAanpassenButtonState; //true save : false aanpassen
         private bool errorsFound;
