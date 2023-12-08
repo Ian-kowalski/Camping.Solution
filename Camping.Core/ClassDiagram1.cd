@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Area">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Area.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Reservation">
+    <Position X="5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABEAEAAAAAAAgAAAAAAgAAAAAIAAAAAAAEAAAAA=</HashCode>
+      <FileName>Reservation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Site">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAIAAAAAAAAQAA=</HashCode>
+      <FileName>Site.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Street">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIIAAAAAAAAAA=</HashCode>
+      <FileName>Street.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Visitor">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAIKAAAQAAAAEgAAAAAAAAAAAAACAg=</HashCode>
+      <FileName>Visitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="camping.Core.Location">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAACIAAAAEAAAAAAAAAAAAAAAAAAAAAACAAABA=</HashCode>
+      <FileName>Location.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="camping.Core.RetrieveData">
+    <Position X="9.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAEAAoQQUBAABBAQAACAAAIAAgEACAAAAAA=</HashCode>
+      <FileName>RetrieveData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="camping.Core.IReservationData">
+    <Position X="7.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAABAAAAUAAAEAAAAAAAAAAAAAEAQAAQAAI=</HashCode>
+      <FileName>IReservationData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Camping.Core.ISiteData">
+    <Position X="7.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAIAAAAAAAAAAAgAAAAAAAQAAAAAAABAAAAAAAAABA=</HashCode>
+      <FileName>ISiteData.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
