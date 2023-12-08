@@ -498,6 +498,7 @@ namespace camping.WPF
             checkBox.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(checkBox);
         }
+
         private void fillReservationInfoGrid(Reservation reservation)
         {
             selectedReservation = reservation;
@@ -517,6 +518,7 @@ namespace camping.WPF
             HouseNumberBox.Text = reservation.Visitor.HouseNumber.ToString();
             PostalCodeBox.Text = reservation.Visitor.PostalCode;
         }
+
         private void RowClick(Reservation reservation)
         {
             resInfoVisible = false;
@@ -882,6 +884,17 @@ namespace camping.WPF
         }
 
 
+
+        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string LastNameFilterBox = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
+            {
+                ((TextBox)sender).Text = "";
+            }
+        }
+
+
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
             AddReservationInfoGrid.Visibility = Visibility.Visible;
@@ -1028,13 +1041,6 @@ namespace camping.WPF
 
         }
 
-        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string LastNameFilterBox = ((TextBox)sender).Text;
-            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
-            {
-                ((TextBox)sender).Text="";
-            }
-        }
+        
     }
 }
