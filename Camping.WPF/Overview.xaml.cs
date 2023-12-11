@@ -20,6 +20,8 @@ namespace camping.WPF
     /// </summary>
     public partial class Overview : Window
     {
+        public event EventHandler<ChangeReservationEventArgs> EditReservationClick;
+
         private SshConnection connection { get; set; }
         private SiteData siteData { get; set; }
         private ReservationRepository resData { get; set; }
@@ -27,7 +29,6 @@ namespace camping.WPF
         private Location tempLocation { get; set; }
         private ChangeReservation changeReservation { get; set; }
 
-        private bool isUpdating { get; set; }
         private bool resInfoVisible { get; set; } = false;
 
         private int rowLength;
@@ -73,7 +74,7 @@ namespace camping.WPF
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
 
-
+            EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
         }
 
@@ -503,19 +504,18 @@ namespace camping.WPF
         
         private void RowClick(Reservation reservation)
         {
-            resInfoVisible = false;
+            changeReservation.isUpdating = false;
 
             selectedReservation = reservation;
-
 
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
 
 
-            changeReservation.chanceAanpassenOrSaveButtonContent(resInfoVisible);
-            changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
-            changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
+            changeReservation.chanceAanpassenOrSaveButtonContent(changeReservation.isUpdating);
+            changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, changeReservation.isUpdating);
+            changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, changeReservation.isUpdating);
 
             changeReservation.hideErrors();
         }
@@ -585,24 +585,8 @@ namespace camping.WPF
 
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
-            if (changeReservation.ReservationAanpassenButtonState)
-            {
-                if (!changeReservation.saveReservation(selectedReservation))
-                {
-                    return;
-                }
-                displayAllReservations();
-            }
-
-            resInfoVisible = !resInfoVisible;
-            changeReservation.chanceAanpassenOrSaveButtonContent(resInfoVisible);
-            changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
-            changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
+            EditReservationClick?.Invoke(sender, new ChangeReservationEventArgs(selectedReservation));
         }
-
-
-        
-
         
 
         private void Checkfields()
