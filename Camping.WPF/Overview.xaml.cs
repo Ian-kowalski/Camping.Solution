@@ -807,6 +807,8 @@ namespace camping.WPF
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
                     ReservationAddedText.Visibility = Visibility.Visible;
                     displayAllReservations();
+                    SearchCampsites.StartDateButton.SelectedDate = null;
+                    SearchCampsites.EndDateButton.SelectedDate = null;
                 }
                 else
                 { }
