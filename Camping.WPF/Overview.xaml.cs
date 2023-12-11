@@ -599,19 +599,9 @@ namespace camping.WPF
             changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, resInfoVisible);
             changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, resInfoVisible);
         }
-
-
         
 
-        
-
-        private void Checkfields()
-        {
-            throw new NotImplementedException();
-        }
-        
-
-        private void FilterZoekenEnterPress(object sender, KeyEventArgs e)
+        private void FilterZoeken_EnterPress(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
@@ -671,7 +661,7 @@ namespace camping.WPF
 
 
 
-        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void StringBox(object sender, TextChangedEventArgs e)
         {
             string LastNameFilterBox = ((TextBox)sender).Text;
             if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))

@@ -94,6 +94,8 @@ namespace camping.WPF
             PostalCodeBox.Text = reservation.Visitor.PostalCode;
         }
 
+
+
         private void notEmpty(Reservation reservation, TextBox text, Label label)
         {
             if (text.Text.IsNullOrEmpty())
@@ -151,6 +153,7 @@ namespace camping.WPF
                 errorsFound = true;
             }
         }
+
         private void checkHouseNumber(Reservation reservation)
         {
             Regex regex = new Regex("^[1-9][1-9]*[a-z]{0,2}$");
@@ -219,7 +222,6 @@ namespace camping.WPF
             }
         }
 
-
         public bool saveReservation(Reservation reservation)
         {
             checkSiteID(reservation);
@@ -251,8 +253,6 @@ namespace camping.WPF
             errorsFound = false;
             return false;
         }
-
-
 
         public void hideErrors()
         {
