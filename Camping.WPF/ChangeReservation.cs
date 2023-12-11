@@ -176,6 +176,7 @@ namespace camping.WPF
                 errorsFound = true;
             }
         }
+
         private void checkHouseNumber(Reservation reservation)
         {
             Regex regex = new Regex("^[1-9][0-9]*[a-z]{0,2}$");
@@ -244,7 +245,6 @@ namespace camping.WPF
             }
         }
 
-
         public bool saveReservation(Reservation reservation)
         {
             checkSiteID(reservation);
@@ -278,8 +278,6 @@ namespace camping.WPF
             errorsFound = false;
             return false;
         }
-
-
 
         public void hideErrors()
         {

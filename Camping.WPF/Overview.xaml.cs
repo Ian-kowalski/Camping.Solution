@@ -654,6 +654,17 @@ namespace camping.WPF
         }
 
 
+
+        private void StringBox(object sender, TextChangedEventArgs e)
+        {
+            string LastNameFilterBox = ((TextBox)sender).Text;
+            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
+            {
+                ((TextBox)sender).Text = "";
+            }
+        }
+
+
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
             AddReservationInfoGrid.Visibility = Visibility.Visible;
@@ -731,7 +742,7 @@ namespace camping.WPF
             }
 
 
-            if (AddResFirstNameBox.Text.IsNullOrEmpty())
+            if (AddResFirstNameBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResFirstNameLabel.Visibility = Visibility.Visible;
                 AddResFirstNameLabel.Content = "Mag niet leeg zijn.";
@@ -744,7 +755,7 @@ namespace camping.WPF
             }
 
 
-            if (AddResLastNameBox.Text.IsNullOrEmpty())
+            if (AddResLastNameBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResLastNameLabel.Visibility = Visibility.Visible;
                 AddResLastNameLabel.Content = "Mag niet leeg zijn";
@@ -756,7 +767,7 @@ namespace camping.WPF
                 AddResLastNameLabel.Visibility = Visibility.Hidden;
             }
 
-            if (AddResCityBox.Text.IsNullOrEmpty())
+            if (AddResCityBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResCityLabel.Visibility = Visibility.Visible;
                 AddResCityLabel.Content = "Mag niet leeg zijn";
@@ -767,7 +778,7 @@ namespace camping.WPF
             {
                 AddResCityLabel.Visibility = Visibility.Hidden;
             }
-            if (AddResAdressBox.Text.IsNullOrEmpty())
+            if (AddResAdressBox.Text.Trim().IsNullOrEmpty())
             {
                 AddResAdressLabel.Visibility = Visibility.Visible;
                 AddResAdressLabel.Content = "Mag niet leeg zijn";
@@ -800,13 +811,6 @@ namespace camping.WPF
 
         }
 
-        private void StringBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string LastNameFilterBox = ((TextBox)sender).Text;
-            if (!Regex.IsMatch(LastNameFilterBox.Trim(), "[0-9a-zA-Z]"))
-            {
-                ((TextBox)sender).Text="";
-            }
-        }
+        
     }
 }
