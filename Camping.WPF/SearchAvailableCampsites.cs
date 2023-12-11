@@ -18,8 +18,8 @@ namespace camping.WPF
     {
         Label StartDateLabel;
         Label EndDateLabel;
-        DatePicker StartDateButton;
-        DatePicker EndDateButton;
+        public DatePicker StartDateButton;
+        public DatePicker EndDateButton;
         Button SearchButton;
         Grid grid;
         Grid availableSitesGrid;
@@ -75,6 +75,7 @@ namespace camping.WPF
             StartDateButton.SelectedDateChanged += StartDateButton_SelectedDateChanged;
             StartDateButton.DisplayDateStart = DateTime.Today;
             StartDateButton.Focusable = false;
+
 
             EndDateButton = new DatePicker();
             Grid.SetColumn(EndDateButton, 2);
