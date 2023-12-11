@@ -116,6 +116,9 @@
             </Grid>
         </Border>
 
+        <Label x:Name="ReservationAddedText" Content="De reservering is toegevoegd!" FontSize="32" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="80,80,80,0" Height="92" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Green" Visibility="Hidden" />
+
+
         <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid x:Name="AddReservationInfoGrid" Visibility="Hidden" Margin="16,16,16,16">
                 <Grid.RowDefinitions>
