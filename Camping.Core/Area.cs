@@ -19,6 +19,5 @@ public class Area : Location
         LocationID = locationID;
     }
 
-
 }
 

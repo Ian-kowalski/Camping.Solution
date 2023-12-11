@@ -178,7 +178,7 @@ namespace camping.WPF
         }
         private void checkHouseNumber(Reservation reservation)
         {
-            Regex regex = new Regex("^[1-9][1-9]*[a-z]{0,2}$");
+            Regex regex = new Regex("^[1-9][0-9]*[a-z]{0,2}$");
             if (regex.IsMatch(HouseNumberBox.Text))
             {
                 reservation.Visitor.HouseNumber = HouseNumberBox.Text;
