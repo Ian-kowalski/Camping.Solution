@@ -1,14 +1,6 @@
 ﻿using camping.Core;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace camping.Database
 {
@@ -22,7 +14,7 @@ namespace camping.Database
         {
             string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
             + "FROM reservation "
-            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID " 
+            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
             + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID;";
             using (var connection = new SqlConnection(connectionString))
             {
@@ -37,7 +29,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 reservationID, 1 startDate, 3 endDate, visitor(2 visitorID, 5 firstName, 6 lastName, 7 preposition, 8 adress, 9 city, 10 postalcode, 11 houseNumber, 12 phoneNumber)
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty :reader.GetString(6)) , reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetInt32(11)), reader.GetInt32(12)));
+                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetInt32(11)), reader.GetInt32(12)));
                     }
                 }
                 connection.Close();
@@ -48,19 +40,19 @@ namespace camping.Database
         public List<Reservation> GetReservationInfo(DateTime date)
         {
             string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
-            +"FROM reservation "
-            +"LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
-            +"LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID "
-            +"WHERE startDate > @startDate;";
+            + "FROM reservation "
+            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
+            + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID "
+            + "WHERE startDate > @startDate;";
 
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                
+
                 List<Reservation> result = new List<Reservation>();
-                
+
 
                 using (var command = new SqlCommand(sql, connection))
                 {
@@ -83,7 +75,7 @@ namespace camping.Database
         public List<Reservation> GetReservationInfo(int ReservetionID, string lastname)
         {
             string andOr = "AND";
-            if (ReservetionID<0) { andOr = "OR"; }
+            if (ReservetionID < 0) { andOr = "OR"; }
 
             string sql = "SELECT distinct(reservation.reservationID), startDate, endDate,\r\n" +
                 "visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber,\r\n" +
@@ -91,7 +83,7 @@ namespace camping.Database
                 "FROM reservation\r\n" +
                 "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID\r\n" +
                 "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID\r\n" +
-                "where lastName like @lastname "+ andOr + " reservation.reservationID = @ReservetionID;";
+                "where lastName like @lastname " + andOr + " reservation.reservationID = @ReservetionID;";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -102,7 +94,7 @@ namespace camping.Database
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@ReservetionID", ReservetionID);
-                    command.Parameters.AddWithValue("@lastname", "%"+lastname+"%");
+                    command.Parameters.AddWithValue("@lastname", "%" + lastname + "%");
 
                     reader = command.ExecuteReader();
 
@@ -357,7 +349,7 @@ namespace camping.Database
                 return (result != 0);
             }
         }
-    
+
         public bool DeleteReservation(int reservationID)
         {
             int result;
@@ -373,7 +365,7 @@ namespace camping.Database
 
                     command.Parameters.AddWithValue("reservationID", reservationID);
 
-                   result = command.ExecuteNonQuery();
+                    result = command.ExecuteNonQuery();
                 }
 
                 connection.Close();

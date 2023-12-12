@@ -1,16 +1,9 @@
 ﻿using camping.Core;
 using camping.Database;
 using System;
-using System.Collections.Generic;
-using System.Windows.Media;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Media3D;
-using Renci.SshNet.Common;
+using System.Windows.Media;
 
 namespace camping.WPF
 {
@@ -30,7 +23,8 @@ namespace camping.WPF
         public AvailableCampsites availableCampsites;
 
 
-        public SearchAvailableCampsites(Grid dateGrid, SiteData siteData, IReservationData resData, Grid availableSitesGrid) {
+        public SearchAvailableCampsites(Grid dateGrid, SiteData siteData, IReservationData resData, Grid availableSitesGrid)
+        {
             grid = dateGrid;
             this.siteData = siteData;
             this.resData = resData;
@@ -44,11 +38,11 @@ namespace camping.WPF
             StartDateLabel.Width = 128;
             StartDateLabel.Height = 32;
             StartDateLabel.FontSize = 18;
-            StartDateLabel.Margin = new Thickness(0,0,0,0);
+            StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             StartDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
             StartDateLabel.VerticalAlignment = VerticalAlignment.Top;
-            
-            
+
+
             EndDateLabel = new Label();
             EndDateLabel.Content = "Einddatum";
             Grid.SetColumn(EndDateLabel, 1);
@@ -123,7 +117,7 @@ namespace camping.WPF
             */
         }
 
-        
+
 
         private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -142,7 +136,8 @@ namespace camping.WPF
             availableCampsites.ReserveCampsite += ShowAddReservation;
         }
 
-        public void ShowAddReservation(object sender, AddReservationEventArgs e) {
+        public void ShowAddReservation(object sender, AddReservationEventArgs e)
+        {
             AddReservation?.Invoke(this, e);
         }
 

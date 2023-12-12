@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using Microsoft;
-using Microsoft.Data.SqlClient;
+﻿using camping.Core;
 using Camping.Core;
-using System.Runtime.CompilerServices;
-using camping.Core;
-using System.Drawing;
-using System.IO;
+using Microsoft.Data.SqlClient;
+using System.ComponentModel;
 
 namespace camping.Database
 {
@@ -133,9 +124,9 @@ namespace camping.Database
             {
                 connection.Open();
                 SqlDataReader reader;
-                
 
-                using ( var command = new SqlCommand(sql, connection))
+
+                using (var command = new SqlCommand(sql, connection))
                 {
                     reader = command.ExecuteReader();
                     while (reader.Read())
@@ -152,42 +143,46 @@ namespace camping.Database
         {
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
-/*            List<int> facilities = new List<int>();
-*/            if(location is Area)
+            /*            List<int> facilities = new List<int>();
+            */
+            if (location is Area)
             {
                 Area area = location as Area;
-/*                facilities = updateArea(area);
-*/                sql = $"UPDATE area " +
-          $"SET powerSupply = @powerSupply, " +
-          $"    waterFront = @waterFront, " +
-          $"    pets = @pets, " +
-          $"    shadow = @shadow, " +
-          $"    waterSupply = @waterSupply " +
-          $"WHERE areaID = {area.LocationID}";
+                /*                facilities = updateArea(area);
+                */
+                sql = $"UPDATE area " +
+        $"SET powerSupply = @powerSupply, " +
+        $"    waterFront = @waterFront, " +
+        $"    pets = @pets, " +
+        $"    shadow = @shadow, " +
+        $"    waterSupply = @waterSupply " +
+        $"WHERE areaID = {area.LocationID}";
             }
             if (location is Street)
             {
                 Street street = location as Street;
-/*                facilities = updateStreet(street);
-*/                sql = $"UPDATE street " +
-          $"SET powerSupply = @powerSupply, " +
-          $"    waterFront = @waterFront, " +
-          $"    pets = @pets, " +
-          $"    shadow = @shadow, " +
-          $"    waterSupply = @waterSupply " +
-          $"WHERE streetID = {street.LocationID}";
+                /*                facilities = updateStreet(street);
+                */
+                sql = $"UPDATE street " +
+        $"SET powerSupply = @powerSupply, " +
+        $"    waterFront = @waterFront, " +
+        $"    pets = @pets, " +
+        $"    shadow = @shadow, " +
+        $"    waterSupply = @waterSupply " +
+        $"WHERE streetID = {street.LocationID}";
             }
             if (location is Site)
             {
                 Site site = location as Site;
-/*                facilities = updateSite(site);
-*/                sql = $"UPDATE campSite " +
-          $"SET powerSupply = @powerSupply, " +
-          $"    waterFront = @waterFront, " +
-          $"    pets = @pets, " +
-          $"    shadow = @shadow, " +
-          $"    waterSupply = @waterSupply " +
-          $"WHERE campSiteID = {site.LocationID}";
+                /*                facilities = updateSite(site);
+                */
+                sql = $"UPDATE campSite " +
+        $"SET powerSupply = @powerSupply, " +
+        $"    waterFront = @waterFront, " +
+        $"    pets = @pets, " +
+        $"    shadow = @shadow, " +
+        $"    waterSupply = @waterSupply " +
+        $"WHERE campSiteID = {site.LocationID}";
             }
 
             List<int> facilities = new List<int>();
@@ -197,15 +192,15 @@ namespace camping.Database
             }
 
             using (var connection = new SqlConnection(connectionString))
-            {                    
-            connection.Open();
+            {
+                connection.Open();
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@powerSupply", facilities[1]);
                     command.Parameters.AddWithValue("@waterFront", facilities[4]);
                     command.Parameters.AddWithValue("@pets", facilities[2]);
                     command.Parameters.AddWithValue("@shadow", facilities[3]);
-                    command.Parameters.AddWithValue("@waterSupply", facilities[0]);                    
+                    command.Parameters.AddWithValue("@waterSupply", facilities[0]);
                     command.ExecuteNonQuery();
 
                 }

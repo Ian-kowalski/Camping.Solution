@@ -1,10 +1,5 @@
 ﻿using camping.Core;
 using camping.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace camping.Test
 {
@@ -49,7 +44,7 @@ namespace camping.Test
         [Test]
         public void GetCampSiteID_ReturnsListOfIntegers()
         {
-            int reservationID = 1; 
+            int reservationID = 1;
 
             List<int> campSiteIDs = siteData.GetCampSiteID(reservationID);
 

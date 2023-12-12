@@ -1,12 +1,6 @@
 ﻿using camping.Core;
-using camping.Database;
 using Camping.Core;
-using Renci.SshNet.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -26,11 +20,12 @@ namespace camping.WPF
         Rectangle campFacilityPets;
         Rectangle campFacilityOutlet;
         Button reserveButton;
-        public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData, DateTime startDate, DateTime endDate) {
+        public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData, DateTime startDate, DateTime endDate)
+        {
             this.grid = grid;
 
             grid.Background = Brushes.White;
-            
+
 
             grid.Children.Clear();
             grid.RowDefinitions.Clear();
