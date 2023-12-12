@@ -799,13 +799,11 @@ namespace camping.WPF
 
             if (!errorsFound)
             {
-
                 if (resData.addReservation(siteID, AddResStartDateDatePicker.Content.ToString(), AddResEndDateDatePicker.Content.ToString(),
                     AddResFirstNameBox.Text, AddResPrepositionBox.Text, AddResLastNameBox.Text,
                     AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
                     AddResHouseNumberBox.Text, phoneNumber))
                 {
-                    // test
                     AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
                     SearchCampsiteGridHeader.Visibility = Visibility.Hidden;
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
