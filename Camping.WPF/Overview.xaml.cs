@@ -812,8 +812,7 @@ namespace camping.WPF
                     SearchCampsites.StartDateButton.SelectedDate = null;
                     SearchCampsites.EndDateButton.SelectedDate = null;
                 }
-                else
-                { }
+                
             }
 
         }
