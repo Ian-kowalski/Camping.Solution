@@ -4,14 +4,11 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace camping.WPF
 {
@@ -43,8 +40,9 @@ namespace camping.WPF
 
         private Site? SelectedSite;
 
-/*        private Location selectedLocation;
-*/        private Button changeFacilitiesButton;
+        /*        private Location selectedLocation;
+        */
+        private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
 
@@ -65,7 +63,8 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
-            SearchCampsites.SearchSites += (sender, e) => { 
+            SearchCampsites.SearchSites += (sender, e) =>
+            {
                 SearchCampsiteGridHeader.Visibility = Visibility.Visible;
                 AvailableCampsitesScrollViewer.Visibility = Visibility.Visible;
             };
@@ -78,7 +77,7 @@ namespace camping.WPF
             Closing += onWindowClosing;
         }
 
-        
+
 
 
         private void displayAllLocations()
@@ -184,8 +183,9 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = null;
                 SelectedArea = area;
-/*                selectedLocation = area;
-*/                toggleChildrenVisibility(area);
+                /*                selectedLocation = area;
+                */
+                toggleChildrenVisibility(area);
                 displayAllLocations();
             }
             else
@@ -195,8 +195,9 @@ namespace camping.WPF
                 SelectedSite = null;
                 SelectedStreet = street;
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-/*                selectedLocation = street;
-*/                toggleChildrenVisibility(street);
+                /*                selectedLocation = street;
+                */
+                toggleChildrenVisibility(street);
                 displayAllLocations();
             }
             else
@@ -206,12 +207,13 @@ namespace camping.WPF
                 SelectedSite = site;
                 SelectedStreet = retrieveData.GetStreetFromID(site.StreetID);
                 SelectedArea = retrieveData.GetAreaFromID(SelectedStreet.AreaID);
-/*                selectedLocation = site;
-*/                displayAllLocations();
+                /*                selectedLocation = site;
+                */
+                displayAllLocations();
             }
             /*            displayInformation(location); 
             */
-            
+
         }
         public void onSiteSelect(Location location)
         {
@@ -382,7 +384,7 @@ namespace camping.WPF
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
                 int resID;
-                if (!int.TryParse(reservationIDFilterBox.Text,out resID))
+                if (!int.TryParse(reservationIDFilterBox.Text, out resID))
                 {
                     reservationIDFilterBox.Text = string.Empty;
                     resID = -1;
@@ -432,7 +434,7 @@ namespace camping.WPF
 
             Grid grid = new Grid();
             grid.MouseDown += (sender, e) => { changeReservation.fillReservationInfoGrid(reservation); };
-            
+
             if (selectedReservation is not null)
             {
                 if (reservation.ReservationID == selectedReservation.ReservationID)
@@ -502,7 +504,7 @@ namespace camping.WPF
             checkBox.VerticalAlignment = VerticalAlignment.Center;
             grid.Children.Add(checkBox);
         }
-        
+
         private void RowClick(Reservation reservation)
         {
             changeReservation.isUpdating = false;
@@ -528,7 +530,7 @@ namespace camping.WPF
             {
                 toBeCancel.Add(reservation);
             }
-            else if(c.IsChecked == false && toBeCancel.Contains(reservation))
+            else if (c.IsChecked == false && toBeCancel.Contains(reservation))
             {
                 toBeCancel.Remove(reservation);
             }
@@ -552,7 +554,7 @@ namespace camping.WPF
             {
                 combinedString += $"{reservation.ReservationID}, ";
             }
-            combinedString.Remove(combinedString.Length-2);
+            combinedString.Remove(combinedString.Length - 2);
             string messageBoxText = "Weet je zeker dat je de volgende reservering(en) wil verwijderen: " + combinedString;
             string caption = "Annuleren reservering(en)";
             MessageBoxButton button = MessageBoxButton.YesNo;
@@ -572,7 +574,7 @@ namespace camping.WPF
                     {
                         // ...Delete out of database
                         retrieveData.DeleteReservation(reservation.ReservationID);
-                        
+
                     }
                     toBeCancel.Clear();
                     displayAllReservations();
@@ -588,13 +590,13 @@ namespace camping.WPF
         {
             EditReservationClick?.Invoke(sender, new ChangeReservationEventArgs(selectedReservation));
         }
-        
+
 
         private void Checkfields()
         {
             throw new NotImplementedException();
         }
-        
+
 
         private void FilterZoekenEnterPress(object sender, KeyEventArgs e)
         {
@@ -644,14 +646,14 @@ namespace camping.WPF
 
         private void PhoneNumberValidation(object sender, TextChangedEventArgs e)
         {
-            
-                string houseNumber = ((TextBox)sender).Text;
-                if (Regex.IsMatch(houseNumber.Trim(), "^[0-9]\\d{1,15}$"))
-                {
-                    ((TextBox)sender).Foreground = Brushes.Black;
-                }
-                else { ((TextBox)sender).Foreground = Brushes.Red; }
-            
+
+            string houseNumber = ((TextBox)sender).Text;
+            if (Regex.IsMatch(houseNumber.Trim(), "^[0-9]\\d{1,15}$"))
+            {
+                ((TextBox)sender).Foreground = Brushes.Black;
+            }
+            else { ((TextBox)sender).Foreground = Brushes.Red; }
+
         }
 
 
@@ -816,6 +818,6 @@ namespace camping.WPF
 
         }
 
-        
+
     }
 }

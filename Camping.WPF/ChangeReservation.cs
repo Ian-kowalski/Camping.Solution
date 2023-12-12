@@ -1,12 +1,8 @@
 ﻿using camping.Core;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -257,18 +253,18 @@ namespace camping.WPF
             reservation.Visitor.LastName = visitorData[1];
             reservation.Visitor.City = visitorData[2];
             reservation.Visitor.Adress = visitorData[3];
-            
+
 
             reservation.Visitor.Preposition = PrepositionBox.Text;
 
             checkDates(reservation);
-            
-            
-            
+
+
+
             if (!errorsFound)
             {
                 var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
-                
+
                 if (result == MessageBoxResult.Yes)
                 {
                     retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);

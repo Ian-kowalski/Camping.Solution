@@ -1,5 +1,4 @@
 ﻿using Camping.Core;
-using System.Windows;
 
 
 namespace camping.Core
@@ -24,9 +23,12 @@ namespace camping.Core
             UpdateReservations();
         }
 
-        public Area GetAreaFromID(int id) {
-            foreach (Area area in Areas) {
-                if (area.LocationID == id) {
+        public Area GetAreaFromID(int id)
+        {
+            foreach (Area area in Areas)
+            {
+                if (area.LocationID == id)
+                {
                     return area;
                 }
             }
@@ -91,10 +93,10 @@ namespace camping.Core
             return reservationData.GetReservationInfo(dateTime);
         }
 
-/*        public int GetCampSiteID(int reservationID)
-        {
-            return reservationData.GetCampSiteID(reservationID);
-        }*/
+        /*        public int GetCampSiteID(int reservationID)
+                {
+                    return reservationData.GetCampSiteID(reservationID);
+                }*/
 
         public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
@@ -106,9 +108,9 @@ namespace camping.Core
         public bool GetDate(int siteID)
         {
             List<ReservationDates> reservations = siteData.GetAvailability(siteID);
-            foreach(ReservationDates dates in reservations)
+            foreach (ReservationDates dates in reservations)
             {
-                if(dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
+                if (dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
                 {
                     return false;
                 }

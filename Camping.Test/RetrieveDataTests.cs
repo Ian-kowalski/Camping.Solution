@@ -1,12 +1,5 @@
 ﻿using camping.Core;
 using camping.Database;
-using Camping.Core;
-using Castle.DynamicProxy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace camping.Test
 {
@@ -51,8 +44,8 @@ namespace camping.Test
         [TestCase(5, false)]
         public void GetDate_ReturnsTrueWhenNoOverlappingReservations(int siteID, bool excpected)
         {
-            var siteData = new SiteData(); 
-            var reservationData = new ReservationRepository ();
+            var siteData = new SiteData();
+            var reservationData = new ReservationRepository();
             var retrieveData = new RetrieveData(siteData, reservationData);
 
             Assert.IsTrue(retrieveData.GetDate(siteID) == excpected);

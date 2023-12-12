@@ -1,18 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace camping.Database
 {
     public class VisitorRepository
     {
         private string connectionString = "Data Source=127.0.0.1;Initial Catalog=CampingClean;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
-        
-        
+
+
         public bool addVisitor(string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
             // checks if that visitor already exists in the database
@@ -90,7 +84,7 @@ namespace camping.Database
                         while (result.Read())
                         {
                             visitorID = result.GetInt32(0);
-                            
+
                         }
                     }
 

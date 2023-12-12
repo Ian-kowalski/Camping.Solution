@@ -15,7 +15,7 @@
 
     public int VisitorID { get; set; }
     public string FirstName { get; set; }
-    public string LastName {  get; set; }
+    public string LastName { get; set; }
     public string Preposition { get; set; }
     public string Adress { get; set; }
     public string City { get; set; }

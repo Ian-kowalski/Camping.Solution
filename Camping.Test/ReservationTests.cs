@@ -34,7 +34,7 @@ namespace Camping.Test
             {
                 Assert.Fail($"Expected: {result} Got: {ID}");
             }
-            
+
 
         }
 
@@ -58,7 +58,7 @@ namespace Camping.Test
             {
                 Assert.Fail($"Expected: {result} Got: {ID}");
             }
-            
+
 
         }
 
@@ -92,7 +92,7 @@ namespace Camping.Test
 
         [Test]
         [TestCase("Jelle", "Bouman", "het", "bertram", "Mepple", "7944NS", "26", 12345678)] // bestaat al, dus false
-        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD","51", 12345678)] // bestaat al, dus false
+        [TestCase("Leroy", "Staaks", "de", "gertrude", "Hoogeveen", "1235JD", "51", 12345678)] // bestaat al, dus false
         public void Reservation_AddVisitor_AlreadyExists(
             string firstName, string lastName, string preposition,
             string adress, string city, string postalcode,
@@ -188,7 +188,7 @@ namespace Camping.Test
             ReservationRepository reservationRepo = new();
 
             Assert.IsTrue(reservationRepo.UpdateVisitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber));
-            
+
         }
 
 
@@ -196,7 +196,7 @@ namespace Camping.Test
         [TestCase(2, "12-02-2025", "12-05-2025", "test", "delete", "res", "this Street", "here", "2332XX", "22", 54717700)]
         public void Reservation_DeleteReservation_delete(int campsId, string sDate, string eDate, string fName, string prop, string lName, string adres, string city, string postcode, string huisnummer, int phoneNumber)
         {
-            ReservationRepository   reservationRepo = new();
+            ReservationRepository reservationRepo = new();
             VisitorRepository visitorRepository = new();
             reservationRepo.addReservation(campsId, sDate, eDate, fName, prop, lName, adres, city, postcode, huisnummer, phoneNumber);
             int visitorID = visitorRepository.getVisitorID(fName, lName, prop, adres, city, postcode, huisnummer, phoneNumber);
@@ -210,7 +210,7 @@ namespace Camping.Test
             {
                 Assert.Fail();
             }
-            
+
         }
 
         [OneTimeTearDown]

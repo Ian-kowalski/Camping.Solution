@@ -1,8 +1,8 @@
-﻿ public class _Camping
+﻿public class _Camping
+{
+    public string Name { get; }
+    public _Camping(string name)
     {
-        public string Name { get; }
-        public _Camping(string name)
-        {
-            Name = name;
-        }
+        Name = name;
     }
+}
