@@ -21,6 +21,7 @@ namespace camping.WPF
         public Area SelectedArea { get; set; }
         public Street SelectedStreet { get; set; }
         public Site SelectedSite { get; set; }
+        Button ChangeFacilitiesButton = new Button();
 
         public LocationInformation(Grid locationInfoGrid, SiteData siteData, RetrieveData retrieveData, Location location, Area selectedArea, Street selectedStreet, Site selectedSite)
         {
@@ -75,7 +76,7 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 50, 2, 2, location);
             CreateAndAddFacility("PetsAllowed", 50, 3, 2, location);
 
-            Button ChangeFacilitiesButton = new Button();
+            ChangeFacilitiesButton.IsEnabled = false;
             ChangeFacilitiesButton.Content = "Faciliteiten Opslaan";
             ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Right;
             ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
@@ -206,6 +207,7 @@ namespace camping.WPF
         //toggles the temporary value of a facility
         private void ToggleFacilityValue(string facilityName)
         {
+            ChangeFacilitiesButton.IsEnabled = true;
             var property = tempLocation.GetType().GetProperty(facilityName);
             if (property != null)
             {
@@ -235,6 +237,7 @@ namespace camping.WPF
         private void ChangeFacilitiesButtonClick(Button button)
         {
             UpdateLocation(tempLocation);
+            ChangeFacilitiesButton.IsEnabled = false;
         }
 
         private void UpdateLocation(Location location)
