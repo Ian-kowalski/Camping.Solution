@@ -59,22 +59,21 @@ namespace camping.WPF
             LocationInfoGrid.Children.Clear();
 
             Label pathLabel = CreateAndAddLabel(getPathText(), 24, 0, 0);
-            Grid.SetColumnSpan(pathLabel, 4);
+            Grid.SetColumnSpan(pathLabel, 3);
             pathLabel.FontWeight = FontWeights.Bold;
-            CreateAndAddLabel("Faciliteiten", 24, 0, 2);
-            CreateAndAddLabel("Overig", 24, 0, 3);
+            CreateAndAddLabel("Faciliteiten", 24, 0, 1);
+            CreateAndAddLabel("Overig", 24, 0, 2);
 
             if (location is Site)
             {
-                CreateAndAddLabel("Oppervlak: ", 24, 0, 1);
-                CreateAndAddLabel(Convert.ToString(((Site)location).Size), 24, 1, 1);
+                CreateAndAddLabel($"Oppervlak: {Convert.ToString(((Site)location).Size)}", 24, 4, 0);
             }
 
-            CreateAndAddFacility("HasWaterSupply", 60, 1, 2, location);
-            CreateAndAddFacility("OutletPresent", 60, 2, 2, location);
-            CreateAndAddFacility("HasShadow", 60, 1, 3, location);
-            CreateAndAddFacility("AtWater", 60, 2, 3, location);
-            CreateAndAddFacility("PetsAllowed", 60, 3, 3, location);
+            CreateAndAddFacility("HasWaterSupply", 50, 1, 1, location);
+            CreateAndAddFacility("OutletPresent", 50, 2, 1, location);
+            CreateAndAddFacility("HasShadow", 50, 1, 2, location);
+            CreateAndAddFacility("AtWater", 50, 2, 2, location);
+            CreateAndAddFacility("PetsAllowed", 50, 3, 2, location);
 
             isUpdating = false;
             Button ChangeFacilitiesButton = new Button();
