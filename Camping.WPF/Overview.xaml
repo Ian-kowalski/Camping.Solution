@@ -43,7 +43,7 @@
             </Grid>
         </Border>
         <Border x:Name="LocationInfo"  Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="3" BorderBrush="#000000" BorderThickness="3">
-            <Grid x:Name="LocationInfoGrid">
+            <Grid x:Name="LocationInfoGrid" VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="2*"/>
