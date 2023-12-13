@@ -21,7 +21,6 @@ namespace camping.WPF
         public Area SelectedArea { get; set; }
         public Street SelectedStreet { get; set; }
         public Site SelectedSite { get; set; }
-        private bool isUpdating { get; set; }
 
         public LocationInformation(Grid locationInfoGrid, SiteData siteData, RetrieveData retrieveData, Location location, Area selectedArea, Street selectedStreet, Site selectedSite)
         {
@@ -66,7 +65,8 @@ namespace camping.WPF
 
             if (location is Site)
             {
-                CreateAndAddLabel($"Oppervlak: {Convert.ToString(((Site)location).Size)}", 24, 4, 0);
+                Label sizeLabel = CreateAndAddLabel($"Oppervlak: {Convert.ToString(((Site)location).Size)}", 24, 4, 0);
+                sizeLabel.HorizontalAlignment = HorizontalAlignment.Right;
             }
 
             CreateAndAddFacility("HasWaterSupply", 50, 1, 1, location);
@@ -75,16 +75,16 @@ namespace camping.WPF
             CreateAndAddFacility("AtWater", 50, 2, 2, location);
             CreateAndAddFacility("PetsAllowed", 50, 3, 2, location);
 
-            isUpdating = false;
             Button ChangeFacilitiesButton = new Button();
-            ChangeFacilitiesButton.Content = "Faciliteiten aanpassen";
-            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Center;
+            ChangeFacilitiesButton.Content = "Faciliteiten Opslaan";
+            ChangeFacilitiesButton.HorizontalAlignment = HorizontalAlignment.Right;
             ChangeFacilitiesButton.VerticalAlignment = VerticalAlignment.Center;
             ChangeFacilitiesButton.Width = 180;
             ChangeFacilitiesButton.Height = 60;
             ChangeFacilitiesButton.BorderBrush = Brushes.Black;
             ChangeFacilitiesButton.BorderThickness = new Thickness(2);
             ChangeFacilitiesButton.FontSize = 16;
+            ChangeFacilitiesButton.Margin = new Thickness(0,0,5,0);
 
             ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
 
@@ -159,15 +159,12 @@ namespace camping.WPF
         //triggered when clicking a facility ellipse
         private void facilityClick(object sender, MouseButtonEventArgs e)
         {
-            if (isUpdating)
-            {
                 Ellipse clickedEllipse = (Ellipse)sender;
                 SolidColorBrush solidColorBrush = new SolidColorBrush();
 
                 ChangeFacilityColor(clickedEllipse);
                 solidColorBrush.Color = GetFacilityColor(clickedEllipse);
                 clickedEllipse.Fill = solidColorBrush;
-            }
         }
 
         //retrieves the color of a specific facility
@@ -237,18 +234,7 @@ namespace camping.WPF
         //triggered when pressing the change facilities button
         private void ChangeFacilitiesButtonClick(Button button)
         {
-            // Toggle the updating state
-            isUpdating = !isUpdating;
-
-            if (isUpdating)
-            {
-                button.Content = "Opslaan";
-            }
-            else
-            {
-                button.Content = "Faciliteiten aanpassen";
-                UpdateLocation(tempLocation);
-            }
+            UpdateLocation(tempLocation);
         }
 
         private void UpdateLocation(Location location)
