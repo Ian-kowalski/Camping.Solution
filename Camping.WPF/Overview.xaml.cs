@@ -268,6 +268,17 @@ namespace camping.WPF
             }
         }
 
+        private void enableAllVisibility(object sender, RoutedEventArgs e) {
+            foreach (Site site in retrieveData.Sites) {
+                site.Visible = true;
+            }
+            foreach (Street street in retrieveData.Streets)
+            {
+                street.Visible = true;
+            }
+            displayAllLocations();
+        }
+
         // toggled de visibility van de sites van een straat
         private void toggleChildrenVisibility(Street street)
         {
@@ -308,7 +319,7 @@ namespace camping.WPF
         {
             Button button = new Button();
             button.Content = $"Plek {site.LocationID}";
-            button.Margin = new Thickness(272, 4, 4, 4);
+            button.Margin = new Thickness(128, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
@@ -321,7 +332,7 @@ namespace camping.WPF
         {
             Button button = new Button();
             button.Content = $"Straat {street.LocationID}";
-            button.Margin = new Thickness(144, 4, 4, 4);
+            button.Margin = new Thickness(64, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
