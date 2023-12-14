@@ -13,6 +13,8 @@ namespace camping.Core
         public List<Area> Areas;
         public List<Reservation> Reservations;
 
+        public event EventHandler<EventArgs> SiteDeleted;
+
         public RetrieveData(ISiteData siteData, IReservationData reservationData)
         {
             this.siteData = siteData;
@@ -121,6 +123,33 @@ namespace camping.Core
         public bool DeleteReservation(int reservationID)
         {
             return reservationData.DeleteReservation(reservationID);
+        }
+
+        public bool HasUpcomingReservations(int campSiteID) {
+            return reservationData.HasUpcomingReservations(campSiteID, DateTime.Today);
+        }
+
+        public bool DeleteCampSite(int campSiteID) {
+
+            // will not delete any campsite if it has any upcoming reservations.
+            if (HasUpcomingReservations(campSiteID)) { return false; }
+
+            // deletes the reservation before telling the main window to update.
+            bool isDeleted = siteData.DeleteCampSite(campSiteID);
+
+            // deletes the site from the list of site classes
+            foreach (Site site in Sites) {
+                if (site.LocationID == campSiteID) { 
+                    Sites.Remove(site);
+                    break;
+                }
+            }
+
+
+            SiteDeleted?.Invoke(this, new EventArgs());
+
+            // return true if a campsite has been deleted.
+            return isDeleted;
         }
         public void UpdateLocations()
         {

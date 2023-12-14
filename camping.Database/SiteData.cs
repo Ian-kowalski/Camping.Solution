@@ -207,7 +207,10 @@ namespace camping.Database
             }
         }
 
+        
+
         public bool DeleteCampSite(int campSiteID) {
+
             int result;
             string sql = "DELETE " +
                 "FROM campSite " +

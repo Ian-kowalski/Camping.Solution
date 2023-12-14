@@ -1,4 +1,5 @@
 ﻿using camping.Database;
+using Newtonsoft.Json.Bson;
 
 namespace Camping.Test
 {
@@ -210,7 +211,22 @@ namespace Camping.Test
             {
                 Assert.Fail();
             }
+        }
 
+        [Test]
+        [TestCase(1, true)]
+        [TestCase(5, false)]
+        public void Reservation_HasUpcomingReservations_Read(int campSiteID, bool result) {
+            ReservationRepository reservationRepository = new();
+            if (reservationRepository.HasUpcomingReservations(campSiteID, DateTime.Today) == result)
+            {
+                Assert.Pass();
+            }
+            else {
+                if (result) { Assert.Fail("The provided camp site ID has no upcoming or ongoing reservations today!"); }
+                if (!result) { Assert.Fail("The provided camp site ID has an upcoming or ongoing reservation today!"); }
+            }
+            
         }
 
         [OneTimeTearDown]
