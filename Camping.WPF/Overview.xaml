@@ -35,7 +35,7 @@
                 </Grid>
             </ScrollViewer>
         </Border>
-        <Border x:Name="LocationInfo"  Visibility="Visible" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="LocationInfo"  Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid x:Name="LocationInfoGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
@@ -184,11 +184,11 @@
                     <Label x:Name="AddResPostalCodeLabel"  Height="28" Grid.Column="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                 </Grid>
                 <Button x:Name="AddResSaveReservationButton" Content="Toevoegen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="AddReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
-                
+
             </Grid>
         </Border>
 
-        <Border x:Name="ReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+        <Border x:Name="ReservationList" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="20*"/>
@@ -206,7 +206,7 @@
                         <ColumnDefinition/>
 
                     </Grid.ColumnDefinitions>
-                    
+
                     <Rectangle Grid.ColumnSpan="5" Margin="0,0,0,0" Stroke="Black" Fill="LightGray"/>
 
                     <Label Content="reserv. Nr." HorizontalContentAlignment="Right" VerticalContentAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
@@ -243,8 +243,8 @@
                 <ScrollViewer x:Name="ReservationListScrollViewer" Grid.Row="2" BorderBrush="#000000" BorderThickness="3"/>
             </Grid>
         </Border>
-        <Border x:Name="ReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
-            <Grid x:Name="ReservationInfoGrid" Visibility="Hidden" Margin="16,16,16,16">
+        <Border x:Name="ReservationInfo" Visibility="Visible" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
+            <Grid x:Name="ReservationInfoGrid" Visibility="Visible" Margin="16,16,16,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3*"/>
                     <RowDefinition Height="4*"/>
@@ -309,7 +309,8 @@
 
                 </Grid>
 
-                <Button x:Name="EditReservationButton" Content="Aanpassen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="EditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
+                <Button x:Name="EditReservationButton" Content="Opslaan" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="EditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
+                <Button x:Name="CancelEditReservationButton" Content="Annuleren" Margin="32,0,32,118" Grid.Row="1" Grid.Column="2" Click="CancelEditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16" Height="51" VerticalAlignment="Bottom"/>
             </Grid>
         </Border>
 
