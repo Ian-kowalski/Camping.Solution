@@ -41,7 +41,9 @@ namespace camping.Database
         public List<Street> GetStreetInfo()
         {
 
-            string sql = $"SELECT * FROM street ORDER BY streetID ASC";
+            string sql = $"SELECT streetID,areaID,powerSupply,waterFront,pets,shadow,waterSupply,street.coordinatesPairsKey, x1,y1,x2,y2 FROM street " +
+                $"join dbo.coordinatesPair cP on street.coordinatesPairsKey = cP.coordinatesPairsKey " +
+                $"ORDER BY streetID ASC";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -56,7 +58,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     {                       // streetID
-                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6)));
+                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6),new CoordinatesPairs(reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10))));
                     }
                 }
                 connection.Close();
