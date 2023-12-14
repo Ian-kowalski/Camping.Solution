@@ -5,7 +5,7 @@ namespace camping.Database
     public class VisitorRepository
     {
 
-        private string connectionString = Constants.connectionString;
+        private string connectionString = Constants.databaseConnectionString;
 
         public bool addVisitor(string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {

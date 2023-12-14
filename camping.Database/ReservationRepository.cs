@@ -7,7 +7,7 @@ namespace camping.Database
 {
     public class ReservationRepository : IReservationData
     {
-        private string connectionString = Constants.connectionString;
+        private string connectionString = Constants.databaseConnectionString;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
