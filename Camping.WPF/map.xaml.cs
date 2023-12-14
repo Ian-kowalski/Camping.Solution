@@ -39,7 +39,8 @@ namespace camping.WPF
             resData = new ReservationRepository();
             retrieveData = new RetrieveData(siteData, resData);
             InitializeComponent();
-            drawStreets();
+            drawMap();
+
 
 
         }
@@ -57,26 +58,89 @@ namespace camping.WPF
             return result;
         }
 
-        public void drawStreets()
+        public void drawSites(List<Site> sites, Brush areaColor, Double angle)
         {
+
             if (retrieveData != null)
             {
-                List<Street>  streets = siteData.GetStreetInfo();
 
-                foreach (var street in streets)
+
+                foreach (var site in sites)
                 {
-                    Line line = new Line();
-                    line.X1 = street.CoordinatesPairs._x1;
-                    line.Y1 = street.CoordinatesPairs._y1;
-                    line.X2 = street.CoordinatesPairs._x2;
-                    line.Y2 = street.CoordinatesPairs._y2;
-                    line.StrokeThickness = 4;
-                    line.Stroke = PickBrush(street.AreaID);
-
-                    campingmap.Children.Add(line);
+                    drawSite(areaColor, angle, site);
 
                 }
             }
+        }
+
+        private void drawSite(Brush areaColor, double angle, Site site)
+        {
+            Button button = new Button();
+            button.Content = site.LocationID.ToString();
+            button.Background = areaColor;
+            button.Height = 20;
+            button.Width = 20;
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            button.VerticalAlignment = VerticalAlignment.Top;
+            button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
+            button.RenderTransformOrigin = new Point(0.5, 0.5);
+            button.RenderTransform = new RotateTransform { Angle = angle };
+            campingmap.Children.Add(button);
+        }
+
+        public void drawMap()
+        {
+
+            if (retrieveData != null)
+            {
+                List<Street>  streets = siteData.GetStreetInfo();
+                List<Site> sites = siteData.GetSiteInfo();
+
+                foreach (var street in streets)
+                {
+                    Brush AreaColor = PickBrush(street.AreaID);
+                    List<Site> sitesOnStreet =
+                        (from site in sites
+                        where site.StreetID == street.LocationID
+                        select site).ToList();
+                    drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor));
+
+                }
+            }
+        }
+
+        private Double drawStreet(Street street, Brush brush)
+        {
+
+            Line line = new Line();
+            line.X1 = street.CoordinatesPairs._x1;
+            line.Y1 = street.CoordinatesPairs._y1;
+            line.X2 = street.CoordinatesPairs._x2;
+            line.Y2 = street.CoordinatesPairs._y2;
+            line.StrokeThickness = 4;
+            line.Stroke = brush;
+            campingmap.Children.Add(line);
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+
+        }
+
+        private Double CalcAngle(int x1, int y1, int x2, int y2)
+        {
+            Double angle = 0;
+            float xDiff = x2 - x1;
+            float yDiff = y2 - y1;
+            angle = Math.Atan2(yDiff, xDiff) * 180.0 / Math.PI;
+
+            while (angle < -45)
+            {
+                angle += 90;
+            }
+            while (angle >= 45)
+            {
+                angle -= 90;
+            }
+
+            return angle;
         }
     }
 }
