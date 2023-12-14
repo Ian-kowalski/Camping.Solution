@@ -70,7 +70,7 @@ namespace camping.WPF
                     line.Y1 = street.CoordinatesPairs._y1;
                     line.X2 = street.CoordinatesPairs._x2;
                     line.Y2 = street.CoordinatesPairs._y2;
-                    line.StrokeThickness = 2;
+                    line.StrokeThickness = 4;
                     line.Stroke = PickBrush(street.AreaID);
 
                     campingmap.Children.Add(line);

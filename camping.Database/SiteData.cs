@@ -41,7 +41,7 @@ namespace camping.Database
         public List<Street> GetStreetInfo()
         {
 
-            string sql = $"SELECT streetID,areaID,powerSupply,waterFront,pets,shadow,waterSupply,street.coordinatesPairsKey, x1,y1,x2,y2 FROM street " +
+            string sql = $"SELECT streetID,areaID,powerSupply,waterFront,pets,shadow,waterSupply, x1,y1,x2,y2 FROM street " +
                 $"join dbo.coordinatesPair cP on street.coordinatesPairsKey = cP.coordinatesPairsKey " +
                 $"ORDER BY streetID ASC";
 
