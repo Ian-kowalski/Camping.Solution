@@ -78,19 +78,7 @@ namespace camping.WPF
 
         public void editReservationButton(object sender, ChangeReservationEventArgs e)
         {
-            if (ReservationAanpassenButtonState)
-            {
-                if (!saveReservation(e.Reservation))
-                {
-                    return;
-                }
-            }
-
-            isUpdating = !isUpdating;
-
-            chanceAanpassenOrSaveButtonContent(isUpdating);
-            enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, StreetBox, HouseNumberBox, PostalCodeBox }, isUpdating);
-            enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDateDatePicker }, isUpdating);
+            saveReservation(e.Reservation);
         }
 
 
@@ -258,21 +246,13 @@ namespace camping.WPF
             reservation.Visitor.Preposition = PrepositionBox.Text;
 
             checkDates(reservation);
-
-
-
-            if (!errorsFound)
-            {
-                var result = MessageBox.Show("Weet je zeker dat je de reservering gegevens wilt aanpassen?", "Confirm", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
-                    return true;
-                }
+            if (!errorsFound) { 
+            retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
+            return true;
             }
-            errorsFound = false;
-            return false;
+            else {
+            return false; 
+            }
         }
 
         public void hideErrors()

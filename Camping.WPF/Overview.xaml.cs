@@ -524,16 +524,15 @@ namespace camping.WPF
 
         private void RowClick(Reservation reservation)
         {
-            changeReservation.isUpdating = false;
-
+            changeReservation.isUpdating = true;
             selectedReservation = reservation;
 
+            
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
 
 
-            changeReservation.chanceAanpassenOrSaveButtonContent(changeReservation.isUpdating);
             changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, changeReservation.isUpdating);
             changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, changeReservation.isUpdating);
 
@@ -606,6 +605,14 @@ namespace camping.WPF
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             EditReservationClick?.Invoke(sender, new ChangeReservationEventArgs(selectedReservation));
+        }
+        private void CancelEditReservationButtonClick(object sender, RoutedEventArgs e)
+        {
+            cancelEdit();
+        }
+        public void cancelEdit()
+        {
+            ReservationInfoGrid.Visibility = Visibility.Hidden;
         }
 
 
