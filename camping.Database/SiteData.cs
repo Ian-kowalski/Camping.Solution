@@ -206,5 +206,32 @@ namespace camping.Database
                 }
             }
         }
+
+        
+
+        public bool DeleteCampSite(int campSiteID) {
+
+            int result;
+            string sql = "DELETE " +
+                "FROM campSite " +
+                "WHERE campSiteID = @campSiteID;";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+
+                    command.Parameters.AddWithValue("campSiteID", campSiteID);
+
+                    result = command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+
+                // will return true if only 1 campsite has been deleted
+                return (result == 1);
+            }
+        }
     }
 }
