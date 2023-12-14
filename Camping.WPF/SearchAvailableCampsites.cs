@@ -31,6 +31,8 @@ namespace camping.WPF
             this.availableSitesGrid = availableSitesGrid;
             grid.Background = Brushes.LightGray;
 
+            availableSitesGrid.Visibility = Visibility.Hidden;
+
             StartDateLabel = new Label();
             StartDateLabel.Content = "Begindatum";
             Grid.SetColumn(StartDateLabel, 1);
