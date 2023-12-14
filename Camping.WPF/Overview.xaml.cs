@@ -56,7 +56,9 @@ namespace camping.WPF
 
             // als een campsite verwijderd wordt, update plekbeheer.
             retrieveData.SiteDeleted += (sender, e) => { 
-                displayAllLocations(); 
+                displayAllLocations();
+                AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
             };
 
 
