@@ -23,6 +23,7 @@ namespace camping.WPF
         public Site SelectedSite { get; set; }
         Button ChangeFacilitiesButton = new Button();
 
+
         public LocationInformation(Grid locationInfoGrid, SiteData siteData, RetrieveData retrieveData, Location location, Area selectedArea, Street selectedStreet, Site selectedSite)
         {
             LocationInfoGrid = locationInfoGrid;
@@ -34,6 +35,8 @@ namespace camping.WPF
             SelectedSite = selectedSite;
 
             displayInformation(location);
+
+
         }
 
         private void displayInformation(Location location)
@@ -92,6 +95,11 @@ namespace camping.WPF
             Grid.SetRow(ChangeFacilitiesButton, 3);
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
+
+            if (location is Site) {
+                addDeleteButton(((Site)location).LocationID);
+            }
+
         }
 
         private string getPathText()
@@ -297,5 +305,63 @@ namespace camping.WPF
                 site.PetsAllowed = tempSite.PetsAllowed;
             }
         }
+
+        private void addDeleteButton(int campSiteID) {
+
+            Button DeleteCampSiteButton = new Button();
+            DeleteCampSiteButton.Content = "Verwijder Plek";
+            DeleteCampSiteButton.HorizontalAlignment = HorizontalAlignment.Center;
+            DeleteCampSiteButton.VerticalAlignment = VerticalAlignment.Center;
+            DeleteCampSiteButton.Width = 180;
+            DeleteCampSiteButton.Height = 60;
+            DeleteCampSiteButton.BorderBrush = Brushes.Black;
+            DeleteCampSiteButton.BorderThickness = new Thickness(2);
+            DeleteCampSiteButton.FontSize = 16;
+
+
+            if (!retrieveData.HasUpcomingReservations(campSiteID)) {
+                DeleteCampSiteButton.Click += (sender, e) => {
+                    deleteCampSiteButtonClick(campSiteID);
+                };
+            } else { 
+                DeleteCampSiteButton.IsEnabled = false;
+            }
+
+            Grid.SetRow(DeleteCampSiteButton, 2);
+            Grid.SetColumn(DeleteCampSiteButton, 4);
+
+            LocationInfoGrid.Children.Add(DeleteCampSiteButton);
+        }
+
+        private void deleteCampSiteButtonClick(int campSiteID) {
+
+            string caption = "Campingplek verwijderen";
+            string messageBoxText = $"Weet je zeker dat je deze plek ({campSiteID}) permanent wil verwijderen?";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    if (!retrieveData.DeleteCampSite(campSiteID))
+                    {
+                        MessageBox.Show("Deze plek kan niet verwijderd worden omdat er nog onafgeronde reserveringen zijn!");
+                    }
+                    else
+                    {
+                        LocationInfoGrid.Children.Clear();
+                    }
+
+                    break;
+                case MessageBoxResult.No:
+                    // User pressed No button
+                    // ...Nothing
+                    break;
+            }
+        }
+
+
     }
 }

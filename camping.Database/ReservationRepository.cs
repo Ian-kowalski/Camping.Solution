@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace camping.Database
 {
@@ -372,6 +373,34 @@ namespace camping.Database
 
                 // will return true if the reservation line has been added
                 return (result > 0);
+            }
+        }
+
+        public bool HasUpcomingReservations(int campSiteID, DateTime date) {
+
+            string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
+                                "WHERE reservationLines.campSiteID = @campSite AND " +
+                                "(@startDate <= startDate OR @startDate <= endDate);";
+            //      if...   today is before a reservation OR today is before a reservation has ended
+            //      if...         upcoming reservation    OR    ongoing reservation
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("campSite", campSiteID);
+                    command.Parameters.AddWithValue("startDate", date.ToString("MM-dd-yyyy")); ;
+
+
+                    int result = (int)command.ExecuteScalar();
+
+                    connection.Close();
+                    Console.WriteLine(result + " lines found!");
+                    return (result > 0);
+
+                }
             }
         }
 
