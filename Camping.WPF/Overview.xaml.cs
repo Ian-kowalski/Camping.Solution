@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,7 @@ namespace camping.WPF
         private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
+        private const int siteButtonMarginSize = 128;
 
         public Overview()
         {
@@ -156,6 +158,7 @@ namespace camping.WPF
         // laat de sites zien van de straat
         private void displaySites(int streetID)
         {
+            bool visible = false;
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == streetID && site.Visible)
@@ -166,7 +169,7 @@ namespace camping.WPF
 
                     Button button = createLocationButton(site);
 
-                    if (SelectedSite == site) button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230));
+                    if (SelectedSite == site) { button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230)); }
                     else button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
                     button.BorderBrush = Brushes.Black;
                     button.BorderThickness = new Thickness(2);
@@ -178,7 +181,22 @@ namespace camping.WPF
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
                     rowLength++;
+                    visible = true;
                 }
+            }
+            if (visible && SelectedStreet is not null && SelectedStreet.LocationID == streetID)
+            {
+                addNewRowDefinition();
+                Button button = createLocationButton(siteButtonMarginSize);
+                button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
+                button.BorderBrush = Brushes.Black;
+                button.BorderThickness = new Thickness(2);
+                button.FontSize = 16;
+
+                Grid.SetRow(button, rowLength);
+                CampSiteList.Children.Add(button);
+                rowLength ++;
+                
             }
         }
 
@@ -300,7 +318,7 @@ namespace camping.WPF
                 }
 
             }
-
+            
 
         }
 
@@ -323,11 +341,19 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
+        private Button createLocationButton(int size)
+        {
+            Button button = new Button();
+            button.Content = $"+";
+            button.Margin = new Thickness(size, 4, 4, 4);
+            return button;
+        }
+
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
             button.Content = $"Plek {site.LocationID}";
-            button.Margin = new Thickness(128, 4, 4, 4);
+            button.Margin = new Thickness(siteButtonMarginSize, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
