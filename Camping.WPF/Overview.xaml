@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:camping.WPF"
         xmlns:Database="clr-namespace:camping.Database;assembly=camping.Database" x:Class="camping.WPF.Overview"
+        xmlns:views="clr-namespace:camping.WPF"
         mc:Ignorable="d"
         Title="Overview" WindowState="Maximized" WindowStyle="ThreeDBorderWindow" Height="960" Width="1920">
     <Grid>
@@ -58,6 +59,9 @@
                     <RowDefinition Height="78"/>
 
                 </Grid.RowDefinitions>
+
+                    <local:map  DataContext="{Binding map}"/>
+
             </Grid>
         </Border>
 

@@ -26,18 +26,18 @@ namespace camping.WPF
     public partial class map : UserControl
     {
 
-        private SiteData siteData { get; set; }
-        private SshConnection connection { get; set; }
-        private ReservationRepository resData { get; set; }
-        private RetrieveData retrieveData { get; set; }
-
+        private RetrieveData _retrieveData;
+        public RetrieveData retrieveData { get; set; }
 
         public map()
         {
-            connection = new SshConnection();
-            siteData = new SiteData();
-            resData = new ReservationRepository();
-            retrieveData = new RetrieveData(siteData, resData);
+
+        }
+
+        public map(RetrieveData retrieveData)
+        {
+
+            _retrieveData = retrieveData;
             InitializeComponent();
             drawMap();
 
@@ -93,8 +93,8 @@ namespace camping.WPF
 
             if (retrieveData != null)
             {
-                List<Street>  streets = siteData.GetStreetInfo();
-                List<Site> sites = siteData.GetSiteInfo();
+                List<Street> streets = retrieveData.Streets;
+                List<Site> sites = retrieveData.Sites;
 
                 foreach (var street in streets)
                 {
