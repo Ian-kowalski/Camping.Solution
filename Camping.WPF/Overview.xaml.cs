@@ -362,7 +362,7 @@ namespace camping.WPF
             return button;
         }
 
-        private Button createLocationButton(Street street)
+        private Button createLocationButton(Street street)  
         {
             Button button = new Button();
             button.Content = $"Straat {street.LocationID}";

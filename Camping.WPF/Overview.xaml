@@ -43,21 +43,27 @@
             </Grid>
         </Border>
         <Border x:Name="LocationInfo"  Visibility="Visible" Grid.Column="1" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="3" BorderBrush="#000000" BorderThickness="3">
-            <Grid x:Name="LocationInfoGrid" VerticalAlignment="Bottom">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="4*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="5*"/>
-                </Grid.ColumnDefinitions>
+            <Grid>
                 <Grid.RowDefinitions>
-
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="78"/>
-                    <RowDefinition Height="78"/>
-
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
+                <Grid x:Name="LocationInfoGrid" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+
+                        <RowDefinition Height="40*"/>
+                        <RowDefinition Height="85*"/>
+                        <RowDefinition Height="85*"/>
+
+                    </Grid.RowDefinitions>
+                </Grid>
             </Grid>
         </Border>
 
