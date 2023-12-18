@@ -36,6 +36,7 @@ namespace camping.WPF
         private List<Reservation> toBeCancel = new List<Reservation>();
 
         private Reservation selectedReservation;
+        private LocationInformation locationInformation;
 
         private Street? SelectedStreet;
 
@@ -43,6 +44,7 @@ namespace camping.WPF
 
         /*        private Location selectedLocation;
         */
+        private Map map;
         private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
@@ -67,6 +69,7 @@ namespace camping.WPF
 
 
             Map map = new Map(retrieveData, campingmap);
+            this.map = map;
 
             displayAllLocations();
 
@@ -83,7 +86,13 @@ namespace camping.WPF
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
 
-            //
+            map.SiteSelected += (sender, e) => 
+            { 
+                onSiteSelect(e.Site);
+                SelectedStreet.Visible = true;
+                SelectedSite.Visible = true;
+                displayAllLocations();
+            };
 
             EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
@@ -273,8 +282,10 @@ namespace camping.WPF
                 displayAllLocations();
 
             }
-            LocationInformation locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
+            locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
+
+
 
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)
