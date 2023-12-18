@@ -51,6 +51,38 @@ namespace camping.WPF
                 }
             }
         }
+        public void drawSites(List<Site> sites, Brush areaColor, Double angle, List<Site> availableSitesList)
+        {
+            if (_retrieveData != null)
+            {
+                //var ids = list1.Select(x => x.Id).Intersect(list2.Select(x => x.Id));
+                //var result = list1.Where(x => ids.Contains(x.Id));
+
+
+                List<Site> availableSites = new List<Site>();
+                foreach (Site site in sites) { 
+                    availableSites.Add(site);
+                }
+
+                List<Site> unavailableSites = new List<Site>();
+                foreach (Site site in sites)
+                {
+                    unavailableSites.Add(site);
+                }
+
+                foreach (var site in sites.Where(s => sites.Select(s => s.LocationID).Intersect(availableSitesList.Select(s => s.LocationID)).Contains(s.LocationID)))
+                {
+                    drawSite(areaColor, angle, site, true);
+                };
+
+                foreach (var site in sites.Where(s => sites.Select(s => s.LocationID).Except(availableSitesList.Select(s => s.LocationID)).Contains(s.LocationID)))
+                {
+                    drawSite(areaColor, angle, site, false);
+                };
+
+
+            }
+        }
 
         private void drawSite(Brush areaColor, double angle, Site site)
         {
@@ -86,6 +118,23 @@ namespace camping.WPF
             };     
         }
 
+        private void drawSite(Brush areaColor, double angle, Site site, bool available)
+        {
+            Button button = new Button();
+
+            button.Content = site.LocationID.ToString();
+            button.Background = areaColor;
+            button.Height = 20;
+            button.Width = 20;
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            button.VerticalAlignment = VerticalAlignment.Top;
+            button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
+            button.RenderTransformOrigin = new Point(0.5, 0.5);
+            button.RenderTransform = new RotateTransform { Angle = angle };
+            button.IsEnabled = available;
+            _campingmap.Children.Add(button);
+        }
+
         public void drawMap()
         {
             if (_retrieveData != null)
@@ -102,6 +151,28 @@ namespace camping.WPF
                          where site.StreetID == street.LocationID
                          select site).ToList();
                     drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor));
+
+                }
+            }
+        }
+        public void drawMap(List<Site> availableCampsites)
+        {
+            _campingmap.Children.Clear();
+
+            if (_retrieveData != null)
+            {
+                List<Street> streets = _retrieveData.Streets;
+                List<Site> sites = _retrieveData.Sites;
+
+                foreach (var street in streets)
+                {
+
+                    Brush AreaColor = PickBrush(street.AreaID);
+                    List<Site> availableSitesOnStreet =
+                        (from site in sites
+                         where site.StreetID == street.LocationID
+                         select site).ToList();
+                    drawSites(availableSitesOnStreet, AreaColor, drawStreet(street, AreaColor), availableCampsites);
 
                 }
             }
@@ -141,6 +212,12 @@ namespace camping.WPF
             return angle;
         }
 
+
+        public void ShowAvailableCampsites(List<Site> availableSites) {
+            drawMap(availableSites);
+        }
+
+      
         private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)
         {
             SiteSelected?.Invoke(sender, e);
@@ -148,5 +225,6 @@ namespace camping.WPF
         }
 
         public event EventHandler<SiteSelectedOnMapEventArgs> SiteSelected;
+
     }
 }

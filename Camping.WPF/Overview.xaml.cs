@@ -50,6 +50,8 @@ namespace camping.WPF
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
 
+        private Map AvailableCampSitesMap;
+
         public Overview()
         {
             InitializeComponent();
@@ -80,6 +82,14 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
+            SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
+            {
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
+            };
+
+            //SearchCampsites.availableCampsites.ReserveButton_Click();
+
 
             SearchCampsites.AddReservation += (sender, e) =>
             {
@@ -98,7 +108,7 @@ namespace camping.WPF
             Closing += onWindowClosing;
         }
 
-
+        
 
 
         private void displayAllLocations()
@@ -204,11 +214,24 @@ namespace camping.WPF
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
 
+                button.Click += (sender, e) => addLocation(SelectedStreet);
+
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
                 rowLength ++;
                 
             }
+        }
+
+        private void addLocation(Location location)
+        {
+            Location test = null;
+            test = siteData.AddLocation(location, 140, 200);
+/*            MessageBox.Show(Convert.ToString(test.LocationID));
+*/            retrieveData.UpdateLocations();
+            displayAllLocations();
+
+
         }
 
         // highlight de geselecteerde site
