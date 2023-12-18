@@ -39,7 +39,7 @@ namespace camping.WPF
 
         }
 
-        public void displayInformation(Location location)
+        private void displayInformation(Location location)
         {
             if (location is Area)
             {
