@@ -1,7 +1,11 @@
 ﻿using camping.Core;
 using Camping.Core;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Numerics;
 
 namespace camping.Database
 {
@@ -123,7 +127,7 @@ namespace camping.Database
             List<ReservationDates> result = new();
             string sql = $"select startDate , endDate from reservation " +
                 $"right join reservationLines on reservationLines.reservationID = reservation.reservationID " +
-                $"WHERE campSiteID = {siteID}";
+                $"WHERE campSiteID = @siteID";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -136,25 +140,23 @@ namespace camping.Database
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
+                        command.Parameters.AddWithValue("@siteID", siteID);
+
                         result.Add(new ReservationDates(reader.GetDateTime(0), reader.GetDateTime(1)));
                     }
                 }
+                connection.Close();
+                return result;
             }
-            return result;
-
         }
 
         public void UpdateFacilities(Location location)
         {
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
-            /*            List<int> facilities = new List<int>();
-            */
             if (location is Area)
             {
                 Area area = location as Area;
-                /*                facilities = updateArea(area);
-                */
                 sql = $"UPDATE area " +
         $"SET powerSupply = @powerSupply, " +
         $"    waterFront = @waterFront, " +
@@ -166,8 +168,6 @@ namespace camping.Database
             if (location is Street)
             {
                 Street street = location as Street;
-                /*                facilities = updateStreet(street);
-                */
                 sql = $"UPDATE street " +
         $"SET powerSupply = @powerSupply, " +
         $"    waterFront = @waterFront, " +
@@ -179,8 +179,6 @@ namespace camping.Database
             if (location is Site)
             {
                 Site site = location as Site;
-                /*                facilities = updateSite(site);
-                */
                 sql = $"UPDATE campSite " +
         $"SET powerSupply = @powerSupply, " +
         $"    waterFront = @waterFront, " +
@@ -209,10 +207,9 @@ namespace camping.Database
                     command.ExecuteNonQuery();
 
                 }
+                connection.Close();
             }
         }
-
-        
 
         public bool DeleteCampSite(int campSiteID) {
 
@@ -236,6 +233,77 @@ namespace camping.Database
 
                 // will return true if only 1 campsite has been deleted
                 return (result == 1);
+            }
+        }
+
+        public Location AddLocation(Location location, int x1, int y1)
+        {
+            int coordinatesPairID = addCoordinatesPair(x1, y1);
+            List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
+            string sql = "";
+            if (location is Street)
+            {
+                sql = $"INSERT INTO campSite(powerSupply, waterFront, pets, shadow, waterSupply, size, streetID, coordinatesPairs) " +
+                    "VALUES(@powerSupply, @waterFront, @pets, @shadow, @waterSupply, 4, @locationID, @coordinatesPairID);"; //size = 4
+            }
+            List<int> facilities = new List<int>();
+            foreach (string facilityName in facilityNames)
+            {
+                if ((int)location.GetType().GetProperty(facilityName).GetValue(location) % 2 == 1) facilities.Add(3);
+                else facilities.Add(2);
+            }
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@powerSupply", facilities[1]);
+                    command.Parameters.AddWithValue("@waterFront", facilities[4]);
+                    command.Parameters.AddWithValue("@pets", facilities[2]);
+                    command.Parameters.AddWithValue("@shadow", facilities[3]);
+                    command.Parameters.AddWithValue("@waterSupply", facilities[0]);
+                    command.Parameters.AddWithValue("@locationID", location.LocationID);
+                    command.Parameters.AddWithValue("@coordinatesPairID", coordinatesPairID);
+
+                    command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return location;
+            }        
+        }
+
+        public int addCoordinatesPair(int x1, int y1)
+        {
+            int x2 = x1 + 20;
+            int y2 = y1 + 20;
+            int result = 0;
+            string sql = "INSERT INTO coordinatesPair (x1, y1, x2, y2) " +
+                "VALUES(@x1, @y1, @x2, @y2);";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlDataReader reader;
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@x1", x1);
+                    command.Parameters.AddWithValue("@y1", y1);
+                    command.Parameters.AddWithValue("@x2", x2);
+                    command.Parameters.AddWithValue("@y2", y2);
+                    command.ExecuteNonQuery();
+                }
+                sql = "SELECT MAX(coordinatesPairsKey) " +
+                    "from coordinatesPair;";
+                using ( var command = new SqlCommand(sql,connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result = reader.GetInt32 (0);
+                    }
+                       
+                }
+                connection.Close ();
+                return result;
             }
         }
     }
