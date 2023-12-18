@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using camping.Database;
 
 namespace camping.WPF
 {
@@ -18,6 +19,7 @@ namespace camping.WPF
 
         private RetrieveData _retrieveData;
         private Grid _campingmap;
+        private List<Button> siteButtons = new List<Button>();
 
         public Map(RetrieveData retrieveData, Grid campingmap)
         {
@@ -85,7 +87,8 @@ namespace camping.WPF
         private void drawSite(Brush areaColor, double angle, Site site)
         {
             Button button = new Button();
-
+            
+            
             button.Content = site.LocationID.ToString();
             button.Background = areaColor;
             button.Height = 20;
@@ -96,6 +99,23 @@ namespace camping.WPF
             button.RenderTransformOrigin = new Point(0.5, 0.5);
             button.RenderTransform = new RotateTransform { Angle = angle };
             _campingmap.Children.Add(button);
+
+            siteButtons.Add(button);
+
+            button.Click += (sender, e) => 
+            {
+                displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
+                button.BorderThickness = new Thickness(2);
+                button.BorderBrush = Brushes.Blue;
+                foreach(Button b in siteButtons)
+                {
+                    if (b != button)
+                    {
+                        b.BorderThickness = new Thickness(1);
+                        b.BorderBrush = Brushes.Black;
+                    }
+                }
+            };     
         }
 
         private void drawSite(Brush areaColor, double angle, Site site, bool available)
@@ -121,7 +141,7 @@ namespace camping.WPF
             {
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
-
+                siteButtons.Clear();
                 foreach (var street in streets)
                 {
 
@@ -192,8 +212,19 @@ namespace camping.WPF
             return angle;
         }
 
+
         public void ShowAvailableCampsites(List<Site> availableSites) {
             drawMap(availableSites);
         }
+
+      
+        private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)
+        {
+            SiteSelected?.Invoke(sender, e);
+            
+        }
+
+        public event EventHandler<SiteSelectedOnMapEventArgs> SiteSelected;
+
     }
 }
