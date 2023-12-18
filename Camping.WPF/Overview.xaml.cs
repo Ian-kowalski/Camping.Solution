@@ -195,11 +195,24 @@ namespace camping.WPF
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
 
+                button.Click += (sender, e) => addLocation(SelectedStreet);
+
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
                 rowLength ++;
                 
             }
+        }
+
+        private void addLocation(Location location)
+        {
+            Location test = null;
+            test = siteData.AddLocation(location, 140, 200);
+/*            MessageBox.Show(Convert.ToString(test.LocationID));
+*/            retrieveData.UpdateLocations();
+            displayAllLocations();
+
+
         }
 
         // highlight de geselecteerde site
