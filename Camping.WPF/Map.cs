@@ -68,22 +68,14 @@ namespace camping.WPF
 
         public void drawMap()
         {
-            Button button = new Button();
-            button.Height = 20;
-            button.Width = 20;
-            button.HorizontalAlignment = HorizontalAlignment.Left;
-            button.VerticalAlignment = VerticalAlignment.Top;
-            _campingmap.Children.Add(button);
-
             if (_retrieveData != null)
             {
-                Debug.WriteLine("RetrieveData is niet null");
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
 
                 foreach (var street in streets)
                 {
-                    Debug.WriteLine("Straat tekenen...");
+
                     Brush AreaColor = PickBrush(street.AreaID);
                     List<Site> sitesOnStreet =
                         (from site in sites
@@ -92,10 +84,6 @@ namespace camping.WPF
                     drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor));
 
                 }
-            }
-            else
-            {
-                Debug.WriteLine("RetrieveData in map is null");
             }
         }
 
