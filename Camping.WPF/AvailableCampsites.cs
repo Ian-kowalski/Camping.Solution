@@ -25,6 +25,7 @@ namespace camping.WPF
         Rectangle campFacilityPets;
         Rectangle campFacilityOutlet;
         Button reserveButton;
+
         public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData)
         {
             this.grid = grid;

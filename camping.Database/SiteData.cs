@@ -15,7 +15,9 @@ namespace camping.Database
         public List<Site> GetSiteInfo()
         {
 
-            string sql = $"SELECT * FROM campSite ORDER BY campSiteID ASC";
+            string sql = $"SELECT campSiteID, powerSupply, waterFront, pets, shadow, waterSupply, size, streetID, x1, y1, x2, y2 FROM campSite " +
+                $"join dbo.coordinatesPair cP on cP.coordinatesPairsKey = campSite.coordinatesPairs " +
+                $"ORDER BY campSiteID ASC";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -30,7 +32,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size, 7 streetID
-                        result.Add(new Site(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7)));
+                        result.Add(new Site(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetInt32(7), new CoordinatesPairs(reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10), reader.GetInt32(11))));
                     }
                 }
                 connection.Close();
@@ -41,7 +43,9 @@ namespace camping.Database
         public List<Street> GetStreetInfo()
         {
 
-            string sql = $"SELECT * FROM street ORDER BY streetID ASC";
+            string sql = $"SELECT streetID,areaID,powerSupply,waterFront,pets,shadow,waterSupply, x1,y1,x2,y2 FROM street " +
+                $"join dbo.coordinatesPair cP on street.coordinatesPairsKey = cP.coordinatesPairsKey " +
+                $"ORDER BY streetID ASC";
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -56,7 +60,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     {                       // streetID
-                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6)));
+                        result.Add(new Street(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6),new CoordinatesPairs(reader.GetInt32(7), reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10))));
                     }
                 }
                 connection.Close();
