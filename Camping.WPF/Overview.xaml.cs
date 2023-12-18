@@ -77,15 +77,13 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
-            SearchCampsites.SearchSites += (sender, e) =>
-            {
-                SearchCampsiteGridHeader.Visibility = Visibility.Visible;
-                AvailableCampsitesScrollViewer.Visibility = Visibility.Visible;
-            };
+
             SearchCampsites.AddReservation += (sender, e) =>
             {
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
+
+            //
 
             EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
@@ -860,13 +858,12 @@ namespace camping.WPF
                     AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
                     AddResHouseNumberBox.Text, phoneNumber))
                 {
-                    AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
-                    SearchCampsiteGridHeader.Visibility = Visibility.Hidden;
-                    AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                    ReservationAddedText.Visibility = Visibility.Visible;
-                    displayAllReservations();
                     SearchCampsites.StartDateButton.SelectedDate = null;
                     SearchCampsites.EndDateButton.SelectedDate = null;
+                    SearchCampsites.ShowSites = false;
+
+                    AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                    ReservationAddedText.Visibility = Visibility.Visible;
                 }
                 
             }

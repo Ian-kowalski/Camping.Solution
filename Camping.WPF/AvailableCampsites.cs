@@ -10,6 +10,11 @@ namespace camping.WPF
 {
     public class AvailableCampsites
     {
+        private ISiteData siteData;
+        private IReservationData resData;
+        private DateTime startDate;
+        private DateTime endDate;
+
         public Grid grid;
         RowDefinition rowDef1;
         TextBlock campSiteIDText;
@@ -21,10 +26,15 @@ namespace camping.WPF
         Rectangle campFacilityOutlet;
         Button reserveButton;
 
-        public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData, DateTime startDate, DateTime endDate)
+        public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData)
         {
             this.grid = grid;
+            this.siteData = siteData;
+            this.resData = resData;
+        }
 
+        public void ShowAvailableCampSites(DateTime startDate, DateTime endDate, bool hasShadow, bool hasWaterSupply, bool atWater, bool petAllowed, bool hasPower)
+        {
             grid.Background = Brushes.White;
 
 
@@ -37,6 +47,14 @@ namespace camping.WPF
 
                 // if a spot isnt available on those selected dates, prevent it from showing up
                 if (!resData.GetAvailableReservation(site.LocationID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
+
+
+                if (hasShadow && site.HasShadow % 2 == 0) continue;
+                if (hasWaterSupply && site.HasWaterSupply % 2 == 0) continue;
+                if (atWater && site.AtWater % 2 == 0) continue;
+                if (petAllowed && site.PetsAllowed % 2 == 0) continue;
+                if (hasPower && site.OutletPresent % 2 == 0) continue;
+
 
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
@@ -130,7 +148,6 @@ namespace camping.WPF
             }
 
             grid.Visibility = Visibility.Visible;
-
         }
 
 
