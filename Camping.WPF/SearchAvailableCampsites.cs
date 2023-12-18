@@ -9,11 +9,22 @@ namespace camping.WPF
 {
     public class SearchAvailableCampsites
     {
+        public bool ShowSites { get; set; }
+        public bool DatesSelected { get; set; }
         Label StartDateLabel;
         Label EndDateLabel;
         public DatePicker StartDateButton;
         public DatePicker EndDateButton;
-        Button SearchButton;
+        public CheckBox ShadowCheckBox;
+        public CheckBox WaterSupplyCheckBox;
+        public CheckBox AtWaterCheckBox;
+        public CheckBox PetCheckBox;
+        public CheckBox PowerCheckBox;
+        public bool HasShadow;
+        public bool HasWaterSupply;
+        public bool AtWater;
+        public bool PetAllowed;
+        public bool HasPower;
         Grid grid;
         Grid availableSitesGrid;
 
@@ -45,14 +56,14 @@ namespace camping.WPF
 
             EndDateLabel = new Label();
             EndDateLabel.Content = "Einddatum";
-            Grid.SetColumn(EndDateLabel, 1);
+            Grid.SetColumn(EndDateLabel, 3);
             Grid.SetRow(EndDateLabel, 1);
             EndDateLabel.Width = 128;
             EndDateLabel.Height = 32;
             EndDateLabel.FontSize = 18;
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            EndDateLabel.VerticalAlignment = VerticalAlignment.Bottom;
+            EndDateLabel.VerticalAlignment = VerticalAlignment.Top;
 
             StartDateButton = new DatePicker();
             Grid.SetColumn(StartDateButton, 2);
@@ -72,7 +83,7 @@ namespace camping.WPF
 
 
             EndDateButton = new DatePicker();
-            Grid.SetColumn(EndDateButton, 2);
+            Grid.SetColumn(EndDateButton, 4);
             Grid.SetRow(EndDateButton, 1);
             EndDateButton.Width = 150;
             EndDateButton.Height = 32;
@@ -82,28 +93,69 @@ namespace camping.WPF
             EndDateButton.BorderThickness = new Thickness(2);
             StartDateLabel.Margin = new Thickness(0, 0, 0, 0);
             EndDateButton.HorizontalAlignment = HorizontalAlignment.Left;
-            EndDateButton.VerticalAlignment = VerticalAlignment.Bottom;
+            EndDateButton.VerticalAlignment = VerticalAlignment.Top;
             EndDateButton.SelectedDateChanged += EndDateButton_SelectedDateChanged;
             EndDateButton.DisplayDateStart = DateTime.Today;
             EndDateButton.Focusable = false;
 
-            SearchButton = new Button();
-            SearchButton.Content = "Zoeken";
-            SearchButton.FontSize = 22;
-            SearchButton.BorderBrush = Brushes.Black;
-            SearchButton.BorderThickness = new Thickness(2);
-            SearchButton.Background = new SolidColorBrush(Color.FromRgb(153, 255, 153));
-            SearchButton.Click += SearchButton_Click;
-            Grid.SetColumn(SearchButton, 4);
-            Grid.SetRow(SearchButton, 1);
 
-            grid.Children.Add(SearchButton);
+            ShadowCheckBox = new CheckBox();
+            Grid.SetColumn(ShadowCheckBox, 1);
+            Grid.SetRow(ShadowCheckBox, 2);
+            ShadowCheckBox.Margin = new Thickness(162.5,0,0,0);
+            ShadowCheckBox.Checked += ShadowCheckBox_Checked;
+            ShadowCheckBox.Unchecked += ShadowCheckBox_Checked;
+
+
+            WaterSupplyCheckBox = new CheckBox();
+            Grid.SetColumn(WaterSupplyCheckBox, 2);
+            Grid.SetRow(WaterSupplyCheckBox, 2);
+            WaterSupplyCheckBox.Margin = new Thickness(42.5,0,0,0);
+            WaterSupplyCheckBox.Checked += HasWaterSupplyCheckBox_Checked;
+            WaterSupplyCheckBox.Unchecked += HasWaterSupplyCheckBox_Checked;
+
+
+            AtWaterCheckBox = new CheckBox();
+            Grid.SetColumn(AtWaterCheckBox, 2);
+            Grid.SetRow(AtWaterCheckBox, 2);
+            AtWaterCheckBox.Margin = new Thickness(118,0,0,0);
+            AtWaterCheckBox.Checked += AtWaterCheckBox_Checked;
+            AtWaterCheckBox.Unchecked += AtWaterCheckBox_Checked;
+
+
+            PetCheckBox = new CheckBox();
+            Grid.SetColumn(PetCheckBox, 3);
+            Grid.SetRow(PetCheckBox, 2);
+            PetCheckBox.Margin = new Thickness(0,0,0,0);
+            PetCheckBox.Checked += PetCheckBox_Checked;
+            PetCheckBox.Unchecked += PetCheckBox_Checked;
+
+
+            PowerCheckBox = new CheckBox();
+            Grid.SetColumn(PowerCheckBox, 3);
+            Grid.SetRow(PowerCheckBox, 2);
+            PowerCheckBox.Margin = new Thickness(76.5,0,0,0);
+            PowerCheckBox.Checked += PowerCheckBox_Checked;
+            PowerCheckBox.Unchecked += PowerCheckBox_Checked;
+
+
+
             grid.Children.Add(StartDateLabel);
             grid.Children.Add(EndDateLabel);
             grid.Children.Add(StartDateButton);
             grid.Children.Add(EndDateButton);
+            grid.Children.Add(ShadowCheckBox);
+            grid.Children.Add(WaterSupplyCheckBox);
+            grid.Children.Add(AtWaterCheckBox);
+            grid.Children.Add(PetCheckBox);
+            grid.Children.Add(PowerCheckBox);
 
 
+            availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData);
+            availableCampsites.ReserveCampsite += ShowAddReservation;
+
+            SearchSites?.Invoke(this, new EventArgs());
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
 
             /*
@@ -122,19 +174,69 @@ namespace camping.WPF
         private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
+
+            if (ShowSites)
+            {
+                SearchSites?.Invoke(this, e);
+                availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+                DatesSelected = true;
+            }
+            ShowSites = true;
         }
 
         private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
+            if (ShowSites)
+            {
+                SearchSites?.Invoke(this, e);
+                availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+                DatesSelected = true;
+            }
+            ShowSites = true;
         }
 
-        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        private void ShadowCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            SearchSites?.Invoke(this, new EventArgs());
-            availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData, StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)));
-            availableCampsites.ReserveCampsite += ShowAddReservation;
+            HasShadow = !HasShadow;
+
+            SearchSites?.Invoke(this, e);
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+
         }
+        private void HasWaterSupplyCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            HasWaterSupply = !HasWaterSupply;
+
+            SearchSites?.Invoke(this, e);
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+
+        }
+        private void AtWaterCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            AtWater = !AtWater;
+
+            SearchSites?.Invoke(this, e);
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+
+        }
+        private void PetCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            PetAllowed = !PetAllowed;
+
+            SearchSites?.Invoke(this, e);
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+
+        }
+        private void PowerCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            HasPower = !HasPower;
+
+            SearchSites?.Invoke(this, e);
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+
+        }
+
 
         public void ShowAddReservation(object sender, AddReservationEventArgs e)
         {
