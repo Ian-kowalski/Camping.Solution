@@ -35,9 +35,11 @@ namespace camping.WPF
             PropertyInfo[] properties = brushesType.GetProperties();
 
             result = (Brush)properties[i].GetValue(null, null);
+            Console.WriteLine(result);
 
             return result;
         }
+
 
         public void drawSites(List<Site> sites, Brush areaColor, Double angle)
         {
