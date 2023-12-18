@@ -1,48 +1,29 @@
 ﻿using camping.Core;
-using camping.Database;
-using DevExpress.DirectX.Common;
-using Renci.SshNet.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows;
 
 namespace camping.WPF
 {
-    /// <summary>
-    /// Interaction logic for map.xaml
-    /// </summary>
-    public partial class map : UserControl
+    public class Map
     {
 
         private RetrieveData _retrieveData;
-        public RetrieveData retrieveData { get; set; }
+        private Grid _campingmap;
 
-        public map()
+        public Map(RetrieveData retrieveData, Grid campingmap)
         {
-
-        }
-
-        public map(RetrieveData retrieveData)
-        {
-
             _retrieveData = retrieveData;
-            InitializeComponent();
+            _campingmap = campingmap;
             drawMap();
-
-
-
         }
 
         private Brush PickBrush(int i)
@@ -60,15 +41,11 @@ namespace camping.WPF
 
         public void drawSites(List<Site> sites, Brush areaColor, Double angle)
         {
-
-            if (retrieveData != null)
+            if (_retrieveData != null)
             {
-
-
                 foreach (var site in sites)
                 {
                     drawSite(areaColor, angle, site);
-
                 }
             }
         }
@@ -76,6 +53,7 @@ namespace camping.WPF
         private void drawSite(Brush areaColor, double angle, Site site)
         {
             Button button = new Button();
+
             button.Content = site.LocationID.ToString();
             button.Background = areaColor;
             button.Height = 20;
@@ -85,27 +63,39 @@ namespace camping.WPF
             button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
             button.RenderTransformOrigin = new Point(0.5, 0.5);
             button.RenderTransform = new RotateTransform { Angle = angle };
-            campingmap.Children.Add(button);
+            _campingmap.Children.Add(button);
         }
 
         public void drawMap()
         {
+            Button button = new Button();
+            button.Height = 20;
+            button.Width = 20;
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            button.VerticalAlignment = VerticalAlignment.Top;
+            _campingmap.Children.Add(button);
 
-            if (retrieveData != null)
+            if (_retrieveData != null)
             {
-                List<Street> streets = retrieveData.Streets;
-                List<Site> sites = retrieveData.Sites;
+                Debug.WriteLine("RetrieveData is niet null");
+                List<Street> streets = _retrieveData.Streets;
+                List<Site> sites = _retrieveData.Sites;
 
                 foreach (var street in streets)
                 {
+                    Debug.WriteLine("Straat tekenen...");
                     Brush AreaColor = PickBrush(street.AreaID);
                     List<Site> sitesOnStreet =
                         (from site in sites
-                        where site.StreetID == street.LocationID
-                        select site).ToList();
+                         where site.StreetID == street.LocationID
+                         select site).ToList();
                     drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor));
 
                 }
+            }
+            else
+            {
+                Debug.WriteLine("RetrieveData in map is null");
             }
         }
 
@@ -119,7 +109,7 @@ namespace camping.WPF
             line.Y2 = street.CoordinatesPairs._y2;
             line.StrokeThickness = 4;
             line.Stroke = brush;
-            campingmap.Children.Add(line);
+            _campingmap.Children.Add(line);
             return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
 
         }
