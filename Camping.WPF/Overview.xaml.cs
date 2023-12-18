@@ -48,6 +48,8 @@ namespace camping.WPF
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
 
+        private Map AvailableCampSitesMap;
+
         public Overview()
         {
             InitializeComponent();
@@ -77,6 +79,14 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
+            SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
+            {
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
+            };
+
+            //SearchCampsites.availableCampsites.ReserveButton_Click();
+
 
             SearchCampsites.AddReservation += (sender, e) =>
             {
@@ -89,7 +99,7 @@ namespace camping.WPF
             Closing += onWindowClosing;
         }
 
-
+        
 
 
         private void displayAllLocations()
