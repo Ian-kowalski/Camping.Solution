@@ -36,6 +36,7 @@ namespace camping.WPF
         private List<Reservation> toBeCancel = new List<Reservation>();
 
         private Reservation selectedReservation;
+        private LocationInformation locationInformation;
 
         private Street? SelectedStreet;
 
@@ -43,10 +44,13 @@ namespace camping.WPF
 
         /*        private Location selectedLocation;
         */
+        private Map map;
         private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
+
+        private Map AvailableCampSitesMap;
 
         public Overview()
         {
@@ -67,6 +71,7 @@ namespace camping.WPF
 
 
             Map map = new Map(retrieveData, campingmap);
+            this.map = map;
 
             displayAllLocations();
 
@@ -77,19 +82,33 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
+            SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
+            {
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
+            };
+
+            //SearchCampsites.availableCampsites.ReserveButton_Click();
+
 
             SearchCampsites.AddReservation += (sender, e) =>
             {
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
 
-            //
+            map.SiteSelected += (sender, e) => 
+            { 
+                onSiteSelect(e.Site);
+                SelectedStreet.Visible = true;
+                SelectedSite.Visible = true;
+                displayAllLocations();
+            };
 
             EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
         }
 
-
+        
 
 
         private void displayAllLocations()
@@ -286,8 +305,10 @@ namespace camping.WPF
                 displayAllLocations();
 
             }
-            LocationInformation locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
+            locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
+
+
 
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)

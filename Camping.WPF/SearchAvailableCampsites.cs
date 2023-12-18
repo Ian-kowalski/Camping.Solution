@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using camping.Database;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -151,9 +152,12 @@ namespace camping.WPF
             grid.Children.Add(PetCheckBox);
             grid.Children.Add(PowerCheckBox);
 
-
             availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData);
             availableCampsites.ReserveCampsite += ShowAddReservation;
+            availableCampsites.AvailableCampsitesListRetrievedEventHandler += (sender, e) =>
+            {
+                AvailableCampsitesListEventHandler?.Invoke(sender, new AvailableCampsitesEventArgs(e.AvailableSites));
+            };
 
             SearchSites?.Invoke(this, new EventArgs());
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
@@ -178,7 +182,6 @@ namespace camping.WPF
 
             if (ShowSites)
             {
-                SearchSites?.Invoke(this, e);
                 availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
                 DatesSelected = true;
             }
@@ -190,7 +193,6 @@ namespace camping.WPF
             StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
             if (ShowSites)
             {
-                SearchSites?.Invoke(this, e);
                 availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
                 DatesSelected = true;
             }
@@ -201,7 +203,6 @@ namespace camping.WPF
         {
             HasShadow = !HasShadow;
 
-            SearchSites?.Invoke(this, e);
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
         }
@@ -209,7 +210,6 @@ namespace camping.WPF
         {
             HasWaterSupply = !HasWaterSupply;
 
-            SearchSites?.Invoke(this, e);
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
         }
@@ -217,7 +217,6 @@ namespace camping.WPF
         {
             AtWater = !AtWater;
 
-            SearchSites?.Invoke(this, e);
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
         }
@@ -225,7 +224,6 @@ namespace camping.WPF
         {
             PetAllowed = !PetAllowed;
 
-            SearchSites?.Invoke(this, e);
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
         }
@@ -233,7 +231,6 @@ namespace camping.WPF
         {
             HasPower = !HasPower;
 
-            SearchSites?.Invoke(this, e);
             availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
 
         }
@@ -246,5 +243,6 @@ namespace camping.WPF
 
         public event EventHandler<EventArgs> SearchSites;
         public event EventHandler<AddReservationEventArgs> AddReservation;
+        public event EventHandler<AvailableCampsitesEventArgs> AvailableCampsitesListEventHandler;
     }
 }
