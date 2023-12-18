@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,7 @@ namespace camping.WPF
         private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
+        private const int siteButtonMarginSize = 128;
 
         public Overview()
         {
@@ -56,7 +58,9 @@ namespace camping.WPF
 
             // als een campsite verwijderd wordt, update plekbeheer.
             retrieveData.SiteDeleted += (sender, e) => { 
-                displayAllLocations(); 
+                displayAllLocations();
+                AddReservationInfoGrid.Visibility = Visibility.Hidden;
+                AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
             };
 
 
@@ -152,6 +156,7 @@ namespace camping.WPF
         // laat de sites zien van de straat
         private void displaySites(int streetID)
         {
+            bool visible = false;
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == streetID && site.Visible)
@@ -162,7 +167,7 @@ namespace camping.WPF
 
                     Button button = createLocationButton(site);
 
-                    if (SelectedSite == site) button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230));
+                    if (SelectedSite == site) { button.Background = new SolidColorBrush(Color.FromArgb(185, 170, 210, 230)); }
                     else button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
                     button.BorderBrush = Brushes.Black;
                     button.BorderThickness = new Thickness(2);
@@ -174,7 +179,22 @@ namespace camping.WPF
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
                     rowLength++;
+                    visible = true;
                 }
+            }
+            if (visible && SelectedStreet is not null && SelectedStreet.LocationID == streetID)
+            {
+                addNewRowDefinition();
+                Button button = createLocationButton(siteButtonMarginSize);
+                button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
+                button.BorderBrush = Brushes.Black;
+                button.BorderThickness = new Thickness(2);
+                button.FontSize = 16;
+
+                Grid.SetRow(button, rowLength);
+                CampSiteList.Children.Add(button);
+                rowLength ++;
+                
             }
         }
 
@@ -296,7 +316,7 @@ namespace camping.WPF
                 }
 
             }
-
+            
 
         }
 
@@ -319,11 +339,19 @@ namespace camping.WPF
             CampSiteList.RowDefinitions.Add(rowDef);
         }
 
+        private Button createLocationButton(int size)
+        {
+            Button button = new Button();
+            button.Content = $"+";
+            button.Margin = new Thickness(size, 4, 4, 4);
+            return button;
+        }
+
         private Button createLocationButton(Site site)
         {
             Button button = new Button();
             button.Content = $"Plek {site.LocationID}";
-            button.Margin = new Thickness(128, 4, 4, 4);
+            button.Margin = new Thickness(siteButtonMarginSize, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
             // De tag kan opgevraagd worden om informatie op het rechter scherm te tonen.
@@ -332,7 +360,7 @@ namespace camping.WPF
             return button;
         }
 
-        private Button createLocationButton(Street street)
+        private Button createLocationButton(Street street)  
         {
             Button button = new Button();
             button.Content = $"Straat {street.LocationID}";
@@ -522,16 +550,15 @@ namespace camping.WPF
 
         private void RowClick(Reservation reservation)
         {
-            changeReservation.isUpdating = false;
-
+            changeReservation.isUpdating = true;
             selectedReservation = reservation;
 
+            
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
 
 
-            changeReservation.chanceAanpassenOrSaveButtonContent(changeReservation.isUpdating);
             changeReservation.enabledReservationInfoTextBoxes(new[] { SiteIDBox, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox }, changeReservation.isUpdating);
             changeReservation.enabledReservationInfodatePicker(new[] { StartDateDatePicker, EndDatedatePicker }, changeReservation.isUpdating);
 
@@ -604,6 +631,14 @@ namespace camping.WPF
         private void EditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             EditReservationClick?.Invoke(sender, new ChangeReservationEventArgs(selectedReservation));
+        }
+        private void CancelEditReservationButtonClick(object sender, RoutedEventArgs e)
+        {
+            cancelEdit();
+        }
+        public void cancelEdit()
+        {
+            ReservationInfoGrid.Visibility = Visibility.Hidden;
         }
 
 

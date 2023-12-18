@@ -69,8 +69,8 @@ namespace camping.WPF
 
             if (location is Site)
             {
-                Label sizeLabel = CreateAndAddLabel($"Oppervlak: {Convert.ToString(((Site)location).Size)}", 24, 4, 0);
-                sizeLabel.HorizontalAlignment = HorizontalAlignment.Right;
+                Label sizeLabel = CreateAndAddLabel($"Oppervlak: {Convert.ToString(((Site)location).Size)}", 20, 2, 0);
+                sizeLabel.HorizontalAlignment = HorizontalAlignment.Center;
             }
 
             CreateAndAddFacility("HasWaterSupply", 50, 1, 1, location);
@@ -310,13 +310,17 @@ namespace camping.WPF
 
             Button DeleteCampSiteButton = new Button();
             DeleteCampSiteButton.Content = "Verwijder Plek";
-            DeleteCampSiteButton.HorizontalAlignment = HorizontalAlignment.Center;
+            DeleteCampSiteButton.HorizontalAlignment = HorizontalAlignment.Right;
             DeleteCampSiteButton.VerticalAlignment = VerticalAlignment.Center;
             DeleteCampSiteButton.Width = 180;
             DeleteCampSiteButton.Height = 60;
             DeleteCampSiteButton.BorderBrush = Brushes.Black;
             DeleteCampSiteButton.BorderThickness = new Thickness(2);
             DeleteCampSiteButton.FontSize = 16;
+            DeleteCampSiteButton.Margin = new Thickness(0, 0, 5, 0);
+
+            
+            
 
 
             if (!retrieveData.HasUpcomingReservations(campSiteID)) {
@@ -325,9 +329,13 @@ namespace camping.WPF
                 };
             } else { 
                 DeleteCampSiteButton.IsEnabled = false;
+                Label sizeLabel = CreateAndAddLabel($"Deze plek bevat nog onafgeronde reserveringen!", 16, 3, 0);
+                sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                sizeLabel.Foreground = Brushes.Red;
+                Grid.SetColumnSpan(sizeLabel, 2);
             }
 
-            Grid.SetRow(DeleteCampSiteButton, 2);
+            Grid.SetRow(DeleteCampSiteButton, 1);
             Grid.SetColumn(DeleteCampSiteButton, 4);
 
             LocationInfoGrid.Children.Add(DeleteCampSiteButton);

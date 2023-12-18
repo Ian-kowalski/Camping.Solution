@@ -7,7 +7,7 @@ namespace camping.Database
 {
     public class ReservationRepository : IReservationData
     {
-        private string connectionString = "Data Source=127.0.0.1;Initial Catalog=CampingClean;Persist Security Info=True;User ID=sa;Password=r2Njj8#4;Trust Server Certificate=True";
+        private string connectionString = Constants.databaseConnectionString;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
