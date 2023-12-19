@@ -111,6 +111,12 @@ namespace camping.WPF
                 SelectedSite.Visible = true;
                 displayAllLocations();
             };
+            map.StreetSelected += (sender, e) =>
+            {
+                onSiteSelect(e.Street);
+                SelectedStreet.Visible = true;
+                displayAllLocations();
+            };
 
             EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
@@ -170,7 +176,11 @@ namespace camping.WPF
                     button.BorderThickness = new Thickness(2);
                     button.FontSize = 16;
                     button.MouseDoubleClick += (sender, e) => { onSitePress(street); };
-                    button.Click += (sender, e) => { onSiteSelect(street); };
+                    button.Click += (sender, e) => 
+                    {
+                        onSiteSelect(street);
+                        map.ShowSelectedStreetOnMap(street);
+                    };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -205,7 +215,11 @@ namespace camping.WPF
                     button.FontSize = 16;
 
                     button.MouseDoubleClick += (sender, e) => { onSitePress(site); };
-                    button.Click += (sender, e) => { onSiteSelect(site); };
+                    button.Click += (sender, e) => 
+                    {
+                        onSiteSelect(site);
+                        map.ShowSelectedSiteOnMap(site);
+                    };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -226,7 +240,7 @@ namespace camping.WPF
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
-                rowLength ++;
+                rowLength++;
                 
             }
         }
