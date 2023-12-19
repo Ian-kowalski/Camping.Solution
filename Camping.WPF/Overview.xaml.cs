@@ -784,10 +784,13 @@ namespace camping.WPF
             AddResPostalCodeBox.Text = "";
         }
 
+        private void CancelReservationButtonClick(object sender, EventArgs e) {
+            AddReservationInfoGrid.Visibility = Visibility.Hidden;
+            AvailableCampsitesMap.Visibility = Visibility.Visible;
+        }
+
         private void AddReservationButtonClick(object sender, EventArgs e)
         {
-
-
             bool errorsFound = false;
 
             if (!int.TryParse(AddResSiteIDBox.Content.ToString(), out int siteID))
