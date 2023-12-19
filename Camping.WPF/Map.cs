@@ -25,7 +25,6 @@ namespace camping.WPF
         private List<Button> siteButtons = new();
         private Button siteButton;
         private List<Line> streetLines = new();
-        private List<Brush> brushes = new();
         private Line streetLine;
 
         public Map(RetrieveData retrieveData, Grid campingmap)
@@ -146,16 +145,12 @@ namespace camping.WPF
                 {
                     button.BorderThickness = new Thickness(4);
                     siteButton = button;
-                    break;
-                }
-            }
-            foreach (Button button in siteButtons)
-            {
-                if (button != siteButton)
+                } else
                 {
                     button.BorderThickness = new Thickness(1);
                 }
             }
+
         }
 
 
@@ -225,11 +220,11 @@ namespace camping.WPF
                 onStreetClick(sender, new StreetSelectedOnMapEventArgs(street));
                 line.Opacity = 1;
 
-                for (int i = 0; i < streetLines.Count(); i++)
+                foreach (Line l in streetLines)
                 {
-                    if (streetLines[i] != line)
+                    if (l != line)
                     {
-                        streetLines[i].Opacity = 0.3;
+                        l.Opacity = 0.3;
                     }
                 }
                 foreach (Button button in siteButtons)
@@ -238,7 +233,6 @@ namespace camping.WPF
                 }
             };
 
-            brushes.Add(brush);
             streetLines.Add(line);
             _campingmap.Children.Add(line);
             return calculateStreetAngle(street);
@@ -258,14 +252,9 @@ namespace camping.WPF
                 {
                     line.Opacity = 1;
                     streetLine = line;
-                    break;
-                }
-            }
-            for (int i = 0; i < streetLines.Count(); i++)
-            {
-                if (streetLines[i] != streetLine)
+                } else
                 {
-                    streetLines[i].Opacity = 0.3;
+                    line.Opacity = 0.3;
                 }
             }
             if (onlyStreet)
