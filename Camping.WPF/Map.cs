@@ -145,27 +145,26 @@ namespace camping.WPF
                 {
                     button.BorderThickness = new Thickness(4);
                     siteButton = button;
-                    break;
-                }
-            }
-            foreach (Button button in siteButtons)
-            {
-                if (button != siteButton)
+                } else
                 {
                     button.BorderThickness = new Thickness(1);
                 }
             }
+
         }
 
 
         public void drawMap()
         {
+            siteButtons.Clear();
+            clearMap();
+
             if (_retrieveData != null)
             {
                 List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
-                siteButtons.Clear();
+
                 foreach (var street in streets)
                 {
 
@@ -179,10 +178,21 @@ namespace camping.WPF
                 }
             }
         }
+
+        private void clearMap()
+        {
+            for (int i = _campingmap.Children.Count-1; i >= 0; i--)
+            {
+                if (typeof(Button) == _campingmap.Children[i].GetType() || typeof(Line) == _campingmap.Children[i].GetType())
+                {
+                    _campingmap.Children.RemoveAt(i);
+                }
+            }
+        }
+
         public void drawMap(List<Site> availableCampsites)
         {
-            _campingmap.Children.Clear();
-
+            clearMap();
             if (_retrieveData != null)
             {
                 List<Area> areas = _retrieveData.Areas;
@@ -223,11 +233,11 @@ namespace camping.WPF
                 onStreetClick(sender, new StreetSelectedOnMapEventArgs(street));
                 line.Opacity = 1;
 
-                for (int i = 0; i < streetLines.Count(); i++)
+                foreach (Line l in streetLines)
                 {
-                    if (streetLines[i] != line)
+                    if (l != line)
                     {
-                        streetLines[i].Opacity = 0.3;
+                        l.Opacity = 0.3;
                     }
                 }
                 foreach (Button button in siteButtons)
@@ -251,14 +261,9 @@ namespace camping.WPF
                 {
                     line.Opacity = 1;
                     streetLine = line;
-                    break;
-                }
-            }
-            for (int i = 0; i < streetLines.Count(); i++)
-            {
-                if (streetLines[i] != streetLine)
+                } else
                 {
-                    streetLines[i].Opacity = 0.3;
+                    line.Opacity = 0.3;
                 }
             }
             if (onlyStreet)

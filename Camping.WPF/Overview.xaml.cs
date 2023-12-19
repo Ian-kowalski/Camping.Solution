@@ -52,7 +52,6 @@ namespace camping.WPF
         private const int siteButtonMarginSize = 128;
         private Point pos = new();
 
-
         private Map AvailableCampSitesMap;
 
         public Overview()
@@ -63,16 +62,17 @@ namespace camping.WPF
             resData = new ReservationRepository();
             retrieveData = new RetrieveData(siteData, resData);
 
+            map = new Map(retrieveData, campingmap);
+
             // als een campsite verwijderd wordt, update plekbeheer.
             retrieveData.SiteDeleted += (sender, e) => { 
                 displayAllLocations();
+                map.drawMap();
                 AddReservationInfoGrid.Visibility = Visibility.Hidden;
                 AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
 
 
             };
-
-            map = new Map(retrieveData, campingmap);
             
             displayAllLocations();
             displayAllReservations();
@@ -475,7 +475,6 @@ namespace camping.WPF
 
         private void setTabButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
 
             foreach (var button in buttons)
             {
@@ -789,7 +788,6 @@ namespace camping.WPF
 
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
             AddReservationInfoGrid.Visibility = Visibility.Visible;
 
             AddResSiteIDBox.Content = campSiteID.ToString();
@@ -931,7 +929,6 @@ namespace camping.WPF
                     SearchCampsites.ShowSites = false;
 
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                    ReservationAddedText.Visibility = Visibility.Visible;
                 }
                 
             }
