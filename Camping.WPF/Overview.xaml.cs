@@ -179,7 +179,7 @@ namespace camping.WPF
                     button.Click += (sender, e) => 
                     {
                         onSiteSelect(street);
-                        map.ShowSelectedStreetOnMap(street);
+                        map.ShowSelectedStreetOnMap(street, true);
                     };
 
                     Grid.SetRow(button, rowLength);
@@ -219,7 +219,7 @@ namespace camping.WPF
                     {
                         onSiteSelect(site);
                         map.ShowSelectedSiteOnMap(site);
-                        map.ShowSelectedStreetOnMap(street);
+                        map.ShowSelectedStreetOnMap(street, false);
                     };
 
                     Grid.SetRow(button, rowLength);

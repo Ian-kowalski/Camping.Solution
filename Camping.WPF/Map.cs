@@ -116,7 +116,7 @@ namespace camping.WPF
                 } else {
                     displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
                     button.BorderThickness = new Thickness(4);
-                    ShowSelectedStreetOnMap(_retrieveData.GetStreetFromID(site.StreetID));
+                    ShowSelectedStreetOnMap(_retrieveData.GetStreetFromID(site.StreetID), false);
                     foreach (Button b in siteButtons)
                     {
                         if (b != button)
@@ -139,7 +139,6 @@ namespace camping.WPF
                 if (button.Tag == site)
                 {
                     button.BorderThickness = new Thickness(4);
-                    button.BorderBrush = Brushes.Blue;
                     siteButton = button;
                     break;
                 }
@@ -149,7 +148,6 @@ namespace camping.WPF
                 if (button != siteButton)
                 {
                     button.BorderThickness = new Thickness(1);
-                    button.BorderBrush = Brushes.Black;
                 }
             }
         }
@@ -227,6 +225,10 @@ namespace camping.WPF
                         streetLines[i].Opacity = 0.3;
                     }
                 }
+                foreach (Button button in siteButtons)
+                {
+                    button.BorderThickness = new Thickness(1);
+                }
             };
 
             brushes.Add(brush);
@@ -236,7 +238,7 @@ namespace camping.WPF
 
         }
 
-        public void ShowSelectedStreetOnMap(Street street)
+        public void ShowSelectedStreetOnMap(Street street, bool onlyStreet)
         {
             foreach (Line line in streetLines)
             {
@@ -252,6 +254,13 @@ namespace camping.WPF
                 if (streetLines[i] != streetLine)
                 {
                     streetLines[i].Opacity = 0.3;
+                }
+            }
+            if (onlyStreet)
+            {
+                foreach (Button button in siteButtons)
+                {
+                    button.BorderThickness = new Thickness(1);
                 }
             }
         }
