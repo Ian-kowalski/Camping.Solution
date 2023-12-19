@@ -134,13 +134,14 @@ namespace camping.WPF
         {
             if (_retrieveData != null)
             {
+                List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
                 siteButtons.Clear();
                 foreach (var street in streets)
                 {
 
-                    Brush AreaColor = PickBrush(street.AreaID);
+                    Brush AreaColor = (SolidColorBrush)new BrushConverter().ConvertFrom(string.Join(",", (from area in areas where area.LocationID == street.AreaID select area.AreaColor)));
                     List<Site> sitesOnStreet =
                         (from site in sites
                          where site.StreetID == street.LocationID
@@ -156,13 +157,15 @@ namespace camping.WPF
 
             if (_retrieveData != null)
             {
+                List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
 
                 foreach (var street in streets)
                 {
+                    Brush AreaColor = (SolidColorBrush)new BrushConverter().ConvertFrom(string.Join(",", (from area in areas where area.LocationID == street.AreaID select area.AreaColor)));
 
-                    Brush AreaColor = PickBrush(street.AreaID);
+
                     List<Site> availableSitesOnStreet =
                         (from site in sites
                          where site.StreetID == street.LocationID
