@@ -179,24 +179,16 @@ namespace camping.WPF
         private void StartDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             EndDateButton.DisplayDateStart = StartDateButton.SelectedDate;
-
-            if (ShowSites)
-            {
-                availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
-                DatesSelected = true;
-            }
-            ShowSites = true;
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+            
         }
 
         private void EndDateButton_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             StartDateButton.DisplayDateEnd = EndDateButton.SelectedDate;
-            if (ShowSites)
-            {
-                availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
-                DatesSelected = true;
-            }
-            ShowSites = true;
+            
+            availableCampsites.ShowAvailableCampSites(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), EndDateButton.SelectedDate.GetValueOrDefault(StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today)), HasShadow, HasWaterSupply, AtWater, PetAllowed, HasPower);
+            
         }
 
         private void ShadowCheckBox_Checked(object sender, RoutedEventArgs e)
