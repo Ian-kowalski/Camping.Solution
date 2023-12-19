@@ -475,7 +475,6 @@ namespace camping.WPF
 
         private void setTabButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
 
             foreach (var button in buttons)
             {
@@ -789,7 +788,6 @@ namespace camping.WPF
 
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
             AddReservationInfoGrid.Visibility = Visibility.Visible;
 
             AddResSiteIDBox.Content = campSiteID.ToString();
@@ -931,7 +929,6 @@ namespace camping.WPF
                     SearchCampsites.ShowSites = false;
 
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                    ReservationAddedText.Visibility = Visibility.Visible;
                 }
                 
             }
