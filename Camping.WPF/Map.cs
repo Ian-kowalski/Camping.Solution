@@ -115,14 +115,13 @@ namespace camping.WPF
                     SiteSelected?.Invoke(sender, new SiteSelectedOnMapEventArgs(site));
                 } else {
                     displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
-                    button.BorderThickness = new Thickness(2);
-                    button.BorderBrush = Brushes.Blue;
+                    button.BorderThickness = new Thickness(4);
+                    ShowSelectedStreetOnMap(_retrieveData.GetStreetFromID(site.StreetID));
                     foreach (Button b in siteButtons)
                     {
                         if (b != button)
                         {
                             b.BorderThickness = new Thickness(1);
-                            b.BorderBrush = Brushes.Black;
                         }
                     }
                 }
@@ -139,7 +138,7 @@ namespace camping.WPF
             {
                 if (button.Tag == site)
                 {
-                    button.BorderThickness = new Thickness(2);
+                    button.BorderThickness = new Thickness(4);
                     button.BorderBrush = Brushes.Blue;
                     siteButton = button;
                     break;
@@ -211,6 +210,7 @@ namespace camping.WPF
             line.X2 = street.CoordinatesPairs._x2;
             line.Y2 = street.CoordinatesPairs._y2;
             line.StrokeThickness = 8;
+            line.Opacity = 0.3;
             line.Stroke = brush;
 
             line.Tag = street;
@@ -218,14 +218,13 @@ namespace camping.WPF
             line.MouseDown += (sender, e) =>
             {
                 onStreetClick(sender, new StreetSelectedOnMapEventArgs(street));
-                line.Stroke = Brushes.Black;
-                line.StrokeThickness = 10;
+                line.Opacity = 1;
+
                 for (int i = 0; i < streetLines.Count(); i++)
                 {
                     if (streetLines[i] != line)
                     {
-                        streetLines[i].Stroke = brushes[i];
-                        streetLines[i].StrokeThickness = 8;
+                        streetLines[i].Opacity = 0.3;
                     }
                 }
             };
@@ -243,8 +242,7 @@ namespace camping.WPF
             {
                 if (line.Tag == street)
                 {
-                    line.Stroke = Brushes.Black;
-                    line.StrokeThickness = 10;
+                    line.Opacity = 1;
                     streetLine = line;
                     break;
                 }
@@ -253,8 +251,7 @@ namespace camping.WPF
             {
                 if (streetLines[i] != streetLine)
                 {
-                    streetLines[i].Stroke = brushes[i];
-                    streetLines[i].StrokeThickness = 8;
+                    streetLines[i].Opacity = 0.3;
                 }
             }
         }
