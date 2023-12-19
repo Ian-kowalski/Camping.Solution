@@ -130,7 +130,7 @@ namespace camping.WPF
                 SiteIDLabel.Foreground = solidColorBrush;
                 errorsFound = true;
             }
-            else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
+            else if (retrieveData.GetCampSiteID().Contains(siteID) || siteID < 1)
             {
                 SiteIDLabel.Visibility = Visibility.Visible;
                 SiteIDLabel.Content = "Deze plek bestaat niet.";
