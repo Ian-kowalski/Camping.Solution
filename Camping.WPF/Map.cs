@@ -218,14 +218,14 @@ namespace camping.WPF
             line.MouseDown += (sender, e) =>
             {
                 onStreetClick(sender, new StreetSelectedOnMapEventArgs(street));
-                line.Stroke = Brushes.Blue;
-                line.StrokeThickness = 5;
+                line.Stroke = Brushes.Black;
+                line.StrokeThickness = 10;
                 for (int i = 0; i < streetLines.Count(); i++)
                 {
                     if (streetLines[i] != line)
                     {
                         streetLines[i].Stroke = brushes[i];
-                        streetLines[i].StrokeThickness = 4;
+                        streetLines[i].StrokeThickness = 8;
                     }
                 }
             };
@@ -243,8 +243,8 @@ namespace camping.WPF
             {
                 if (line.Tag == street)
                 {
-                    line.Stroke = Brushes.Blue;
-                    line.StrokeThickness = 5;
+                    line.Stroke = Brushes.Black;
+                    line.StrokeThickness = 10;
                     streetLine = line;
                     break;
                 }
@@ -254,7 +254,7 @@ namespace camping.WPF
                 if (streetLines[i] != streetLine)
                 {
                     streetLines[i].Stroke = brushes[i];
-                    streetLines[i].StrokeThickness = 4;
+                    streetLines[i].StrokeThickness = 8;
                 }
             }
         }
