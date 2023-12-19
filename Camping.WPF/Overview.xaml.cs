@@ -38,6 +38,9 @@ namespace camping.WPF
         private Reservation selectedReservation;
         private LocationInformation locationInformation;
 
+        private Reservation originalReservation;
+
+
         private Street? SelectedStreet;
 
         private Site? SelectedSite;
@@ -599,7 +602,7 @@ namespace camping.WPF
             changeReservation.isUpdating = true;
             selectedReservation = reservation;
 
-            
+
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
@@ -680,13 +683,8 @@ namespace camping.WPF
         }
         private void CancelEditReservationButtonClick(object sender, RoutedEventArgs e)
         {
-            cancelEdit();
+            changeReservation.fillReservationInfoGrid(selectedReservation);
         }
-        public void cancelEdit()
-        {
-            ReservationInfoGrid.Visibility = Visibility.Hidden;
-        }
-
 
         private void Checkfields()
         {
