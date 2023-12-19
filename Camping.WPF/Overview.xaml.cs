@@ -85,14 +85,22 @@ namespace camping.WPF
             AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
             SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
             {
+                AvailableCampsitesMap.Visibility = Visibility.Visible;
+                AddReservationInfoGrid.Visibility = Visibility.Collapsed;
                 AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
             };
 
-            //SearchCampsites.availableCampsites.ReserveButton_Click();
+            AvailableCampSitesMap.SiteSelected += (sender, e) => {
+                AvailableCampsitesMap.Visibility = Visibility.Collapsed;
+                AddReservationInfoGrid.Visibility = Visibility.Visible;
+                SearchCampsites.ShowAddReservation(sender, new AddReservationEventArgs(e.Site.LocationID, SearchCampsites.StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), SearchCampsites.EndDateButton.SelectedDate.GetValueOrDefault(SearchCampsites.StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today))));
+            };
 
 
             SearchCampsites.AddReservation += (sender, e) =>
             {
+                AvailableCampsitesMap.Visibility = Visibility.Collapsed;
+                AddReservationInfoGrid.Visibility = Visibility.Visible;
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
             };
 

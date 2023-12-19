@@ -47,7 +47,7 @@ namespace camping.WPF
             {
                 foreach (var site in sites)
                 {
-                    drawSite(areaColor, angle, site);
+                    drawSite(areaColor, angle, site, true);
                 }
             }
         }
@@ -84,44 +84,11 @@ namespace camping.WPF
             }
         }
 
-        private void drawSite(Brush areaColor, double angle, Site site)
-        {
-            Button button = new Button();
-            
-            
-            button.Content = site.LocationID.ToString();
-            button.Background = areaColor;
-            button.Height = 20;
-            button.Width = 20;
-            button.HorizontalAlignment = HorizontalAlignment.Left;
-            button.VerticalAlignment = VerticalAlignment.Top;
-            button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
-            button.RenderTransformOrigin = new Point(0.5, 0.5);
-            button.RenderTransform = new RotateTransform { Angle = angle };
-            _campingmap.Children.Add(button);
-
-            siteButtons.Add(button);
-
-            button.Click += (sender, e) => 
-            {
-                displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
-                button.BorderThickness = new Thickness(2);
-                button.BorderBrush = Brushes.Blue;
-                foreach(Button b in siteButtons)
-                {
-                    if (b != button)
-                    {
-                        b.BorderThickness = new Thickness(1);
-                        b.BorderBrush = Brushes.Black;
-                    }
-                }
-            };     
-        }
-
         private void drawSite(Brush areaColor, double angle, Site site, bool available)
         {
             Button button = new Button();
-
+            
+            
             button.Content = site.LocationID.ToString();
             button.Background = areaColor;
             button.Height = 20;
@@ -131,9 +98,35 @@ namespace camping.WPF
             button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
             button.RenderTransformOrigin = new Point(0.5, 0.5);
             button.RenderTransform = new RotateTransform { Angle = angle };
+
             button.IsEnabled = available;
+
+
+            button.Click += (sender, e) => 
+            {
+                if (_campingmap.Name == "AvailableCampsitesMap") {
+                    _campingmap.Visibility = Visibility.Hidden;
+                    SiteSelected?.Invoke(sender, new SiteSelectedOnMapEventArgs(site));
+                } else {
+                    displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
+                    button.BorderThickness = new Thickness(2);
+                    button.BorderBrush = Brushes.Blue;
+                    foreach (Button b in siteButtons)
+                    {
+                        if (b != button)
+                        {
+                            b.BorderThickness = new Thickness(1);
+                            b.BorderBrush = Brushes.Black;
+                        }
+                    }
+                }
+            };
+
+            siteButtons.Add(button);
             _campingmap.Children.Add(button);
         }
+
+        
 
         public void drawMap()
         {
