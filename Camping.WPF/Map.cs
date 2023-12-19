@@ -14,6 +14,7 @@ using System.Windows.Input;
 
 // DIT MOET NIET
 using camping.Database;
+using System.Windows.Media.Media3D;
 
 namespace camping.WPF
 {
@@ -160,6 +161,7 @@ namespace camping.WPF
 
             if (_retrieveData != null)
             {
+
                 List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
