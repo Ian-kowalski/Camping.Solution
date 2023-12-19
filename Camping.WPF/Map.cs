@@ -10,6 +10,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Input;
+
+// DIT MOET NIET
 using camping.Database;
 
 namespace camping.WPF
@@ -30,7 +33,10 @@ namespace camping.WPF
             _retrieveData = retrieveData;
             _campingmap = campingmap;
             drawMap();
+            
         }
+
+
 
         private Brush PickBrush(int i)
         {
@@ -233,10 +239,14 @@ namespace camping.WPF
             brushes.Add(brush);
             streetLines.Add(line);
             _campingmap.Children.Add(line);
-            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+            return calculateStreetAngle(street);
 
         }
 
+        public Double calculateStreetAngle(Street street)
+        {
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+        }
         public void ShowSelectedStreetOnMap(Street street)
         {
             foreach (Line line in streetLines)
