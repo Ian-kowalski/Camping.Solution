@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows;
+using System.Windows.Input;
 
 namespace camping.WPF
 {
@@ -24,7 +25,10 @@ namespace camping.WPF
             _retrieveData = retrieveData;
             _campingmap = campingmap;
             drawMap();
+            
         }
+
+
 
         private Brush PickBrush(int i)
         {
@@ -98,8 +102,13 @@ namespace camping.WPF
             line.StrokeThickness = 4;
             line.Stroke = brush;
             _campingmap.Children.Add(line);
-            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+            return calculateStreetAngle(street);
 
+        }
+
+        public Double calculateStreetAngle(Street street)
+        {
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
         }
 
         private Double CalcAngle(int x1, int y1, int x2, int y2)
