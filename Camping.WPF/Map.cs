@@ -25,7 +25,6 @@ namespace camping.WPF
         private List<Button> siteButtons = new();
         private Button siteButton;
         private List<Line> streetLines = new();
-        private List<Brush> brushes = new();
         private Line streetLine;
 
         public Map(RetrieveData retrieveData, Grid campingmap)
@@ -236,18 +235,13 @@ namespace camping.WPF
                     button.BorderThickness = new Thickness(1);
                 }
             };
-
-            brushes.Add(brush);
             streetLines.Add(line);
             _campingmap.Children.Add(line);
             return calculateStreetAngle(street);
 
         }
 
-        public Double calculateStreetAngle(Street street)
-        {
-            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
-        }
+        
 
         public void ShowSelectedStreetOnMap(Street street, bool onlyStreet)
         {
@@ -276,6 +270,11 @@ namespace camping.WPF
             }
         }
 
+        public Double calculateStreetAngle(Street street)
+        {
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+        }
+
         private Double CalcAngle(int x1, int y1, int x2, int y2)
         {
             Double angle = 0;
@@ -295,21 +294,19 @@ namespace camping.WPF
             return angle;
         }
 
-
         public void ShowAvailableCampsites(List<Site> availableSites) {
             drawMap(availableSites);
         }
 
-      
         private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)
         {
             SiteSelected?.Invoke(sender, e);
         }
+
         private void onStreetClick(object sender, StreetSelectedOnMapEventArgs e)
         {
             StreetSelected?.Invoke(sender, e);
         }
-
 
         public event EventHandler<SiteSelectedOnMapEventArgs> SiteSelected;
         public event EventHandler<StreetSelectedOnMapEventArgs> StreetSelected;

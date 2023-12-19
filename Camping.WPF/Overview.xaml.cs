@@ -51,7 +51,7 @@ namespace camping.WPF
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
         private Point pos = new();
-        Map map = null;
+
 
         private Map AvailableCampSitesMap;
 
