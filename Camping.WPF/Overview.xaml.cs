@@ -50,7 +50,7 @@ namespace camping.WPF
 
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
-        private Point pos = new();
+        private Point mousePosition = new();
 
         private Map AvailableCampSitesMap;
 
@@ -127,8 +127,8 @@ namespace camping.WPF
             Grid campingmap = sender as Grid;
 
 
-            pos = e.GetPosition(campingmap);
-            preview.Margin = new Thickness(pos.X, pos.Y, 0, 0);
+            mousePosition = e.GetPosition(campingmap);
+            preview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
         }
 
         private void displayAllLocations()
@@ -260,9 +260,9 @@ namespace camping.WPF
         private void TextBlockClick(object sender, MouseButtonEventArgs e) //add site
         {
             preview.Visibility = Visibility.Hidden;
-            int tempSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(pos.X), Convert.ToInt32(pos.Y));            
+            int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y));            
             retrieveData.UpdateLocations();
-            Site site = retrieveData.GetSiteFromID(tempSiteID);
+            Site site = retrieveData.GetSiteFromID(newSiteID);
             Street street = retrieveData.GetStreetFromID(site.StreetID);
             Area area = retrieveData.GetAreaFromID(street.AreaID);
 
