@@ -155,7 +155,11 @@ namespace camping.WPF
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
                 button.MouseDoubleClick += (sender, e) => { onSitePress(area); };
-                button.Click += (sender, e) => { onSiteSelect(area); };
+                button.Click += (sender, e) => 
+                {
+                    onSiteSelect(area);
+                    map.ShowSelectedAreaOnMap(area);
+                };
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
@@ -475,7 +479,6 @@ namespace camping.WPF
 
         private void setTabButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
 
             foreach (var button in buttons)
             {
@@ -789,7 +792,6 @@ namespace camping.WPF
 
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
             AddReservationInfoGrid.Visibility = Visibility.Visible;
 
             AddResSiteIDBox.Content = campSiteID.ToString();
@@ -931,7 +933,6 @@ namespace camping.WPF
                     SearchCampsites.ShowSites = false;
 
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                    ReservationAddedText.Visibility = Visibility.Visible;
                 }
                 
             }
