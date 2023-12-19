@@ -209,10 +209,12 @@ namespace camping.WPF
         private void displaySites(Street street)
         {
             bool visible = false;
+            int count = 0;
             foreach (Site site in retrieveData.Sites)
             {
                 if (site.StreetID == street.LocationID && site.Visible)
                 {
+                    count++;
 
                     addNewRowDefinition();
 
@@ -407,6 +409,7 @@ namespace camping.WPF
                 }
 
             }
+
         }
 
         private void enableChildrenVisibility(Street street)
