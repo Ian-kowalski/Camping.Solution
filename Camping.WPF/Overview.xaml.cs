@@ -423,8 +423,8 @@ namespace camping.WPF
             }
         }
 
-            // verbergt alle sites van de straat
-            private void hideChildren(Street street)
+        // verbergt alle sites van de straat
+        private void hideChildren(Street street)
         {
             foreach (Site site in retrieveData.Sites)
             {
