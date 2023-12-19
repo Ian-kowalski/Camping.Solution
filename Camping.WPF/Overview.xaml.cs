@@ -107,14 +107,14 @@ namespace camping.WPF
             map.SiteSelected += (sender, e) => 
             { 
                 onSiteSelect(e.Site);
-                SelectedStreet.Visible = true;
-                SelectedSite.Visible = true;
+                toggleChildrenVisibility(retrieveData.GetAreaFromID(retrieveData.GetStreetFromID(e.Site.StreetID).AreaID));
+                toggleChildrenVisibility(retrieveData.GetStreetFromID(e.Site.StreetID));
                 displayAllLocations();
             };
             map.StreetSelected += (sender, e) =>
             {
                 onSiteSelect(e.Street);
-                SelectedStreet.Visible = true;
+                toggleChildrenVisibility(retrieveData.GetAreaFromID(e.Street.AreaID));
                 displayAllLocations();
             };
 
