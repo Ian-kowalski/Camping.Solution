@@ -156,13 +156,15 @@ namespace camping.WPF
 
         public void drawMap()
         {
+            siteButtons.Clear();
+            clearMap();
+
             if (_retrieveData != null)
             {
                 List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
-                siteButtons.Clear();
-                _campingmap.Children.Clear();
+
                 foreach (var street in streets)
                 {
 
@@ -176,10 +178,21 @@ namespace camping.WPF
                 }
             }
         }
+
+        private void clearMap()
+        {
+            for (int i = _campingmap.Children.Count-1; i >= 0; i--)
+            {
+                if (typeof(Button) == _campingmap.Children[i].GetType() || typeof(Line) == _campingmap.Children[i].GetType())
+                {
+                    _campingmap.Children.RemoveAt(i);
+                }
+            }
+        }
+
         public void drawMap(List<Site> availableCampsites)
         {
-            _campingmap.Children.Clear();
-
+            clearMap();
             if (_retrieveData != null)
             {
                 List<Area> areas = _retrieveData.Areas;
@@ -232,17 +245,13 @@ namespace camping.WPF
                     button.BorderThickness = new Thickness(1);
                 }
             };
-
             streetLines.Add(line);
             _campingmap.Children.Add(line);
             return calculateStreetAngle(street);
 
         }
 
-        public Double calculateStreetAngle(Street street)
-        {
-            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
-        }
+        
 
         public void ShowSelectedStreetOnMap(Street street, bool onlyStreet)
         {
@@ -266,6 +275,11 @@ namespace camping.WPF
             }
         }
 
+        public Double calculateStreetAngle(Street street)
+        {
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
+        }
+
         private Double CalcAngle(int x1, int y1, int x2, int y2)
         {
             Double angle = 0;
@@ -285,21 +299,19 @@ namespace camping.WPF
             return angle;
         }
 
-
         public void ShowAvailableCampsites(List<Site> availableSites) {
             drawMap(availableSites);
         }
 
-      
         private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)
         {
             SiteSelected?.Invoke(sender, e);
         }
+
         private void onStreetClick(object sender, StreetSelectedOnMapEventArgs e)
         {
             StreetSelected?.Invoke(sender, e);
         }
-
 
         public event EventHandler<SiteSelectedOnMapEventArgs> SiteSelected;
         public event EventHandler<StreetSelectedOnMapEventArgs> StreetSelected;
