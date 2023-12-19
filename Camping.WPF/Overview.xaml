@@ -49,13 +49,13 @@
                     <RowDefinition Height="4*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-              
                 <Border x:Name="LocationInfoMap"  Visibility="Visible" Margin="0" BorderBrush="#000000" BorderThickness="0,0,0,1.5">
                     <ScrollViewer Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <Grid x:Name="campingmap" Grid.Row="0" MouseMove="Grid_MouseMove">
                           <TextBlock />
-                          <Rectangle Name="preview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="TextBlockClick"/>
+                          <Rectangle Name="preview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="TextBlockClick"/>
                             <Rectangle Name="streetPreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="5" Height="5" Fill="Black" Visibility="Hidden" MouseLeftButtonDown="StreetDrawLineDown" MouseLeftButtonUp="StreetDrawLineRelease"/>
+
                         </Grid> 
                     </ScrollViewer>
                 </Border>
@@ -143,7 +143,6 @@
             </Grid>
         </Border>
 
-        <Label x:Name="ReservationAddedText" Content="De reservering is toegevoegd!" FontSize="32" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="80,80,80,0" Height="92" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Green" Visibility="Hidden" />
 
 
         <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">

@@ -14,6 +14,7 @@ using System.Windows.Input;
 
 // DIT MOET NIET
 using camping.Database;
+using System.Windows.Media.Media3D;
 
 namespace camping.WPF
 {
@@ -25,7 +26,6 @@ namespace camping.WPF
         private List<Button> siteButtons = new();
         private Button siteButton;
         private List<Line> streetLines = new();
-        private List<Brush> brushes = new();
         private Line streetLine;
 
         public Map(RetrieveData retrieveData, Grid campingmap)
@@ -110,6 +110,7 @@ namespace camping.WPF
             button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
             button.RenderTransformOrigin = new Point(0.5, 0.5);
             button.RenderTransform = new RotateTransform { Angle = angle };
+            button.Opacity = 0.5;
 
             button.IsEnabled = available;
             button.Tag = site;
@@ -121,13 +122,13 @@ namespace camping.WPF
                     SiteSelected?.Invoke(sender, new SiteSelectedOnMapEventArgs(site));
                 } else {
                     displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
-                    button.BorderThickness = new Thickness(4);
+                    button.Opacity = 1;
                     ShowSelectedStreetOnMap(_retrieveData.GetStreetFromID(site.StreetID), false);
                     foreach (Button b in siteButtons)
                     {
                         if (b != button)
                         {
-                            b.BorderThickness = new Thickness(1);
+                            b.Opacity = 0.5;
                         }
                     }
                 }
@@ -144,16 +145,10 @@ namespace camping.WPF
             {
                 if (button.Tag == site)
                 {
-                    button.BorderThickness = new Thickness(4);
-                    siteButton = button;
-                    break;
-                }
-            }
-            foreach (Button button in siteButtons)
-            {
-                if (button != siteButton)
+                    button.Opacity = 1;
+                } else
                 {
-                    button.BorderThickness = new Thickness(1);
+                    button.Opacity = 0.5;
                 }
             }
         }
@@ -161,13 +156,16 @@ namespace camping.WPF
 
         public void drawMap()
         {
+            siteButtons.Clear();
+            clearMap();
+
             if (_retrieveData != null)
             {
+
                 List<Area> areas = _retrieveData.Areas;
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
-                //siteButtons.Clear();
-                //_campingmap.Children.Clear();
+
                 foreach (var street in streets)
                 {
 
@@ -181,10 +179,21 @@ namespace camping.WPF
                 }
             }
         }
+
+        private void clearMap()
+        {
+            for (int i = _campingmap.Children.Count-1; i >= 0; i--)
+            {
+                if (typeof(Button) == _campingmap.Children[i].GetType() || typeof(Line) == _campingmap.Children[i].GetType())
+                {
+                    _campingmap.Children.RemoveAt(i);
+                }
+            }
+        }
+
         public void drawMap(List<Site> availableCampsites)
         {
-            _campingmap.Children.Clear();
-
+            clearMap();
             if (_retrieveData != null)
             {
                 List<Area> areas = _retrieveData.Areas;
@@ -225,30 +234,33 @@ namespace camping.WPF
                 onStreetClick(sender, new StreetSelectedOnMapEventArgs(street));
                 line.Opacity = 1;
 
-                for (int i = 0; i < streetLines.Count(); i++)
+                foreach (Line l in streetLines)
                 {
-                    if (streetLines[i] != line)
+                    if (l != line)
                     {
-                        streetLines[i].Opacity = 0.3;
+                        l.Opacity = 0.3;
                     }
                 }
                 foreach (Button button in siteButtons)
                 {
-                    button.BorderThickness = new Thickness(1);
+                    Site site = button.Tag as Site;
+                    if (_retrieveData.GetStreetFromID(site.StreetID).LocationID == street.LocationID)
+                    {
+                        button.Opacity = 1;
+                    }
+                    else
+                    {
+                        button.Opacity = 0.5;
+                    }
                 }
             };
-
-            brushes.Add(brush);
             streetLines.Add(line);
             _campingmap.Children.Add(line);
             return calculateStreetAngle(street);
 
         }
 
-        public Double calculateStreetAngle(Street street)
-        {
-            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
-        }
+        
 
         public void ShowSelectedStreetOnMap(Street street, bool onlyStreet)
         {
@@ -257,24 +269,58 @@ namespace camping.WPF
                 if (line.Tag == street)
                 {
                     line.Opacity = 1;
-                    streetLine = line;
-                    break;
-                }
-            }
-            for (int i = 0; i < streetLines.Count(); i++)
-            {
-                if (streetLines[i] != streetLine)
+                } else
                 {
-                    streetLines[i].Opacity = 0.3;
+                    line.Opacity = 0.3;
                 }
             }
             if (onlyStreet)
             {
                 foreach (Button button in siteButtons)
                 {
-                    button.BorderThickness = new Thickness(1);
+                    Site site = button.Tag as Site;
+                    if (_retrieveData.GetStreetFromID(site.StreetID).LocationID == street.LocationID)
+                    {
+                        button.Opacity = 1;
+                    }
+                    else
+                    {
+                        button.Opacity = 0.5;
+                    }
                 }
             }
+        }
+
+        public void ShowSelectedAreaOnMap(Area area)
+        {
+            foreach (Line line in streetLines)
+            {
+                Street street = line.Tag as Street;
+                if (street.AreaID == area.LocationID)
+                {
+                    line.Opacity = 1;
+                } else
+                {
+                    line.Opacity = 0.3;
+                }
+                
+            }
+            foreach (Button button in siteButtons)
+            {
+                Site site = button.Tag as Site;
+                if (_retrieveData.GetStreetFromID(site.StreetID).AreaID == area.LocationID)
+                {
+                    button.Opacity = 1;
+                }
+                else {
+                    button.Opacity = 0.5;
+                }
+            }
+        }
+
+        public Double calculateStreetAngle(Street street)
+        {
+            return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
         }
 
         private Double CalcAngle(int x1, int y1, int x2, int y2)
@@ -296,21 +342,19 @@ namespace camping.WPF
             return angle;
         }
 
-
         public void ShowAvailableCampsites(List<Site> availableSites) {
             drawMap(availableSites);
         }
 
-      
         private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)
         {
             SiteSelected?.Invoke(sender, e);
         }
+
         private void onStreetClick(object sender, StreetSelectedOnMapEventArgs e)
         {
             StreetSelected?.Invoke(sender, e);
         }
-
 
         public event EventHandler<SiteSelectedOnMapEventArgs> SiteSelected;
         public event EventHandler<StreetSelectedOnMapEventArgs> StreetSelected;

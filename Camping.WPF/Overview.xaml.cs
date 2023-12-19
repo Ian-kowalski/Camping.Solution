@@ -53,7 +53,9 @@ namespace camping.WPF
 
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
+
         private const int streetButtonMarginSize = 64;
+
         private Point mousePosition = new();
 
         private Map AvailableCampSitesMap;
@@ -111,14 +113,15 @@ namespace camping.WPF
             map.SiteSelected += (sender, e) => 
             { 
                 onSiteSelect(e.Site);
-                SelectedStreet.Visible = true;
-                SelectedSite.Visible = true;
+                enableChildrenVisibility(retrieveData.GetAreaFromID(retrieveData.GetStreetFromID(e.Site.StreetID).AreaID));
+                enableChildrenVisibility(retrieveData.GetStreetFromID(e.Site.StreetID));
+                
                 displayAllLocations();
             };
             map.StreetSelected += (sender, e) =>
             {
                 onSiteSelect(e.Street);
-                SelectedStreet.Visible = true;
+                enableChildrenVisibility(retrieveData.GetAreaFromID(e.Street.AreaID));
                 displayAllLocations();
             };
 
@@ -134,6 +137,7 @@ namespace camping.WPF
             mousePosition = e.GetPosition(campingmap);
             preview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
             streetPreview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
+
         }
 
         private void displayAllLocations()
@@ -160,7 +164,11 @@ namespace camping.WPF
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
                 button.MouseDoubleClick += (sender, e) => { onSitePress(area); };
-                button.Click += (sender, e) => { onSiteSelect(area); };
+                button.Click += (sender, e) => 
+                {
+                    onSiteSelect(area);
+                    map.ShowSelectedAreaOnMap(area);
+                };
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
@@ -225,8 +233,10 @@ namespace camping.WPF
         private void displaySites(Street street)
         {
             bool visible = false;
+            int siteCount = 0;
             foreach (Site site in retrieveData.Sites)
             {
+                if (site.StreetID == street.LocationID) { siteCount++; }
                 if (site.StreetID == street.LocationID && site.Visible)
                 {
 
@@ -255,7 +265,7 @@ namespace camping.WPF
                     visible = true;
                 }
             }
-            if (visible && SelectedStreet is not null && SelectedStreet.LocationID == street.LocationID)
+            if ( (siteCount == 0  || visible) && SelectedStreet is not null && SelectedStreet.LocationID == street.LocationID)
             {
                 addNewRowDefinition();
                 Button button = createLocationButton(siteButtonMarginSize);
@@ -287,9 +297,10 @@ namespace camping.WPF
         private void TextBlockClick(object sender, MouseButtonEventArgs e) //add site
         {
             preview.Visibility = Visibility.Hidden;
-            int tempSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
+
+            int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
             retrieveData.UpdateLocations();
-            Site site = retrieveData.GetSiteFromID(tempSiteID);
+            Site site = retrieveData.GetSiteFromID(newSiteID);
             Street street = retrieveData.GetStreetFromID(site.StreetID);
             Area area = retrieveData.GetAreaFromID(street.AreaID);
 
@@ -412,6 +423,18 @@ namespace camping.WPF
                 }
             }
         }
+        private void enableChildrenVisibility(Area area)
+        {
+
+
+            foreach (Street street in retrieveData.Streets)
+            {
+                if (street.AreaID == area.LocationID)
+                {
+                    street.Visible = true;
+                }
+            }
+        }
 
         private void enableAllVisibility(object sender, RoutedEventArgs e) {
             foreach (Site site in retrieveData.Sites) {
@@ -437,8 +460,20 @@ namespace camping.WPF
                 }
 
             }
-            
+        }
 
+        private void enableChildrenVisibility(Street street)
+        {
+
+
+            foreach (Site site in retrieveData.Sites)
+            {
+                if (site.StreetID == street.LocationID)
+                {
+                    site.Visible = true;
+                }
+
+            }
         }
 
         // verbergt alle sites van de straat
@@ -522,7 +557,6 @@ namespace camping.WPF
 
         private void setTabButtonState(Button selectedButton, UIElement[] BorderElements, Button[] buttons)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
 
             foreach (var button in buttons)
             {
@@ -836,7 +870,6 @@ namespace camping.WPF
 
         private void fillAddReservationInfoGrid(int campSiteID, DateTime startDate, DateTime endDate)
         {
-            ReservationAddedText.Visibility = Visibility.Hidden;
             AddReservationInfoGrid.Visibility = Visibility.Visible;
 
             AddResSiteIDBox.Content = campSiteID.ToString();
@@ -978,7 +1011,6 @@ namespace camping.WPF
                     SearchCampsites.ShowSites = false;
 
                     AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                    ReservationAddedText.Visibility = Visibility.Visible;
                 }
                 
             }
