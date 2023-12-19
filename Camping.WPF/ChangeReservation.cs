@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -78,6 +79,7 @@ namespace camping.WPF
 
         public void editReservationButton(object sender, ChangeReservationEventArgs e)
         {
+            errorsFound = false;
             saveReservation(e.Reservation);
         }
 
@@ -130,7 +132,7 @@ namespace camping.WPF
                 SiteIDLabel.Foreground = solidColorBrush;
                 errorsFound = true;
             }
-            else if (siteID > retrieveData.GetCampSiteID().Count() || siteID < 1)
+            else if (!retrieveData.GetCampSiteID().Contains(siteID) || siteID < 1)
             {
                 SiteIDLabel.Visibility = Visibility.Visible;
                 SiteIDLabel.Content = "Deze plek bestaat niet.";
@@ -231,6 +233,8 @@ namespace camping.WPF
 
         public bool saveReservation(Reservation reservation)
         {
+
+
             checkSiteID(reservation);
             checkPhoneNumber(reservation);
             checkHouseNumber(reservation);
@@ -246,12 +250,12 @@ namespace camping.WPF
             reservation.Visitor.Preposition = PrepositionBox.Text;
 
             checkDates(reservation);
-            if (!errorsFound) { 
-            retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
-            return true;
+            if (!errorsFound) {
+                retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
+                return true;
             }
             else {
-            return false; 
+                return false; 
             }
         }
 
