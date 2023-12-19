@@ -7,7 +7,7 @@
         xmlns:Database="clr-namespace:camping.Database;assembly=camping.Database" x:Class="camping.WPF.Overview"
         xmlns:views="clr-namespace:camping.WPF"
         mc:Ignorable="d"
-        Title="Overview" WindowState="Maximized" WindowStyle="ThreeDBorderWindow" Height="960" Width="1920">
+        Title="Overview" WindowState="Maximized" MaxWidth="1780" MaxHeight="960" WindowStyle="ThreeDBorderWindow" Height="960" Width="1920">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150*"/>
