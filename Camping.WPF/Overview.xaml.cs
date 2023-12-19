@@ -38,9 +38,6 @@ namespace camping.WPF
         private Reservation selectedReservation;
         private LocationInformation locationInformation;
 
-        private Reservation originalReservation;
-
-
         private Street? SelectedStreet;
 
         private Site? SelectedSite;
