@@ -63,16 +63,17 @@ namespace camping.WPF
             resData = new ReservationRepository();
             retrieveData = new RetrieveData(siteData, resData);
 
+            map = new Map(retrieveData, campingmap);
+
             // als een campsite verwijderd wordt, update plekbeheer.
             retrieveData.SiteDeleted += (sender, e) => { 
                 displayAllLocations();
+                map.drawMap();
                 AddReservationInfoGrid.Visibility = Visibility.Hidden;
                 AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
 
 
             };
-
-            map = new Map(retrieveData, campingmap);
             
             displayAllLocations();
             displayAllReservations();

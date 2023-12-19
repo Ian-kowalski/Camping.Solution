@@ -348,6 +348,5 @@
                 <Button x:Name="CancelEditReservationButton" Content="Annuleren" Margin="32,0,32,118" Grid.Row="1" Grid.Column="2" Click="CancelEditReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16" Height="51" VerticalAlignment="Bottom"/>
             </Grid>
         </Border>
-
     </Grid>
 </Window>
