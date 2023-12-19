@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
+using System.Reflection.PortableExecutable;
 
 namespace camping.Database
 {
@@ -90,7 +91,7 @@ namespace camping.Database
 
                     while (reader.Read())
                     { /// 0 nummer, 1 power, 2 atwater, 3 pets, 4 shadow, 5 watersupply, 6 size
-                        result.Add(new Area(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5)));
+                        result.Add(new Area(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetString(6)));
                     }
                 }
                 connection.Close();
@@ -236,8 +237,9 @@ namespace camping.Database
             }
         }
 
-        public Location AddLocation(Location location, int x1, int y1)
+        public int AddLocation(Location location, int x1, int y1)
         {
+            int result = 0;
             int coordinatesPairID = addCoordinatesPair(x1, y1);
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
@@ -255,6 +257,8 @@ namespace camping.Database
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
+                SqlDataReader reader;
+
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@powerSupply", facilities[1]);
@@ -267,8 +271,18 @@ namespace camping.Database
 
                     command.ExecuteNonQuery();
                 }
+                sql = "SELECT MAX(campSiteID) " +
+                    "from campSite;";
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result = reader.GetInt32(0);
+                    }
+                }
                 connection.Close();
-                return location;
+                return result;
             }        
         }
 
