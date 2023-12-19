@@ -213,7 +213,7 @@
                 </Grid>
             </Grid>
 
-                    
+
         </Border>
 
         <Border x:Name="ReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
