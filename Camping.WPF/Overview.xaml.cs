@@ -37,6 +37,7 @@ namespace camping.WPF
         private List<Reservation> toBeCancel = new List<Reservation>();
 
         private Reservation selectedReservation;
+        private LocationInformation locationInformation;
 
         private Street? SelectedStreet;
 
@@ -44,12 +45,15 @@ namespace camping.WPF
 
         /*        private Location selectedLocation;
         */
+        private Map map;
         private Button changeFacilitiesButton;
 
         private SearchAvailableCampsites SearchCampsites;
         private const int siteButtonMarginSize = 128;
         private Point pos = new();
         Map map = null;
+
+        private Map AvailableCampSitesMap;
 
         public Overview()
         {
@@ -69,6 +73,7 @@ namespace camping.WPF
             };
 
             map = new Map(retrieveData, campingmap);
+            
             displayAllLocations();
             displayAllReservations();
 
@@ -76,20 +81,51 @@ namespace camping.WPF
             changeReservation = changeRes;
 
             SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
+            SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
+            {
+                AvailableCampsitesMap.Visibility = Visibility.Visible;
+                AddReservationInfoGrid.Visibility = Visibility.Collapsed;
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
+            };
+
+            AvailableCampSitesMap.SiteSelected += (sender, e) => {
+                AvailableCampsitesMap.Visibility = Visibility.Collapsed;
+                AddReservationInfoGrid.Visibility = Visibility.Visible;
+                SearchCampsites.ShowAddReservation(sender, new AddReservationEventArgs(e.Site.LocationID, SearchCampsites.StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today), SearchCampsites.EndDateButton.SelectedDate.GetValueOrDefault(SearchCampsites.StartDateButton.SelectedDate.GetValueOrDefault(DateTime.Today))));
+            };
+
 
             SearchCampsites.AddReservation += (sender, e) =>
             {
+                AvailableCampsitesMap.Visibility = Visibility.Collapsed;
+                AddReservationInfoGrid.Visibility = Visibility.Visible;
                 fillAddReservationInfoGrid(e.CampSiteID, e.StartDate, e.EndDate);
+            };
+
+
+            map.SiteSelected += (sender, e) => 
+            { 
+                onSiteSelect(e.Site);
+                SelectedStreet.Visible = true;
+                SelectedSite.Visible = true;
+                displayAllLocations();
+            };
+            map.StreetSelected += (sender, e) =>
+            {
+                onSiteSelect(e.Street);
+                SelectedStreet.Visible = true;
+                displayAllLocations();
             };
 
             EditReservationClick += changeReservation.editReservationButton;
             Closing += onWindowClosing;
         }
 
-
         private void Grid_MouseMove(object sender, MouseEventArgs e)
         {
             Grid campingmap = sender as Grid;
+
 
             pos = e.GetPosition(campingmap);
             preview.Margin = new Thickness(pos.X, pos.Y, 0, 0);
@@ -146,7 +182,11 @@ namespace camping.WPF
                     button.BorderThickness = new Thickness(2);
                     button.FontSize = 16;
                     button.MouseDoubleClick += (sender, e) => { onSitePress(street); };
-                    button.Click += (sender, e) => { onSiteSelect(street); };
+                    button.Click += (sender, e) => 
+                    {
+                        onSiteSelect(street);
+                        map.ShowSelectedStreetOnMap(street);
+                    };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -181,7 +221,11 @@ namespace camping.WPF
                     button.FontSize = 16;
 
                     button.MouseDoubleClick += (sender, e) => { onSitePress(site); };
-                    button.Click += (sender, e) => { onSiteSelect(site); };
+                    button.Click += (sender, e) => 
+                    {
+                        onSiteSelect(site);
+                        map.ShowSelectedSiteOnMap(site);
+                    };
 
                     Grid.SetRow(button, rowLength);
                     CampSiteList.Children.Add(button);
@@ -202,7 +246,7 @@ namespace camping.WPF
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
-                rowLength ++;
+                rowLength++;
                 
             }
         }
@@ -296,8 +340,10 @@ namespace camping.WPF
                 displayAllLocations();
 
             }
-            LocationInformation locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
+            locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
+
+
 
         // toggled de visibility van de straat van een area
         private void toggleChildrenVisibility(Area area)
@@ -580,7 +626,7 @@ namespace camping.WPF
             changeReservation.isUpdating = true;
             selectedReservation = reservation;
 
-            
+
             ReservationInfoGrid.Visibility = Visibility.Visible;
 
             displayAllReservations();
@@ -661,13 +707,8 @@ namespace camping.WPF
         }
         private void CancelEditReservationButtonClick(object sender, RoutedEventArgs e)
         {
-            cancelEdit();
+            changeReservation.fillReservationInfoGrid(selectedReservation);
         }
-        public void cancelEdit()
-        {
-            ReservationInfoGrid.Visibility = Visibility.Hidden;
-        }
-
 
         private void Checkfields()
         {
@@ -765,10 +806,13 @@ namespace camping.WPF
             AddResPostalCodeBox.Text = "";
         }
 
+        private void CancelReservationButtonClick(object sender, EventArgs e) {
+            AddReservationInfoGrid.Visibility = Visibility.Hidden;
+            AvailableCampsitesMap.Visibility = Visibility.Visible;
+        }
+
         private void AddReservationButtonClick(object sender, EventArgs e)
         {
-
-
             bool errorsFound = false;
 
             if (!int.TryParse(AddResSiteIDBox.Content.ToString(), out int siteID))

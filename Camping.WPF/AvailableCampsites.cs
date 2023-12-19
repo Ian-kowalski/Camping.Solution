@@ -1,6 +1,7 @@
 ﻿using camping.Core;
 using Camping.Core;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -25,6 +26,8 @@ namespace camping.WPF
         Rectangle campFacilityPets;
         Rectangle campFacilityOutlet;
         Button reserveButton;
+        public List<Site> AvailableSitesList = new List<Site>();
+        public event EventHandler<AvailableCampsitesEventArgs> AvailableCampsitesListRetrievedEventHandler; 
 
         public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData)
         {
@@ -40,6 +43,7 @@ namespace camping.WPF
 
             grid.Children.Clear();
             grid.RowDefinitions.Clear();
+            AvailableSitesList.Clear();
 
             int rowNumber = 0;
             foreach (Site site in siteData.GetSiteInfo())
@@ -55,6 +59,7 @@ namespace camping.WPF
                 if (petAllowed && site.PetsAllowed % 2 == 0) continue;
                 if (hasPower && site.OutletPresent % 2 == 0) continue;
 
+                AvailableSitesList.Add(site);
 
                 rowDef1 = new RowDefinition();
                 rowDef1.Height = new GridLength(50);
@@ -147,6 +152,8 @@ namespace camping.WPF
                 rowNumber++;
             }
 
+            AvailableCampsitesListRetrievedEventHandler?.Invoke(this, new AvailableCampsitesEventArgs(AvailableSitesList));
+
             grid.Visibility = Visibility.Visible;
         }
 
@@ -183,7 +190,7 @@ namespace camping.WPF
             return rect;
         }
 
-        private void ReserveButton_Click(object sender, RoutedEventArgs e, int campSiteID, DateTime startDate, DateTime endDate)
+        public void ReserveButton_Click(object sender, RoutedEventArgs e, int campSiteID, DateTime startDate, DateTime endDate)
         {
             ReserveCampsite?.Invoke(sender, new AddReservationEventArgs(campSiteID, startDate, endDate));
 
