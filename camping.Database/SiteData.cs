@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
+using System.Reflection.PortableExecutable;
 
 namespace camping.Database
 {
@@ -236,8 +237,9 @@ namespace camping.Database
             }
         }
 
-        public Location AddLocation(Location location, int x1, int y1)
+        public int AddLocation(Location location, int x1, int y1)
         {
+            int result = 0;
             int coordinatesPairID = addCoordinatesPair(x1, y1);
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
@@ -255,6 +257,8 @@ namespace camping.Database
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
+                SqlDataReader reader;
+
                 using (var command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@powerSupply", facilities[1]);
@@ -267,8 +271,18 @@ namespace camping.Database
 
                     command.ExecuteNonQuery();
                 }
+                sql = "SELECT MAX(campSiteID) " +
+                    "from campSite;";
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result = reader.GetInt32(0);
+                    }
+                }
                 connection.Close();
-                return location;
+                return result;
             }        
         }
 

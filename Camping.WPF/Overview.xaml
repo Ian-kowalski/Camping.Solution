@@ -7,7 +7,7 @@
         xmlns:Database="clr-namespace:camping.Database;assembly=camping.Database" x:Class="camping.WPF.Overview"
         xmlns:views="clr-namespace:camping.WPF"
         mc:Ignorable="d"
-        Title="Overview" WindowState="Maximized" WindowStyle="ThreeDBorderWindow" Height="960" Width="1920">
+        Title="Overview" WindowState="Maximized" MaxWidth="1780" MaxHeight="960" WindowStyle="ThreeDBorderWindow" Height="960" Width="1920">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="150*"/>
@@ -49,10 +49,13 @@
                     <RowDefinition Height="4*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
+              
                 <Border x:Name="LocationInfoMap"  Visibility="Visible" Margin="0" BorderBrush="#000000" BorderThickness="0,0,0,1.5">
                     <ScrollViewer Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <Grid x:Name="campingmap" >
-                        </Grid>
+                        <Grid x:Name="campingmap" Grid.Row="0" MouseMove="Grid_MouseMove">
+                          <TextBlock />
+                          <Rectangle Name="preview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="TextBlockClick"/>
+                        </Grid> 
                     </ScrollViewer>
                 </Border>
 
@@ -211,12 +214,13 @@
                         <Label x:Name="AddResHouseNumberLabel" Height="28" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                         <Label x:Name="AddResPostalCodeLabel"  Height="28" Grid.Column="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                     </Grid>
+                    <Button x:Name="AddResCancelButton" Content="Annuleren" Margin="32,32,32,118" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="CancelReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
                     <Button x:Name="AddResSaveReservationButton" Content="Toevoegen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="AddReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
 
                 </Grid>
             </Grid>
 
-                    
+
         </Border>
 
         <Border x:Name="ReservationList" Visibility="Hidden" Grid.Column="0" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">

@@ -100,11 +100,10 @@ namespace camping.WPF
             EndDateButton.DisplayDateStart = DateTime.Today;
             EndDateButton.Focusable = false;
 
-
             ShadowCheckBox = new CheckBox();
             Grid.SetColumn(ShadowCheckBox, 1);
             Grid.SetRow(ShadowCheckBox, 2);
-            ShadowCheckBox.Margin = new Thickness(162.5,0,0,0);
+            ShadowCheckBox.Margin = new Thickness(130, 5, 0, 0);
             ShadowCheckBox.Checked += ShadowCheckBox_Checked;
             ShadowCheckBox.Unchecked += ShadowCheckBox_Checked;
 
@@ -112,7 +111,7 @@ namespace camping.WPF
             WaterSupplyCheckBox = new CheckBox();
             Grid.SetColumn(WaterSupplyCheckBox, 2);
             Grid.SetRow(WaterSupplyCheckBox, 2);
-            WaterSupplyCheckBox.Margin = new Thickness(42.5,0,0,0);
+            WaterSupplyCheckBox.Margin = new Thickness(35,5,0,0);
             WaterSupplyCheckBox.Checked += HasWaterSupplyCheckBox_Checked;
             WaterSupplyCheckBox.Unchecked += HasWaterSupplyCheckBox_Checked;
 
@@ -120,7 +119,7 @@ namespace camping.WPF
             AtWaterCheckBox = new CheckBox();
             Grid.SetColumn(AtWaterCheckBox, 2);
             Grid.SetRow(AtWaterCheckBox, 2);
-            AtWaterCheckBox.Margin = new Thickness(118,0,0,0);
+            AtWaterCheckBox.Margin = new Thickness(98,5,0,0);
             AtWaterCheckBox.Checked += AtWaterCheckBox_Checked;
             AtWaterCheckBox.Unchecked += AtWaterCheckBox_Checked;
 
@@ -128,7 +127,7 @@ namespace camping.WPF
             PetCheckBox = new CheckBox();
             Grid.SetColumn(PetCheckBox, 3);
             Grid.SetRow(PetCheckBox, 2);
-            PetCheckBox.Margin = new Thickness(0,0,0,0);
+            PetCheckBox.Margin = new Thickness(3,5,0,0);
             PetCheckBox.Checked += PetCheckBox_Checked;
             PetCheckBox.Unchecked += PetCheckBox_Checked;
 
@@ -136,7 +135,7 @@ namespace camping.WPF
             PowerCheckBox = new CheckBox();
             Grid.SetColumn(PowerCheckBox, 3);
             Grid.SetRow(PowerCheckBox, 2);
-            PowerCheckBox.Margin = new Thickness(76.5,0,0,0);
+            PowerCheckBox.Margin = new Thickness(65,5,0,0);
             PowerCheckBox.Checked += PowerCheckBox_Checked;
             PowerCheckBox.Unchecked += PowerCheckBox_Checked;
 
