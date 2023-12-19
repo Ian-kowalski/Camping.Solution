@@ -155,7 +155,11 @@ namespace camping.WPF
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
                 button.MouseDoubleClick += (sender, e) => { onSitePress(area); };
-                button.Click += (sender, e) => { onSiteSelect(area); };
+                button.Click += (sender, e) => 
+                {
+                    onSiteSelect(area);
+                    map.ShowSelectedAreaOnMap(area);
+                };
 
                 Grid.SetRow(button, rowLength);
                 CampSiteList.Children.Add(button);
