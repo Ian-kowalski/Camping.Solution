@@ -207,6 +207,7 @@
                         <Label x:Name="AddResHouseNumberLabel" Height="28" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                         <Label x:Name="AddResPostalCodeLabel"  Height="28" Grid.Column="2" Grid.Row="1" IsEnabled="False" VerticalAlignment="Top" HorizontalContentAlignment="Left"/>
                     </Grid>
+                    <Button x:Name="AddResCancelButton" Content="Annuleren" Margin="32,32,32,118" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="CancelReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
                     <Button x:Name="AddResSaveReservationButton" Content="Toevoegen" Margin="32,32,32,32" Height="50" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="2" Click="AddReservationButtonClick" BorderBrush="#000000" BorderThickness="2" FontSize="16"/>
 
                 </Grid>
