@@ -185,7 +185,7 @@ namespace camping.WPF
                     button.Click += (sender, e) => 
                     {
                         onSiteSelect(street);
-                        map.ShowSelectedStreetOnMap(street);
+                        map.ShowSelectedStreetOnMap(street, true);
                     };
 
                     Grid.SetRow(button, rowLength);
@@ -193,7 +193,7 @@ namespace camping.WPF
 
                     rowLength++;
 
-                    displaySites(street.LocationID);
+                    displaySites(street);
                 }
 
 
@@ -201,12 +201,12 @@ namespace camping.WPF
         }
 
         // laat de sites zien van de straat
-        private void displaySites(int streetID)
+        private void displaySites(Street street)
         {
             bool visible = false;
             foreach (Site site in retrieveData.Sites)
             {
-                if (site.StreetID == streetID && site.Visible)
+                if (site.StreetID == street.LocationID && site.Visible)
                 {
 
                     addNewRowDefinition();
@@ -225,6 +225,7 @@ namespace camping.WPF
                     {
                         onSiteSelect(site);
                         map.ShowSelectedSiteOnMap(site);
+                        map.ShowSelectedStreetOnMap(street, false);
                     };
 
                     Grid.SetRow(button, rowLength);
@@ -233,7 +234,7 @@ namespace camping.WPF
                     visible = true;
                 }
             }
-            if (visible && SelectedStreet is not null && SelectedStreet.LocationID == streetID)
+            if (visible && SelectedStreet is not null && SelectedStreet.LocationID == street.LocationID)
             {
                 addNewRowDefinition();
                 Button button = createLocationButton(siteButtonMarginSize);
