@@ -136,7 +136,9 @@ namespace camping.WPF
             {
                 List<Street> streets = _retrieveData.Streets;
                 List<Site> sites = _retrieveData.Sites;
+                Console.WriteLine(siteButtons);
                 siteButtons.Clear();
+                _campingmap.Children.Clear();
                 foreach (var street in streets)
                 {
 

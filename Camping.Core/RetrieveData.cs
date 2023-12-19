@@ -145,6 +145,7 @@ namespace camping.Core
                 }
             }
 
+            Console.WriteLine(Sites);
 
             SiteDeleted?.Invoke(this, new EventArgs());
 
