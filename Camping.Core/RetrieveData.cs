@@ -145,8 +145,6 @@ namespace camping.Core
                 }
             }
 
-            Console.WriteLine(Sites);
-
             SiteDeleted?.Invoke(this, new EventArgs());
 
             // return true if a campsite has been deleted.
