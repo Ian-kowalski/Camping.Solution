@@ -107,14 +107,15 @@ namespace camping.WPF
             map.SiteSelected += (sender, e) => 
             { 
                 onSiteSelect(e.Site);
-                toggleChildrenVisibility(retrieveData.GetAreaFromID(retrieveData.GetStreetFromID(e.Site.StreetID).AreaID));
-                toggleChildrenVisibility(retrieveData.GetStreetFromID(e.Site.StreetID));
+                enableChildrenVisibility(retrieveData.GetAreaFromID(retrieveData.GetStreetFromID(e.Site.StreetID).AreaID));
+                enableChildrenVisibility(retrieveData.GetStreetFromID(e.Site.StreetID));
+                
                 displayAllLocations();
             };
             map.StreetSelected += (sender, e) =>
             {
                 onSiteSelect(e.Street);
-                toggleChildrenVisibility(retrieveData.GetAreaFromID(e.Street.AreaID));
+                enableChildrenVisibility(retrieveData.GetAreaFromID(e.Street.AreaID));
                 displayAllLocations();
             };
 
@@ -369,6 +370,18 @@ namespace camping.WPF
                 }
             }
         }
+        private void enableChildrenVisibility(Area area)
+        {
+
+
+            foreach (Street street in retrieveData.Streets)
+            {
+                if (street.AreaID == area.LocationID)
+                {
+                    street.Visible = true;
+                }
+            }
+        }
 
         private void enableAllVisibility(object sender, RoutedEventArgs e) {
             foreach (Site site in retrieveData.Sites) {
@@ -394,12 +407,24 @@ namespace camping.WPF
                 }
 
             }
-            
-
         }
 
-        // verbergt alle sites van de straat
-        private void hideChildren(Street street)
+        private void enableChildrenVisibility(Street street)
+        {
+
+
+            foreach (Site site in retrieveData.Sites)
+            {
+                if (site.StreetID == street.LocationID)
+                {
+                    site.Visible = true;
+                }
+
+            }
+        }
+
+            // verbergt alle sites van de straat
+            private void hideChildren(Street street)
         {
             foreach (Site site in retrieveData.Sites)
             {
