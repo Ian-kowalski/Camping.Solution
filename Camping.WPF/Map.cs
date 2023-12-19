@@ -93,8 +93,8 @@ namespace camping.WPF
             
             button.Content = site.LocationID.ToString();
             button.Background = areaColor;
-            button.Height = 20;
-            button.Width = 20;
+            button.Height = 30;
+            button.Width = 30;
             button.HorizontalAlignment = HorizontalAlignment.Left;
             button.VerticalAlignment = VerticalAlignment.Top;
             button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
@@ -181,7 +181,7 @@ namespace camping.WPF
             line.Y1 = street.CoordinatesPairs._y1;
             line.X2 = street.CoordinatesPairs._x2;
             line.Y2 = street.CoordinatesPairs._y2;
-            line.StrokeThickness = 4;
+            line.StrokeThickness = 8;
             line.Stroke = brush;
             _campingmap.Children.Add(line);
             return CalcAngle(street.CoordinatesPairs._x1, street.CoordinatesPairs._y1, street.CoordinatesPairs._x2, street.CoordinatesPairs._y2);
