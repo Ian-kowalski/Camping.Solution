@@ -54,7 +54,7 @@
                         <Grid x:Name="campingmap" Grid.Row="0" MouseMove="Grid_MouseMove">
                           <TextBlock />
                           <Rectangle Name="preview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="TextBlockClick"/>
-                            <Rectangle Name="streetPreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="5" Height="5" Fill="Black" Visibility="Hidden" MouseLeftButtonDown="StreetDrawLineDown" MouseLeftButtonUp="StreetDrawLineRelease"/>
+                            <Ellipse Name="streetPreview" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Black" Visibility="Hidden" MouseLeftButtonDown="TexBlockClickStreet"  Width="10" Height="10"/>
 
                         </Grid> 
                     </ScrollViewer>

@@ -58,6 +58,10 @@ namespace camping.WPF
 
         private Point mousePosition = new();
 
+
+        private Point streetPoint1 = new();
+        private Line streetLine = new Line{ Stroke = Brushes.Black};
+
         private Map AvailableCampSitesMap;
 
         public Overview()
@@ -136,7 +140,19 @@ namespace camping.WPF
 
             mousePosition = e.GetPosition(campingmap);
             preview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
-            streetPreview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
+            streetPreview.Margin = new Thickness(mousePosition.X-5, mousePosition.Y-5, 0, 0);
+
+            if (streetPoint1.X != 0 && streetPoint1.X != 0)
+            {
+                campingmap.Children.Remove(streetLine);
+                streetLine.X1 = streetPoint1.X-1;
+                streetLine.Y1 = streetPoint1.Y-1;
+                streetLine.X2 = mousePosition.X - 1;
+                streetLine.Y2 = mousePosition.Y - 1;
+                campingmap.Children.Add(streetLine);
+            }
+
+
 
         }
 
@@ -215,7 +231,7 @@ namespace camping.WPF
             {
                 addNewRowDefinition();
                 Button button = createLocationButton(streetButtonMarginSize);
-                button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
+                button.Background = new SolidColorBrush(Color.FromRgb(210, 210, 210));
                 button.BorderBrush = Brushes.Black;
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
@@ -289,7 +305,7 @@ namespace camping.WPF
         } 
         private void addStreetPreview()
         {
-            streetPreview.Visibility = Visibility.Visible; // 
+            streetPreview.Visibility = Visibility.Visible;
             //preview.RenderTransform = new RotateTransform { Angle = map.calculateStreetAngle(SelectedStreet) };
         }
     
@@ -314,25 +330,37 @@ namespace camping.WPF
             
             displayAllLocations();
         }
-        private void StreetDrawLineDown(object sender, MouseButtonEventArgs e) //add street
-        {
-            StartXStreet = Convert.ToInt32(mousePosition.X);
-           StartYStreet = Convert.ToInt32(mousePosition.Y);
-        }
-        private void StreetDrawLineRelease(object sender, MouseButtonEventArgs e)
-        {
-            int newStreetID = siteData.AddLocation(SelectedArea, StartXStreet, StartYStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y));
-            retrieveData.UpdateLocations();
-            Street street = retrieveData.GetStreetFromID(newStreetID);
-            Area area = retrieveData.GetAreaFromID(street.AreaID);
-            toggleChildrenVisibility(area);
-
-            if (map is not null)
+        private void TexBlockClickStreet(object sender, MouseButtonEventArgs e) //add street
+        { 
+            if (streetPoint1.X != 0 && streetPoint1.X != 0)
             {
-                map.drawMap();
+                campingmap.Children.Remove(streetLine);
+                streetPreview.Visibility = Visibility.Hidden;
+
+                int newStreetID = siteData.AddLocation(SelectedArea, Convert.ToInt32(streetPoint1.X), Convert.ToInt32(streetPoint1.Y), Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y));
+                retrieveData.UpdateLocations();
+                Street street = retrieveData.GetStreetFromID(newStreetID);
+                Area area = retrieveData.GetAreaFromID(street.AreaID);
+
+                toggleChildrenVisibility(area);
+
+                if (map is not null)
+                {
+                    map.drawMap();
+                }
+
+                displayAllLocations();
+
+                streetPoint1 = new Point();
+
             }
-            streetPreview.Visibility = Visibility.Hidden;
-            displayAllLocations();
+            else
+            {
+                streetPoint1 = new Point(mousePosition.X, mousePosition.Y);
+            }
+            
+
+            
         }
 
         // highlight de geselecteerde site
@@ -790,11 +818,6 @@ namespace camping.WPF
         private void CancelEditReservationButtonClick(object sender, RoutedEventArgs e)
         {
             changeReservation.fillReservationInfoGrid(selectedReservation);
-        }
-
-        private void Checkfields()
-        {
-            throw new NotImplementedException();
         }
 
 
