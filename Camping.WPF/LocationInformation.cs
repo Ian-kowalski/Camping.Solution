@@ -340,9 +340,13 @@ namespace camping.WPF
                 {
                     deleteCampSiteButtonClick(location.LocationID);
                 };
-            }else
+            }else if((typeof(Street) == location.GetType() ? retrieveData.HasChildren((Street)location) : retrieveData.HasChildren((Area)location)))
             {
                 DeleteCampSiteButton.IsEnabled = false;
+                Label sizeLabel = CreateAndAddLabel($"er zijn nog straten of plekken!", 16, 3, 0);
+                sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                sizeLabel.Foreground = Brushes.Red;
+                Grid.SetColumnSpan(sizeLabel, 2);
             }
 
             Grid.SetRow(DeleteCampSiteButton, 1);

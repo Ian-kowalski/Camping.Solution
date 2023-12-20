@@ -129,6 +129,31 @@ namespace camping.Core
             return reservationData.HasUpcomingReservations(campSiteID, DateTime.Today);
         }
 
+        public bool HasChildren(Street street)
+        {
+            foreach (var site in Sites)
+            {
+                if (site.StreetID == street.LocationID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool HasChildren(Area area)
+        {
+            foreach (var street in Streets)
+            {
+                if (street.AreaID == area.LocationID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
         public bool DeleteCampSite(int campSiteID) {
 
             // will not delete any campsite if it has any upcoming reservations.
