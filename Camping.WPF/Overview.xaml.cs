@@ -350,7 +350,7 @@ namespace camping.WPF
 
         private void sitePreviewClick(object sender, MouseButtonEventArgs e) //add site
         {
-            sitePreview.Visibility = Visibility.Hidden;
+            RemovePrevieu();
 
             int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
             retrieveData.UpdateLocations();
@@ -368,12 +368,11 @@ namespace camping.WPF
             
             displayAllLocations();
         }
-        private void TexBlockClickStreet(object sender, MouseButtonEventArgs e) //add street
+        private void StreetDrawLineDown(object sender, MouseButtonEventArgs e) //add street
         { 
             if (streetPoint1.X != 0 && streetPoint1.X != 0)
             {
-                campingmap.Children.Remove(streetLine);
-                streetPreview.Visibility = Visibility.Hidden;
+
 
                 int newStreetID = siteData.AddLocation(SelectedArea, Convert.ToInt32(streetPoint1.X), Convert.ToInt32(streetPoint1.Y), Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y));
                 retrieveData.UpdateLocations();
@@ -389,7 +388,7 @@ namespace camping.WPF
 
                 displayAllLocations();
 
-                streetPoint1 = new Point();
+                RemovePrevieu();
 
             }
             else
@@ -401,10 +400,19 @@ namespace camping.WPF
             
         }
 
+        private void RemovePrevieu()
+        {
+            campingmap.Children.Remove(streetLine);
+            sitePreview.Visibility = Visibility.Hidden;
+            streetPreview.Visibility = Visibility.Hidden;
+            streetPoint1 = new Point();
+        }
+
         // highlight de geselecteerde site
         private void onSitePress(Location location)
         {
-            sitePreview.Visibility = Visibility.Hidden;
+            RemovePrevieu();
+
             if (location is Area && location is not null)
             {
                 Area area = location as Area;
@@ -436,7 +444,8 @@ namespace camping.WPF
         }
         public void onSiteSelect(Location location)
         {
-            sitePreview.Visibility = Visibility.Hidden;
+            RemovePrevieu();
+
             if (location is Area && location is not null)
             {
                 Area area = location as Area;
