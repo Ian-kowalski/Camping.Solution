@@ -53,7 +53,7 @@
                     <ScrollViewer Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <Grid x:Name="campingmap" Grid.Row="0" MouseMove="Grid_MouseMove">
                           <TextBlock />
-                          <Rectangle Name="sitePreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="sitePreviewClick"/>
+                            <Rectangle Name="sitePreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="sitePreviewClick"/>
                             <Rectangle Name="streetPreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="5" Height="5" Fill="Black" Visibility="Hidden" MouseLeftButtonDown="StreetDrawLineDown" MouseLeftButtonUp="StreetDrawLineRelease"/>
 
                         </Grid> 
@@ -148,7 +148,9 @@
         <Border x:Name="AddReservationInfo" Visibility="Hidden" Grid.Column="2" Grid.Row="1" Margin="32,32,32,32" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderBrush="#000000" BorderThickness="3">
             <Grid x:Name="AddReservationGeneralGrid">
                 <ScrollViewer Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <Grid x:Name="AvailableCampsitesMap" Grid.Row="0" Grid.Column="0" Visibility="Visible"/>
+                    <Grid x:Name="AvailableCampsitesMap" Grid.Row="0" Grid.Column="0" Visibility="Visible">
+                        <TextBlock Background="#ACE85A"/>
+                    </Grid>
                 </ScrollViewer>
 
                 <Grid x:Name="AddReservationInfoGrid" Grid.Row="0" Grid.Column="0" Visibility="Hidden" Margin="16,16,16,16">
