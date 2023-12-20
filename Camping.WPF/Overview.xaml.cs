@@ -215,7 +215,6 @@ namespace camping.WPF
         }
 
         private void addNewArea() {
-            // voeg gebied toe aan database
             RemovePreview();
 
             Random random = new Random();
@@ -228,7 +227,7 @@ namespace camping.WPF
             string color = $"#{colorAlpha:X2}{colorRed:X2}{colorGreen:X2}{colorBlue:X2}";
 
             siteData.AddArea(color);
-            // update scherm
+
             retrieveData.UpdateLocations();
             displayAllLocations();
         }
