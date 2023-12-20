@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Camping.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace camping.WPF
     public class LocationInformation
     {
         public Grid LocationInfoGrid { get; set; }
-        private SiteData siteData { get; set; }
+        private ISiteData siteData { get; set; }
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
         private Location location { get; set; }
@@ -24,7 +25,7 @@ namespace camping.WPF
         Button ChangeFacilitiesButton = new Button();
 
 
-        public LocationInformation(Grid locationInfoGrid, SiteData siteData, RetrieveData retrieveData, Location location, Area selectedArea, Street selectedStreet, Site selectedSite)
+        public LocationInformation(Grid locationInfoGrid, ISiteData siteData, RetrieveData retrieveData, Location location, Area selectedArea, Street selectedStreet, Site selectedSite)
         {
             LocationInfoGrid = locationInfoGrid;
             this.siteData = siteData;
