@@ -52,7 +52,7 @@
                 <Border x:Name="LocationInfoMap"  Visibility="Visible" Margin="0" BorderBrush="#000000" BorderThickness="0,0,0,1.5">
                     <ScrollViewer Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <Grid x:Name="campingmap" Grid.Row="0" MouseMove="Grid_MouseMove">
-                          <TextBlock />
+                            <TextBlock Background="#ACE85A"/>
 
                             <Ellipse Name="streetPreview" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="Black" Visibility="Hidden" MouseLeftButtonDown="StreetDrawLineDown"  Width="10" Height="10"/>
                             <Rectangle Name="sitePreview" HorizontalAlignment="Left" VerticalAlignment="Top" Width="30" Height="30" Fill="Aqua" Visibility="Hidden" MouseLeftButtonDown="sitePreviewClick"/>
