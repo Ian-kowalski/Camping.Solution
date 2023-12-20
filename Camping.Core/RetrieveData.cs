@@ -180,7 +180,7 @@ namespace camping.Core
             if (HasChildren(street)) { return false; }
 
             // deletes the reservation before telling the main window to update.
-            bool isDeleted = siteData.DeleteCampSite(street.LocationID);
+            bool isDeleted = siteData.DeleteStreet(street.LocationID);
 
             // deletes the site from the list of site classes
             Streets.Remove(street);
@@ -197,7 +197,7 @@ namespace camping.Core
             if (HasChildren(area)) { return false; }
 
             // deletes the reservation before telling the main window to update.
-            bool isDeleted = siteData.DeleteCampSite(area.LocationID);
+            bool isDeleted = siteData.DeleteArea(area.LocationID);
 
             // deletes the site from the list of site classes
             Areas.Remove(area);
