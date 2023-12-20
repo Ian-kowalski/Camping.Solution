@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Camping.Core;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace camping.WPF
         public event EventHandler<ChangeReservationEventArgs> EditReservationClick;
 
         private SshConnection connection { get; set; }
-        private SiteData siteData { get; set; }
-        private ReservationRepository resData { get; set; }
+        private ISiteData siteData { get; set; }
+        private IReservationData resData { get; set; }
         private RetrieveData retrieveData { get; set; }
         private Location tempLocation { get; set; }
         private ChangeReservation changeReservation { get; set; }
@@ -168,6 +169,45 @@ namespace camping.WPF
 
                 displayStreets(area.LocationID);
             }
+
+            Button newAreaButton = NewAreaButton(rowLength);
+            CampSiteList.Children.Add(newAreaButton);
+            rowLength++;
+        }
+        private Button NewAreaButton(int rowNumber)
+        {
+            addNewRowDefinition();
+            Button button = new Button();
+            button.Content = "+";
+            button.Background = new SolidColorBrush(Color.FromRgb(190, 190, 190));
+            button.BorderBrush = Brushes.Black;
+            button.BorderThickness = new Thickness(2);
+            button.FontSize = 16;
+            button.Margin = new Thickness(16, 4, 4, 4);
+
+            button.Click += (sender, e) => addNewArea();
+
+            Grid.SetRow(button, rowNumber);
+
+            return button;
+        }
+
+        private void addNewArea() {
+            // voeg gebied toe aan database
+
+            Random random = new Random();
+
+            var colorAlpha = 255;
+            var colorRed = random.Next(0,256);
+            var colorGreen = random.Next(0, 256 - colorRed);
+            var colorBlue = random.Next(0, 256 - colorGreen);
+
+            string color = $"#{colorAlpha:X2}{colorRed:X2}{colorGreen:X2}{colorBlue:X2}";
+
+            siteData.AddArea(color);
+            // update scherm
+            retrieveData.UpdateLocations();
+            displayAllLocations();
         }
 
         // laat de straten zien van de area
@@ -258,6 +298,7 @@ namespace camping.WPF
                 
             }
         }
+
         private void addSitePreview()
         {
             preview.Visibility = Visibility.Visible;
@@ -348,7 +389,7 @@ namespace camping.WPF
                 displayAllLocations();
 
             }
-            locationInformation = new(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
+            locationInformation = new LocationInformation(LocationInfoGrid, siteData, retrieveData, location, SelectedArea, SelectedStreet, SelectedSite);
         }
 
 

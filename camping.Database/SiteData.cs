@@ -237,13 +237,36 @@ namespace camping.Database
             }
         }
 
-        public int AddLocation(Location location, int x1, int y1)
+        public bool AddArea(string color) {
+            int linesInserted;
+
+            string sql = "INSERT INTO area (powerSupply, waterFront, pets, shadow, waterSupply, color) VALUES (0, 0, 0, 0, 0, @color);";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("color", color);
+
+                    linesInserted = command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+
+                // will return true if the area has been added
+                return (linesInserted > 0);
+            }
+        }
+        
+
+        public int AddLocation(Location parentLocation, int x1, int y1)
         {
             int result = 0;
             int coordinatesPairID = addCoordinatesPair(x1, y1);
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
-            if (location is Street)
+            if (parentLocation is Street)
             {
                 sql = $"INSERT INTO campSite(powerSupply, waterFront, pets, shadow, waterSupply, size, streetID, coordinatesPairs) " +
                     "VALUES(@powerSupply, @waterFront, @pets, @shadow, @waterSupply, 4, @locationID, @coordinatesPairID);"; //size = 4
@@ -251,7 +274,7 @@ namespace camping.Database
             List<int> facilities = new List<int>();
             foreach (string facilityName in facilityNames)
             {
-                if ((int)location.GetType().GetProperty(facilityName).GetValue(location) % 2 == 1) facilities.Add(3);
+                if ((int)parentLocation.GetType().GetProperty(facilityName).GetValue(parentLocation) % 2 == 1) facilities.Add(3);
                 else facilities.Add(2);
             }
             using (var connection = new SqlConnection(connectionString))
@@ -266,7 +289,7 @@ namespace camping.Database
                     command.Parameters.AddWithValue("@pets", facilities[2]);
                     command.Parameters.AddWithValue("@shadow", facilities[3]);
                     command.Parameters.AddWithValue("@waterSupply", facilities[0]);
-                    command.Parameters.AddWithValue("@locationID", location.LocationID);
+                    command.Parameters.AddWithValue("@locationID", parentLocation.LocationID);
                     command.Parameters.AddWithValue("@coordinatesPairID", coordinatesPairID);
 
                     command.ExecuteNonQuery();
