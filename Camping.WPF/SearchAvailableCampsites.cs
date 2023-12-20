@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Camping.Core;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -29,13 +30,13 @@ namespace camping.WPF
         Grid grid;
         Grid availableSitesGrid;
 
-        SiteData siteData;
+        ISiteData siteData;
         IReservationData resData;
 
         public AvailableCampsites availableCampsites;
 
 
-        public SearchAvailableCampsites(Grid dateGrid, SiteData siteData, IReservationData resData, Grid availableSitesGrid)
+        public SearchAvailableCampsites(Grid dateGrid, ISiteData siteData, IReservationData resData, Grid availableSitesGrid)
         {
             grid = dateGrid;
             this.siteData = siteData;
