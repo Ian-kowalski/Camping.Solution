@@ -236,8 +236,10 @@ namespace camping.WPF
         private void displayStreets(int areaID)
         {
             bool visible = false;
+            int streetCount = 0;
             foreach (Street street in retrieveData.Streets)
             {
+                if (street.AreaID == areaID) { streetCount++; }
                 if (street.AreaID == areaID && street.Visible)
                 {
 
@@ -265,7 +267,7 @@ namespace camping.WPF
                     visible = true;
                 }
             }
-            if (visible && SelectedArea is not null && SelectedArea.LocationID == areaID)
+            if ((streetCount == 0 || visible) && SelectedArea is not null && SelectedArea.LocationID == areaID)
             {
                 addNewRowDefinition();
                 Button button = createLocationButton(streetButtonMarginSize);
