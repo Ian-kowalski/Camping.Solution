@@ -143,7 +143,7 @@ namespace camping.WPF
             sitePreview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
             streetPreview.Margin = new Thickness(mousePosition.X-5, mousePosition.Y-5, 0, 0);
 
-            if (streetPoint1.X != 0 && streetPoint1.X != 0)
+            if (streetPoint1.X != 0 && streetPoint1.Y != 0)
             {
                 campingmap.Children.Remove(streetLine);
                 streetLine.X1 = streetPoint1.X-1;
@@ -216,6 +216,7 @@ namespace camping.WPF
 
         private void addNewArea() {
             // voeg gebied toe aan database
+            RemovePreview();
 
             Random random = new Random();
 
@@ -340,19 +341,20 @@ namespace camping.WPF
 
         private void addSitePreview()
         {
+            RemovePreview();
             sitePreview.Visibility = Visibility.Visible;
             sitePreview.RenderTransform = new RotateTransform { Angle = map.calculateStreetAngle(SelectedStreet) };
         } 
         private void addStreetPreview()
         {
+            RemovePreview();
             streetPreview.Visibility = Visibility.Visible;
-            //preview.RenderTransform = new RotateTransform { Angle = map.calculateStreetAngle(SelectedStreet) };
         }
     
 
         private void sitePreviewClick(object sender, MouseButtonEventArgs e) //add site
         {
-            RemovePrevieu();
+            RemovePreview();
 
             int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
             retrieveData.UpdateLocations();
@@ -372,7 +374,7 @@ namespace camping.WPF
         }
         private void StreetDrawLineDown(object sender, MouseButtonEventArgs e) //add street
         { 
-            if (streetPoint1.X != 0 && streetPoint1.X != 0)
+            if (streetPoint1.X != 0 && streetPoint1.Y != 0)
             {
 
 
@@ -390,7 +392,7 @@ namespace camping.WPF
 
                 displayAllLocations();
 
-                RemovePrevieu();
+                RemovePreview();
 
             }
             else
@@ -402,7 +404,7 @@ namespace camping.WPF
             
         }
 
-        private void RemovePrevieu()
+        private void RemovePreview()
         {
             campingmap.Children.Remove(streetLine);
             sitePreview.Visibility = Visibility.Hidden;
@@ -413,7 +415,7 @@ namespace camping.WPF
         // highlight de geselecteerde site
         private void onSitePress(Location location)
         {
-            RemovePrevieu();
+            RemovePreview();
 
             if (location is Area && location is not null)
             {
@@ -446,7 +448,7 @@ namespace camping.WPF
         }
         public void onSiteSelect(Location location)
         {
-            RemovePrevieu();
+            RemovePreview();
 
             if (location is Area && location is not null)
             {
