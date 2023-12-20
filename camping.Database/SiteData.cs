@@ -260,16 +260,22 @@ namespace camping.Database
         }
         
 
-        public int AddLocation(Location parentLocation, int x1, int y1)
+
+        public int AddLocation(Location parentLocation, int x1, int y1, int x2, int y2)
         {
             int result = 0;
-            int coordinatesPairID = addCoordinatesPair(x1, y1);
+            int coordinatesPairID = addCoordinatesPair(parentLocation, x1, y1, x2, y2);
             List<string> facilityNames = new List<string> { "HasWaterSupply", "OutletPresent", "PetsAllowed", "HasShadow", "AtWater" };
             string sql = "";
             if (parentLocation is Street)
             {
                 sql = $"INSERT INTO campSite(powerSupply, waterFront, pets, shadow, waterSupply, size, streetID, coordinatesPairs) " +
                     "VALUES(@powerSupply, @waterFront, @pets, @shadow, @waterSupply, 4, @locationID, @coordinatesPairID);"; //size = 4
+            }            
+            if (parentLocation is Area)
+            {
+                sql = $"INSERT INTO street(areaID, powerSupply, waterFront, pets, shadow, waterSupply, coordinatesPairsKey) " +
+                    "VALUES(@locationID, @powerSupply, @waterFront, @pets, @shadow, @waterSupply, @coordinatesPairID);"; 
             }
             List<int> facilities = new List<int>();
             foreach (string facilityName in facilityNames)
@@ -294,8 +300,16 @@ namespace camping.Database
 
                     command.ExecuteNonQuery();
                 }
+                if (parentLocation is Street)
+                {
                 sql = "SELECT MAX(campSiteID) " +
                     "from campSite;";
+                }
+                if (parentLocation is Area)
+                {
+                    sql = "SELECT MAX(streetID) " +
+                   "from street;";
+                }
                 using (var command = new SqlCommand(sql, connection))
                 {
                     reader = command.ExecuteReader();
@@ -309,10 +323,8 @@ namespace camping.Database
             }        
         }
 
-        public int addCoordinatesPair(int x1, int y1)
+        public int addCoordinatesPair(Location parentLocation, int x1, int y1, int x2, int y2)
         {
-            int x2 = x1 + 20;
-            int y2 = y1 + 20;
             int result = 0;
             string sql = "INSERT INTO coordinatesPair (x1, y1, x2, y2) " +
                 "VALUES(@x1, @y1, @x2, @y2);";
