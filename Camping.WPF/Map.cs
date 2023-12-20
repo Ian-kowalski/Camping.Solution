@@ -109,7 +109,7 @@ namespace camping.WPF
             button.Margin = new Thickness(site.CoordinatesPairs._x1, site.CoordinatesPairs._y1, 0, 0);
             button.RenderTransformOrigin = new Point(0.5, 0.5);
             button.RenderTransform = new RotateTransform { Angle = angle };
-            button.Opacity = 0.5;
+            button.Opacity = 0.8;
 
             button.IsEnabled = available;
             button.Tag = site;
@@ -127,7 +127,7 @@ namespace camping.WPF
                     {
                         if (b != button)
                         {
-                            b.Opacity = 0.5;
+                            b.Opacity = 0.8;
                         }
                     }
                 }
@@ -147,7 +147,7 @@ namespace camping.WPF
                     button.Opacity = 1;
                 } else
                 {
-                    button.Opacity = 0.5;
+                    button.Opacity = 0.8;
                 }
             }
         }
@@ -221,9 +221,10 @@ namespace camping.WPF
             line.Y1 = street.CoordinatesPairs._y1;
             line.X2 = street.CoordinatesPairs._x2;
             line.Y2 = street.CoordinatesPairs._y2;
-            line.StrokeThickness = 8;
-            line.Opacity = 0.3;
             line.Stroke = brush;
+            line.StrokeThickness = 8;
+
+            line.Opacity = 0.3;
 
             line.Tag = street;
 
@@ -248,7 +249,7 @@ namespace camping.WPF
                     }
                     else
                     {
-                        button.Opacity = 0.5;
+                        button.Opacity = 0.8;
                     }
                 }
             };
@@ -283,7 +284,7 @@ namespace camping.WPF
                     }
                     else
                     {
-                        button.Opacity = 0.5;
+                        button.Opacity = 0.8;
                     }
                 }
             }
@@ -311,7 +312,7 @@ namespace camping.WPF
                     button.Opacity = 1;
                 }
                 else {
-                    button.Opacity = 0.5;
+                    button.Opacity = 0.8;
                 }
             }
         }
