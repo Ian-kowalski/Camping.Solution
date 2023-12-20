@@ -133,9 +133,8 @@ namespace camping.WPF
         {
             Grid campingmap = sender as Grid;
 
-
             mousePosition = e.GetPosition(campingmap);
-            preview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
+            sitePreview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
             streetPreview.Margin = new Thickness(mousePosition.X, mousePosition.Y, 0, 0);
 
         }
@@ -283,8 +282,8 @@ namespace camping.WPF
         }
         private void addSitePreview()
         {
-            preview.Visibility = Visibility.Visible;
-            preview.RenderTransform = new RotateTransform { Angle = map.calculateStreetAngle(SelectedStreet) };
+            sitePreview.Visibility = Visibility.Visible;
+            sitePreview.RenderTransform = new RotateTransform { Angle = map.calculateStreetAngle(SelectedStreet) };
         } 
         private void addStreetPreview()
         {
@@ -293,9 +292,9 @@ namespace camping.WPF
         }
     
 
-        private void TextBlockClick(object sender, MouseButtonEventArgs e) //add site
+        private void sitePreviewClick(object sender, MouseButtonEventArgs e) //add site
         {
-            preview.Visibility = Visibility.Hidden;
+            sitePreview.Visibility = Visibility.Hidden;
 
             int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
             retrieveData.UpdateLocations();
@@ -337,7 +336,7 @@ namespace camping.WPF
         // highlight de geselecteerde site
         private void onSitePress(Location location)
         {
-            preview.Visibility = Visibility.Hidden;
+            sitePreview.Visibility = Visibility.Hidden;
             if (location is Area && location is not null)
             {
                 Area area = location as Area;
@@ -369,7 +368,7 @@ namespace camping.WPF
         }
         public void onSiteSelect(Location location)
         {
-            preview.Visibility = Visibility.Hidden;
+            sitePreview.Visibility = Visibility.Hidden;
             if (location is Area && location is not null)
             {
                 Area area = location as Area;
