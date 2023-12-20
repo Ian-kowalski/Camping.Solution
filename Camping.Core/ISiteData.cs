@@ -15,7 +15,7 @@ namespace Camping.Core
         public void UpdateFacilities(Location location);
 
         public bool DeleteCampSite(int campSiteiD);
-        public int AddLocation(Location location, int x1, int y1);
-        public int addCoordinatesPair(int x1, int y1);
+        public int AddLocation(Location location, int x1, int y1, int x2, int y2);
+        public int addCoordinatesPair(Location location, int x1, int y1, int x2, int y2);
     }
 }
