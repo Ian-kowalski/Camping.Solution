@@ -1,5 +1,4 @@
 ﻿using camping.Core;
-using camping.Database;
 using Camping.Core;
 using System;
 using System.Collections.Generic;
@@ -89,7 +88,7 @@ namespace camping.WPF
             ChangeFacilitiesButton.BorderBrush = Brushes.Black;
             ChangeFacilitiesButton.BorderThickness = new Thickness(2);
             ChangeFacilitiesButton.FontSize = 16;
-            ChangeFacilitiesButton.Margin = new Thickness(0,0,5,0);
+            ChangeFacilitiesButton.Margin = new Thickness(0, 0, 5, 0);
 
             ChangeFacilitiesButton.Click += (sender, e) => { ChangeFacilitiesButtonClick(ChangeFacilitiesButton); };
 
@@ -97,17 +96,18 @@ namespace camping.WPF
             Grid.SetColumn(ChangeFacilitiesButton, 4);
             LocationInfoGrid.Children.Add(ChangeFacilitiesButton);
 
-            if (location is Site) {
-                addDeleteButton(((Site)location).LocationID);
-            }
+
+            addDeleteButton(location);
 
         }
 
         private string getPathText()
         {
-            if (SelectedStreet == null) return $"Gebied: {SelectedArea.LocationID.ToString()}";
-            if (SelectedSite == null) return $"Gebied: {SelectedArea.LocationID.ToString()}, Straat: {SelectedStreet.LocationID.ToString()}";
-            return $"Gebied: {SelectedArea.LocationID.ToString()}, Straat: {SelectedStreet.LocationID.ToString()}, Plaats: {SelectedSite.LocationID.ToString()}";
+            string path = $"Gebied: {SelectedArea.LocationID}"
+                + (SelectedStreet != null ? $"/ Straat: {SelectedStreet.LocationID}" : "")
+                + (SelectedSite != null ? $"/ Plaats: {SelectedSite.LocationID}" : "");
+
+            return path;
         }
 
         //add label to LocationInfoGrid
@@ -169,12 +169,12 @@ namespace camping.WPF
         //triggered when clicking a facility ellipse
         private void facilityClick(object sender, MouseButtonEventArgs e)
         {
-                Ellipse clickedEllipse = (Ellipse)sender;
-                SolidColorBrush solidColorBrush = new SolidColorBrush();
+            Ellipse clickedEllipse = (Ellipse)sender;
+            SolidColorBrush solidColorBrush = new SolidColorBrush();
 
-                ChangeFacilityColor(clickedEllipse);
-                solidColorBrush.Color = GetFacilityColor(clickedEllipse);
-                clickedEllipse.Fill = solidColorBrush;
+            ChangeFacilityColor(clickedEllipse);
+            solidColorBrush.Color = GetFacilityColor(clickedEllipse);
+            clickedEllipse.Fill = solidColorBrush;
         }
 
         //retrieves the color of a specific facility
@@ -307,10 +307,10 @@ namespace camping.WPF
             }
         }
 
-        private void addDeleteButton(int campSiteID) {
+        private void addDeleteButton(Location location)
+        {
 
             Button DeleteCampSiteButton = new Button();
-            DeleteCampSiteButton.Content = "Verwijder Plek";
             DeleteCampSiteButton.HorizontalAlignment = HorizontalAlignment.Right;
             DeleteCampSiteButton.VerticalAlignment = VerticalAlignment.Center;
             DeleteCampSiteButton.Width = 180;
@@ -320,20 +320,29 @@ namespace camping.WPF
             DeleteCampSiteButton.FontSize = 16;
             DeleteCampSiteButton.Margin = new Thickness(0, 0, 5, 0);
 
-            
-            
+            string Content = "Verwijder " + (typeof(Site) == location.GetType() ? "Plek":(typeof(Street) == location.GetType() ? "Straat ": "Gebied")) ;
+
+            DeleteCampSiteButton.Content = Content;
 
 
-            if (!retrieveData.HasUpcomingReservations(campSiteID)) {
-                DeleteCampSiteButton.Click += (sender, e) => {
-                    deleteCampSiteButtonClick(campSiteID);
-                };
-            } else { 
+            if (retrieveData.HasUpcomingReservations(location.LocationID) && typeof(Site) == location.GetType())
+            {
+
                 DeleteCampSiteButton.IsEnabled = false;
                 Label sizeLabel = CreateAndAddLabel($"Deze plek bevat nog onafgeronde reserveringen!", 16, 3, 0);
                 sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
                 sizeLabel.Foreground = Brushes.Red;
                 Grid.SetColumnSpan(sizeLabel, 2);
+            }
+            else if (typeof(Site) == location.GetType())
+            {
+                DeleteCampSiteButton.Click += (sender, e) =>
+                {
+                    deleteCampSiteButtonClick(location.LocationID);
+                };
+            }else
+            {
+                DeleteCampSiteButton.IsEnabled = false;
             }
 
             Grid.SetRow(DeleteCampSiteButton, 1);
@@ -342,7 +351,8 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(DeleteCampSiteButton);
         }
 
-        private void deleteCampSiteButtonClick(int campSiteID) {
+        private void deleteCampSiteButtonClick(int campSiteID)
+        {
 
             string caption = "Campingplek verwijderen";
             string messageBoxText = $"Weet je zeker dat je deze plek ({campSiteID}) permanent wil verwijderen?";
@@ -365,8 +375,6 @@ namespace camping.WPF
 
                     break;
                 case MessageBoxResult.No:
-                    // User pressed No button
-                    // ...Nothing
                     break;
             }
         }
