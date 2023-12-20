@@ -15,6 +15,8 @@ namespace Camping.Core
         public void UpdateFacilities(Location location);
 
         public bool DeleteCampSite(int campSiteiD);
+        public bool DeleteArea(int areaID);
+        public bool DeleteStreet(int streetID);
 
         public bool AddArea(string color);
 
