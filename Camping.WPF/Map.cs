@@ -108,7 +108,7 @@ namespace camping.WPF
                 } else {
                     displayLocation(sender, new SiteSelectedOnMapEventArgs(site));
 
-                    button.BorderThickness = new Thickness(2);
+                    button.BorderThickness = new Thickness(4);
                     button.BorderBrush = Brushes.White;
 
                     ShowSelectedStreetOnMap(_retrieveData.GetStreetFromID(site.StreetID), false);
