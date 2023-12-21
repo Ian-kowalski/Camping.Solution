@@ -125,31 +125,89 @@ namespace camping.Core
             return reservationData.DeleteReservation(reservationID);
         }
 
-        public bool HasUpcomingReservations(int campSiteID) {
+        public bool HasUpcomingReservations(int campSiteID)
+        {
             return reservationData.HasUpcomingReservations(campSiteID, DateTime.Today);
         }
 
-        public bool DeleteCampSite(int campSiteID) {
-
-            // will not delete any campsite if it has any upcoming reservations.
-            if (HasUpcomingReservations(campSiteID)) { return false; }
-
-            // deletes the reservation before telling the main window to update.
-            bool isDeleted = siteData.DeleteCampSite(campSiteID);
-
-            // deletes the site from the list of site classes
-            foreach (Site site in Sites) {
-                if (site.LocationID == campSiteID) { 
-                    Sites.Remove(site);
-                    break;
+        public bool HasChildren(Street street)
+        {
+            foreach (var site in Sites)
+            {
+                if (site.StreetID == street.LocationID)
+                {
+                    return true;
                 }
             }
+            return false;
+        }
+
+        public bool HasChildren(Area area)
+        {
+            foreach (var street in Streets)
+            {
+                if (street.AreaID == area.LocationID)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public bool DeleteLocation(Site campSiteID)
+        {
+
+            // will not delete any campsite if it has any upcoming reservations.
+            if (HasUpcomingReservations(campSiteID.LocationID)) { return false; }
+
+            // deletes the reservation before telling the main window to update.
+            bool isDeleted = siteData.DeleteCampSite(campSiteID.LocationID);
+
+            // deletes the site from the list of site classes
+            Sites.Remove(campSiteID);
 
             SiteDeleted?.Invoke(this, new EventArgs());
 
             // return true if a campsite has been deleted.
             return isDeleted;
         }
+
+
+        public bool DeleteLocation(Street street)
+        {
+            // will not delete any campsite if it has any upcoming reservations.
+            if (HasChildren(street)) { return false; }
+
+            // deletes the reservation before telling the main window to update.
+            bool isDeleted = siteData.DeleteStreet(street.LocationID);
+
+            // deletes the site from the list of site classes
+            Streets.Remove(street);
+
+            SiteDeleted?.Invoke(this, new EventArgs());
+
+            // return true if a campsite has been deleted.
+            return isDeleted;
+        }
+
+        public bool DeleteLocation(Area area)
+        {
+            // will not delete any campsite if it has any upcoming reservations.
+            if (HasChildren(area)) { return false; }
+
+            // deletes the reservation before telling the main window to update.
+            bool isDeleted = siteData.DeleteArea(area.LocationID);
+
+            // deletes the site from the list of site classes
+            Areas.Remove(area);
+
+            SiteDeleted?.Invoke(this, new EventArgs());
+
+            // return true if a campsite has been deleted.
+            return isDeleted;
+        }
+
         public void UpdateLocations()
         {
             Sites = siteData.GetSiteInfo();

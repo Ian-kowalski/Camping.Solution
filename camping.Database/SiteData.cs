@@ -237,6 +237,58 @@ namespace camping.Database
             }
         }
 
+        public bool DeleteStreet(int streetID)
+        {
+
+            int result;
+            string sql = "DELETE " +
+                "FROM street " +
+                "WHERE streetID = @streetID;";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+
+                    command.Parameters.AddWithValue("streetID", streetID);
+
+                    result = command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+
+                // will return true if only 1 campsite has been deleted
+                return (result == 1);
+            }
+        }
+
+        public bool DeleteArea(int areaID)
+        {
+
+            int result;
+            string sql = "DELETE " +
+                "FROM area " +
+                "WHERE areaID = @areaID;";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+
+                    command.Parameters.AddWithValue("areaID", areaID);
+
+                    result = command.ExecuteNonQuery();
+                }
+
+                connection.Close();
+
+                // will return true if only 1 campsite has been deleted
+                return (result == 1);
+            }
+        }
+
         public bool AddArea(string color) {
             int linesInserted;
 
