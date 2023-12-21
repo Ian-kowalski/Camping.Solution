@@ -217,7 +217,8 @@ namespace camping.Database
             int result;
             string sql = "DELETE " +
                 "FROM campSite " +
-                "WHERE campSiteID = @campSiteID;";
+                "WHERE campSiteID = @campSiteID;\r\n" +
+                "declare @max int;\r\nselect @max = max(campSiteID) from campSite;\r\ndbcc checkident(campSite,reseed,@max);";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -243,7 +244,8 @@ namespace camping.Database
             int result;
             string sql = "DELETE " +
                 "FROM street " +
-                "WHERE streetID = @streetID;";
+                "WHERE streetID = @streetID;\r\n" +
+                "declare @max int;\r\nselect @max = max(streetID) from street;\r\ndbcc checkident(street,reseed,@max);";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -269,7 +271,8 @@ namespace camping.Database
             int result;
             string sql = "DELETE " +
                 "FROM area " +
-                "WHERE areaID = @areaID;";
+                "WHERE areaID = @areaID;\r\n" +
+                "declare @max int;\r\nselect @max = max(areaID) from area;\r\ndbcc checkident(area,reseed,@max);";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();

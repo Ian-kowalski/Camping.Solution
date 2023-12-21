@@ -327,26 +327,15 @@ namespace camping.WPF
 
             if (retrieveData.HasUpcomingReservations(location.LocationID) && typeof(Site) == location.GetType())
             {
-
-                DeleteCampSiteButton.IsEnabled = false;
-                Label sizeLabel = CreateAndAddLabel($"Deze plek bevat nog onafgeronde reserveringen!", 16, 3, 0);
-                sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                sizeLabel.Foreground = Brushes.Red;
-                Grid.SetColumnSpan(sizeLabel, 2);
+                showError(DeleteCampSiteButton, "Deze plek bevat nog onafgeronde reserveringen!");
             }
-            else if (typeof(Site) == location.GetType())
+            else if(typeof(Street) == location.GetType() && retrieveData.HasChildren((Street)location))
             {
-                DeleteCampSiteButton.Click += (sender, e) =>
-                {
-                    deleteCampSiteButtonClick(location);
-                };
-            }else if((typeof(Street) == location.GetType() ? retrieveData.HasChildren((Street)location) : retrieveData.HasChildren((Area)location)))
+                showError(DeleteCampSiteButton, "Er zijn nog plekken!");
+            }
+            else if (typeof(Area) == location.GetType() && retrieveData.HasChildren((Area)location))
             {
-                DeleteCampSiteButton.IsEnabled = false;
-                Label sizeLabel = CreateAndAddLabel($"er zijn nog straten of plekken!", 16, 3, 0);
-                sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
-                sizeLabel.Foreground = Brushes.Red;
-                Grid.SetColumnSpan(sizeLabel, 2);
+                showError(DeleteCampSiteButton, "Er zijn nog straten!");
             }
             else
             {
@@ -360,6 +349,15 @@ namespace camping.WPF
             Grid.SetColumn(DeleteCampSiteButton, 4);
 
             LocationInfoGrid.Children.Add(DeleteCampSiteButton);
+        }
+
+        private void showError(Button DeleteCampSiteButton, string error)
+        {
+            DeleteCampSiteButton.IsEnabled = false;
+            Label sizeLabel = CreateAndAddLabel(error, 16, 3, 0);
+            sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+            sizeLabel.Foreground = Brushes.Red;
+            Grid.SetColumnSpan(sizeLabel, 2);
         }
 
         private void deleteCampSiteButtonClick(Location location)
