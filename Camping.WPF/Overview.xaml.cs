@@ -848,6 +848,7 @@ namespace camping.WPF
                     if (toBeCancel.Contains(selectedReservation))
                     {
                         ReservationInfoGrid.Visibility = Visibility.Hidden;
+                        AnnulerenButton.IsEnabled = false;
                     }
                     foreach (var reservation in toBeCancel)
                     {
