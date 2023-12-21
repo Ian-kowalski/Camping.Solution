@@ -664,23 +664,21 @@ namespace camping.WPF
                 int resID;
                 if (!int.TryParse(reservationIDFilterBox.Text, out resID) || reservationIDFilterBox.Text == string.Empty)
                 {
-                    MessageBox.Show("UpdateReservations(LastNameFilterBox.Text.Trim())");
-                    reservations = retrieveData.UpdateReservations(LastNameFilterBox.Text.Trim());
+                    reservations = retrieveData.UpdateReservationsList(LastNameFilterBox.Text.Trim());
                     reservationIDFilterBox.Text = string.Empty;
                 }else if (LastNameFilterBox.Text == string.Empty && int.TryParse(reservationIDFilterBox.Text, out resID))
                 {
-                    MessageBox.Show("UpdateReservations(resID)");
-                    reservations =  retrieveData.UpdateReservations(resID);
+                    reservations =  retrieveData.UpdateReservationsList(resID);
                 }
                 else
                 {
-                    reservations =  retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim());
+                    reservations =  retrieveData.UpdateReservationslist(resID, LastNameFilterBox.Text.Trim());
                 }
 
             }
             else
             {
-                reservations = retrieveData.UpdateReservations();
+                reservations = retrieveData.UpdateReservationsList();
             }
 
             Grid grid = new Grid();

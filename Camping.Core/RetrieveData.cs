@@ -1,4 +1,5 @@
 ﻿using Camping.Core;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -24,9 +25,9 @@ namespace camping.Core
 
             Reservations = reservationData.GetReservationInfo();
 
-            UpdateLocations();
-
-            UpdateReservations();
+            Sites = siteData.GetSiteInfo();
+            Streets = siteData.GetStreetInfo();
+            Areas = siteData.GetAreaInfo();
         }
 
         public Area GetAreaFromID(int id)
@@ -97,8 +98,17 @@ namespace camping.Core
 
         public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
+            Reservation result = (from r in Reservations
+                             where r.ReservationID == reservationID
+                                  select r).Single();
+
+            result.StartDate = startDate;
+            result.EndDate = endDate;
+            result.SiteID = campSiteID;
+            result.Visitor = visitor;
+
+
             return (reservationData.UpdateReservation(reservationID, startDate, endDate, campSiteID) &&
-                reservationData.UpdateReservationLines(campSiteID, reservationID) &&
                 reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
@@ -205,32 +215,28 @@ namespace camping.Core
 
         public void UpdateLocations()
         {
-            Sites = siteData.GetSiteInfo();
-            Streets = siteData.GetStreetInfo();
-            Areas = siteData.GetAreaInfo();
+
         }
 
-        public List<Reservation> UpdateReservations()
+        public List<Reservation> UpdateReservationsList()
         {
             return Reservations;
         }
-
-        public List<Reservation> UpdateReservations(string lastname)
+        public List<Reservation> UpdateReservationsList(string lastname)
         {
             return (from reservation in Reservations
                     where reservation.Visitor.LastName.ToLower().Contains(lastname.ToLower())
                     select reservation).ToList();
         }
-        public List<Reservation> UpdateReservations(int reservationID)
+        public List<Reservation> UpdateReservationsList(int reservationID)
         {
             return (from reservation in Reservations
                     where reservation.ReservationID == reservationID
                     select reservation).ToList();
         }
-
-        public List<Reservation> UpdateReservations(int reservationID, string lastname)
+        public List<Reservation> UpdateReservationslist(int reservationID, string lastname)
         {
-            return UpdateReservations(reservationID).Intersect(UpdateReservations(lastname)).ToList();
+            return UpdateReservationsList(reservationID).Intersect(UpdateReservationsList(lastname)).ToList();
         }
     }
 }

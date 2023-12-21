@@ -223,12 +223,11 @@ namespace camping.Database
                     command.Parameters.AddWithValue("startDate", startDate);
                     command.Parameters.AddWithValue("endDate", endDate);
                     command.Parameters.AddWithValue("reservationID", reservationID);
-                    command.Parameters.AddWithValue("campSiteID", campSiteID);
 
                     result = command.ExecuteNonQuery();
                 }
                 connection.Close();
-                return (result != 0);
+                return (result > 0 && UpdateReservationLines(campSiteID, reservationID));
             }
         }
 
