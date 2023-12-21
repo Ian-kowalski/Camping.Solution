@@ -1,4 +1,6 @@
 ﻿using Camping.Core;
+using System.Linq;
+using System.Linq.Expressions;
 
 
 namespace camping.Core
@@ -19,6 +21,8 @@ namespace camping.Core
         {
             this.siteData = siteData;
             this.reservationData = reservationData;
+
+            Reservations = reservationData.GetReservationInfo();
 
             UpdateLocations();
 
@@ -206,34 +210,27 @@ namespace camping.Core
             Areas = siteData.GetAreaInfo();
         }
 
-        public void UpdateReservations()
+        public List<Reservation> UpdateReservations()
         {
-            Reservations = reservationData.GetReservationInfo();
+            return Reservations;
         }
 
-        public void UpdateReservations(string lastname)
+        public List<Reservation> UpdateReservations(string lastname)
         {
-            
-            List<Reservation> sortedlist = new List<Reservation>();
-            sortedlist = (from reservation in Reservations
-                          where reservation.Visitor.LastName.ToLower().Contains(lastname.ToLower())
-                          select reservation).ToList();
-            Reservations = sortedlist;
+            return (from reservation in Reservations
+                    where reservation.Visitor.LastName.ToLower().Contains(lastname.ToLower())
+                    select reservation).ToList();
         }
-        public void UpdateReservations(int reservationID)
+        public List<Reservation> UpdateReservations(int reservationID)
         {
-            List<Reservation> sortedlist = new List<Reservation>();
-            sortedlist = (from reservation in Reservations
-                          where reservation.ReservationID == reservationID
-                          select reservation).ToList();
-            Reservations = sortedlist;
+            return (from reservation in Reservations
+                    where reservation.ReservationID == reservationID
+                    select reservation).ToList();
         }
 
-        public void UpdateReservations(int reservationID, string lastname)
+        public List<Reservation> UpdateReservations(int reservationID, string lastname)
         {
-            UpdateReservations(lastname);
-            UpdateReservations(reservationID);
-
+            return UpdateReservations(reservationID).Intersect(UpdateReservations(lastname)).ToList();
         }
     }
 }
