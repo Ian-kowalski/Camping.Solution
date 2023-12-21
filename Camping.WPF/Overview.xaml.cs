@@ -79,6 +79,7 @@ namespace camping.WPF
             retrieveData.SiteDeleted += (sender, e) => { 
                 displayAllLocations();
                 map.drawMap();
+                AvailableCampSitesMap.drawMap();
                 AddReservationInfoGrid.Visibility = Visibility.Hidden;
                 AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
 
@@ -367,6 +368,7 @@ namespace camping.WPF
             if (map is not null)
             {
                 map.drawMap();
+                AvailableCampSitesMap.drawMap();
             }
             
             displayAllLocations();
@@ -387,6 +389,7 @@ namespace camping.WPF
                 if (map is not null)
                 {
                     map.drawMap();
+                    AvailableCampSitesMap.drawMap();
                 }
 
                 displayAllLocations();
