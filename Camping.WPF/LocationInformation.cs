@@ -338,11 +338,22 @@ namespace camping.WPF
             {
                 DeleteCampSiteButton.Click += (sender, e) =>
                 {
-                    deleteCampSiteButtonClick(location.LocationID);
+                    deleteCampSiteButtonClick(location);
                 };
-            }else
+            }else if((typeof(Street) == location.GetType() ? retrieveData.HasChildren((Street)location) : retrieveData.HasChildren((Area)location)))
             {
                 DeleteCampSiteButton.IsEnabled = false;
+                Label sizeLabel = CreateAndAddLabel($"er zijn nog straten of plekken!", 16, 3, 0);
+                sizeLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                sizeLabel.Foreground = Brushes.Red;
+                Grid.SetColumnSpan(sizeLabel, 2);
+            }
+            else
+            {
+                DeleteCampSiteButton.Click += (sender, e) =>
+                {
+                    deleteCampSiteButtonClick(location);
+                };
             }
 
             Grid.SetRow(DeleteCampSiteButton, 1);
@@ -351,11 +362,11 @@ namespace camping.WPF
             LocationInfoGrid.Children.Add(DeleteCampSiteButton);
         }
 
-        private void deleteCampSiteButtonClick(int campSiteID)
+        private void deleteCampSiteButtonClick(Location location)
         {
 
             string caption = "Campingplek verwijderen";
-            string messageBoxText = $"Weet je zeker dat je deze plek ({campSiteID}) permanent wil verwijderen?";
+            string messageBoxText = $"Weet je zeker dat je ({location.LocationID}) permanent wil verwijderen?";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
 
@@ -364,13 +375,13 @@ namespace camping.WPF
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    if (!retrieveData.DeleteCampSite(campSiteID))
+                    if (typeof(Site) == location.GetType() ? retrieveData.DeleteLocation((Site)location): typeof(Street) == location.GetType() ? retrieveData.DeleteLocation((Street)location) : retrieveData.DeleteLocation((Area)location))
                     {
-                        MessageBox.Show("Deze plek kan niet verwijderd worden omdat er nog onafgeronde reserveringen zijn!");
+                        LocationInfoGrid.Children.Clear();
                     }
                     else
                     {
-                        LocationInfoGrid.Children.Clear();
+                        MessageBox.Show("Deze plek kan niet verwijderd worden omdat er nog onafgeronde reserveringen zijn!");
                     }
 
                     break;
