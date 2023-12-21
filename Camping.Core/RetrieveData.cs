@@ -1,4 +1,7 @@
 ﻿using Camping.Core;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 
 namespace camping.Core
@@ -20,9 +23,11 @@ namespace camping.Core
             this.siteData = siteData;
             this.reservationData = reservationData;
 
-            UpdateLocations();
+            Reservations = reservationData.GetReservationInfo();
 
-            UpdateReservations();
+            Sites = siteData.GetSiteInfo();
+            Streets = siteData.GetStreetInfo();
+            Areas = siteData.GetAreaInfo();
         }
 
         public Area GetAreaFromID(int id)
@@ -90,20 +95,20 @@ namespace camping.Core
             return reservationData.GetOtherAvailableReservation(campSite, startDate, endDate, reservationID);
         }
 
-        public List<Reservation> GetReservations(DateTime dateTime)
-        {
-            return reservationData.GetReservationInfo(dateTime);
-        }
-
-        /*        public int GetCampSiteID(int reservationID)
-                {
-                    return reservationData.GetCampSiteID(reservationID);
-                }*/
 
         public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
+            Reservation result = (from r in Reservations
+                             where r.ReservationID == reservationID
+                                  select r).Single();
+
+            result.StartDate = startDate;
+            result.EndDate = endDate;
+            result.SiteID = campSiteID;
+            result.Visitor = visitor;
+
+
             return (reservationData.UpdateReservation(reservationID, startDate, endDate, campSiteID) &&
-                reservationData.UpdateReservationLines(campSiteID, reservationID) &&
                 reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
@@ -210,18 +215,28 @@ namespace camping.Core
 
         public void UpdateLocations()
         {
-            Sites = siteData.GetSiteInfo();
-            Streets = siteData.GetStreetInfo();
-            Areas = siteData.GetAreaInfo();
+
         }
 
-        public void UpdateReservations()
+        public List<Reservation> UpdateReservationsList()
         {
-            Reservations = reservationData.GetReservationInfo();
+            return Reservations;
         }
-        public void UpdateReservations(int siteID, String lastname)
+        public List<Reservation> UpdateReservationsList(string lastname)
         {
-            Reservations = reservationData.GetReservationInfo(siteID, lastname);
+            return (from reservation in Reservations
+                    where reservation.Visitor.LastName.ToLower().Contains(lastname.ToLower())
+                    select reservation).ToList();
+        }
+        public List<Reservation> UpdateReservationsList(int reservationID)
+        {
+            return (from reservation in Reservations
+                    where reservation.ReservationID == reservationID
+                    select reservation).ToList();
+        }
+        public List<Reservation> UpdateReservationslist(int reservationID, string lastname)
+        {
+            return UpdateReservationsList(reservationID).Intersect(UpdateReservationsList(lastname)).ToList();
         }
     }
 }

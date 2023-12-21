@@ -660,23 +660,29 @@ namespace camping.WPF
             // zorgt ervoor dat de annuleerlijst weer null wordt wanneer
             // er opnieuw een reservering geselecteerd wordt
             // (anders bevat de lisjt reserveringen die niet zijn aangeklikt!)
+            List<Reservation> reservations = new List<Reservation>();
 
             if (reservationIDFilterBox.Text != string.Empty || LastNameFilterBox.Text != string.Empty)
             {
                 int resID;
-                if (!int.TryParse(reservationIDFilterBox.Text, out resID))
+                if (!int.TryParse(reservationIDFilterBox.Text, out resID) || reservationIDFilterBox.Text == string.Empty)
                 {
+                    reservations = retrieveData.UpdateReservationsList(LastNameFilterBox.Text.Trim());
                     reservationIDFilterBox.Text = string.Empty;
-                    resID = -1;
+                }else if (LastNameFilterBox.Text == string.Empty && int.TryParse(reservationIDFilterBox.Text, out resID))
+                {
+                    reservations =  retrieveData.UpdateReservationsList(resID);
                 }
-                retrieveData.UpdateReservations(resID, LastNameFilterBox.Text.Trim()); ;
+                else
+                {
+                    reservations =  retrieveData.UpdateReservationslist(resID, LastNameFilterBox.Text.Trim());
+                }
+
             }
             else
             {
-                retrieveData.UpdateReservations();
+                reservations = retrieveData.UpdateReservationsList();
             }
-
-            List<Reservation> reservations = retrieveData.Reservations;
 
             Grid grid = new Grid();
             grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });

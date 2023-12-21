@@ -38,78 +38,7 @@ namespace camping.Database
             }
         }
 
-        public List<Reservation> GetReservationInfo(DateTime date)
-        {
-            string sql = "SELECT distinct(reservation.reservationID), startDate, endDate, visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber, campSiteID "
-            + "FROM reservation "
-            + "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID "
-            + "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID "
-            + "WHERE startDate > @startDate;";
 
-
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-
-                List<Reservation> result = new List<Reservation>();
-
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    string d = date.ToString("MM-dd-yyyy");
-                    command.Parameters.AddWithValue("startDate", d);
-                    Console.WriteLine(sql);
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    { /// 0 reservationID, 1 startDate, 3 endDate, visitor(2 visitorID, 5 firstName, 6 lastName, 7 preposition, 8 adress, 9 city, 10 postalcode, 11 houseNumber, 12 phoneNumber)
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetInt32(11)), reader.GetInt32(12)));
-                    }
-                }
-                connection.Close();
-                return result;
-            }
-        }
-
-
-        public List<Reservation> GetReservationInfo(int ReservetionID, string lastname)
-        {
-            string andOr = "AND";
-            if (ReservetionID < 0) { andOr = "OR"; }
-
-            string sql = "SELECT distinct(reservation.reservationID), startDate, endDate,\r\n" +
-                "visitor.visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber,\r\n" +
-                "campSiteID\r\n" +
-                "FROM reservation\r\n" +
-                "LEFT JOIN visitor ON reservation.visitorID = visitor.visitorID\r\n" +
-                "LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID\r\n" +
-                "where lastName like @lastname " + andOr + " reservation.reservationID = @ReservetionID;";
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                SqlDataReader reader;
-                List<Reservation> result = new List<Reservation>();
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@ReservetionID", ReservetionID);
-                    command.Parameters.AddWithValue("@lastname", "%" + lastname + "%");
-
-                    reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-
-                        result.Add(new Reservation(reader.GetInt32(0), reader.GetDateTime(1), reader.GetDateTime(2), new Visitor(reader.GetInt32(3), reader.GetString(4), reader.GetString(5), (reader.IsDBNull(6) ? string.Empty : reader.GetString(6)), reader.GetString(7), reader.GetString(8), reader.GetString(9), reader.GetString(10), reader.GetInt32(11)), reader.GetInt32(12)));
-                    }
-                }
-                connection.Close();
-                return result;
-            }
-            throw new NotImplementedException();
-        }
 
         // adds a new reservation to the database
         public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
@@ -250,6 +179,7 @@ namespace camping.Database
                 }
             }
         }
+
         public bool GetOtherAvailableReservation(int campSite, string startDate, string endDate, int reservationID)
         {
             string sql = "SELECT COUNT(*) FROM reservation LEFT JOIN reservationLines ON reservation.reservationID = reservationLines.reservationID " +
@@ -293,12 +223,11 @@ namespace camping.Database
                     command.Parameters.AddWithValue("startDate", startDate);
                     command.Parameters.AddWithValue("endDate", endDate);
                     command.Parameters.AddWithValue("reservationID", reservationID);
-                    command.Parameters.AddWithValue("campSiteID", campSiteID);
 
                     result = command.ExecuteNonQuery();
                 }
                 connection.Close();
-                return (result != 0);
+                return (result > 0 && UpdateReservationLines(campSiteID, reservationID));
             }
         }
 
@@ -323,40 +252,13 @@ namespace camping.Database
             }
         }
 
-        public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
-        {
-            string sql = $"UPDATE visitor SET firstName = @firstName, lastName = @lastName, preposition = @preposition, adress = @adress, city = @city, postalcode = @Postalcode, houseNumber = @houseNumber, phoneNumber = @phoneNumber WHERE visitorID = @visitorID";
-
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                int result;
-
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("firstName", firstName);
-                    command.Parameters.AddWithValue("lastName", lastName);
-                    command.Parameters.AddWithValue("preposition", preposition);
-                    command.Parameters.AddWithValue("adress", adress);
-                    command.Parameters.AddWithValue("city", city);
-                    command.Parameters.AddWithValue("postalcode", postalcode);
-                    command.Parameters.AddWithValue("houseNumber", houseNumber);
-                    command.Parameters.AddWithValue("phoneNumber", phoneNumber);
-                    command.Parameters.AddWithValue("visitorID", visitorID);
-
-                    result = command.ExecuteNonQuery();
-                }
-                connection.Close();
-                return (result != 0);
-            }
-        }
-
         public bool DeleteReservation(int reservationID)
         {
             int result;
             string sql = "DELETE " +
                 "FROM reservation " +
-                "WHERE reservationID = @reservationID;";
+                "WHERE reservationID = @reservationID;\r\n" +
+                "declare @max int;\r\nselect @max = max(reservationID) from reservation;\r\ndbcc checkident(reservation,reseed,@max);";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -402,6 +304,14 @@ namespace camping.Database
 
                 }
             }
+        }
+
+
+
+        public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
+        {
+            VisitorRepository visitor = new();
+            return visitor.UpdateVisitor(visitorID,firstName,lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
         }
 
     }

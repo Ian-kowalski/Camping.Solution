@@ -253,6 +253,7 @@ namespace camping.WPF
             if (!errorsFound) {
                 retrieveData.UpdateReservation(reservation.ReservationID, reservation.StartDate, reservation.Visitor, reservation.EndDate, reservation.SiteID);
                 return true;
+
             }
             else {
                 return false; 
