@@ -95,5 +95,33 @@ namespace camping.Database
                 }
             }
         }
+
+        public bool UpdateVisitor(int visitorID, string firstName, string lastName, string preposition, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
+        {
+            string sql = $"UPDATE visitor SET firstName = @firstName, lastName = @lastName, preposition = @preposition, adress = @adress, city = @city, postalcode = @Postalcode, houseNumber = @houseNumber, phoneNumber = @phoneNumber WHERE visitorID = @visitorID";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                int result;
+
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("firstName", firstName);
+                    command.Parameters.AddWithValue("lastName", lastName);
+                    command.Parameters.AddWithValue("preposition", preposition);
+                    command.Parameters.AddWithValue("adress", adress);
+                    command.Parameters.AddWithValue("city", city);
+                    command.Parameters.AddWithValue("postalcode", postalcode);
+                    command.Parameters.AddWithValue("houseNumber", houseNumber);
+                    command.Parameters.AddWithValue("phoneNumber", phoneNumber);
+                    command.Parameters.AddWithValue("visitorID", visitorID);
+
+                    result = command.ExecuteNonQuery();
+                }
+                connection.Close();
+                return (result != 0);
+            }
+        }
     }
 }

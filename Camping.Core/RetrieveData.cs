@@ -90,15 +90,6 @@ namespace camping.Core
             return reservationData.GetOtherAvailableReservation(campSite, startDate, endDate, reservationID);
         }
 
-        public List<Reservation> GetReservations(DateTime dateTime)
-        {
-            return reservationData.GetReservationInfo(dateTime);
-        }
-
-        /*        public int GetCampSiteID(int reservationID)
-                {
-                    return reservationData.GetCampSiteID(reservationID);
-                }*/
 
         public bool UpdateReservation(int reservationID, DateTime startDate, Visitor visitor, DateTime endDate, int campSiteID)
         {
@@ -219,9 +210,30 @@ namespace camping.Core
         {
             Reservations = reservationData.GetReservationInfo();
         }
-        public void UpdateReservations(int siteID, String lastname)
+
+        public void UpdateReservations(string lastname)
         {
-            Reservations = reservationData.GetReservationInfo(siteID, lastname);
+            
+            List<Reservation> sortedlist = new List<Reservation>();
+            sortedlist = (from reservation in Reservations
+                          where reservation.Visitor.LastName.ToLower().Contains(lastname.ToLower())
+                          select reservation).ToList();
+            Reservations = sortedlist;
+        }
+        public void UpdateReservations(int reservationID)
+        {
+            List<Reservation> sortedlist = new List<Reservation>();
+            sortedlist = (from reservation in Reservations
+                          where reservation.ReservationID == reservationID
+                          select reservation).ToList();
+            Reservations = sortedlist;
+        }
+
+        public void UpdateReservations(int reservationID, string lastname)
+        {
+            UpdateReservations(lastname);
+            UpdateReservations(reservationID);
+
         }
     }
 }
