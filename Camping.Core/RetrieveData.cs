@@ -1,5 +1,6 @@
 ﻿using Camping.Core;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -141,6 +142,7 @@ namespace camping.Core
 
         public bool DeleteReservation(int reservationID)
         {
+            Reservations.Remove((from Reservation in Reservations where Reservation.ReservationID == reservationID select Reservation).Single());
             return reservationData.DeleteReservation(reservationID);
         }
 
@@ -229,7 +231,6 @@ namespace camping.Core
 
         public void UpdateLocations()
         {
-
         }
 
         public List<Reservation> UpdateReservationsList()
@@ -251,6 +252,15 @@ namespace camping.Core
         public List<Reservation> UpdateReservationslist(int reservationID, string lastname)
         {
             return UpdateReservationsList(reservationID).Intersect(UpdateReservationsList(lastname)).ToList();
+        }
+
+        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
+        {
+            CultureInfo provider = new CultureInfo("en-US");
+            int visitorID = reservationData.addReservation(campSiteID, startDate, endDate, firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
+            Reservations.Add(new Reservation(reservationData.getReservationID(visitorID, startDate, endDate), DateTime.ParseExact( startDate, "MM-dd-yyyy", provider), DateTime.ParseExact(endDate, "MM-dd-yyyy", provider), new Visitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber), campSiteID));
+            return visitorID <= 0 ? true: false;
+            
         }
     }
 }
