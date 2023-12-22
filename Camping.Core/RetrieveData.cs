@@ -90,6 +90,20 @@ namespace camping.Core
             return reservationData.GetAvailableReservation(campSite, startDate, endDate);
         }
 
+        public List<Site> GetAvailableReservations(DateTime startDate, DateTime endDate)
+        {
+            var list = (from site in Sites
+                        join reservation in Reservations on site.LocationID equals reservation.SiteID
+                        where ((startDate >= reservation.StartDate && endDate <= reservation.EndDate) ||
+                        (startDate >= reservation.StartDate && endDate <= reservation.EndDate) ||
+                        (startDate <= reservation.StartDate && endDate >= reservation.EndDate)) &&
+                        (startDate <= endDate)
+            select site).ToList();
+            var campList = Sites.Except(list).ToList();
+
+            return campList;
+        }
+
         public bool GetOtherAvailableReservations(int campSite, string startDate, string endDate, int reservationID)
         {
             return reservationData.GetOtherAvailableReservation(campSite, startDate, endDate, reservationID);

@@ -30,17 +30,15 @@ namespace camping.WPF
         Grid grid;
         Grid availableSitesGrid;
 
-        ISiteData siteData;
-        IReservationData resData;
+        private RetrieveData retrieveData { get; set; }
 
         public AvailableCampsites availableCampsites;
 
 
-        public SearchAvailableCampsites(Grid dateGrid, ISiteData siteData, IReservationData resData, Grid availableSitesGrid)
+        public SearchAvailableCampsites(Grid dateGrid, RetrieveData retrieveData, Grid availableSitesGrid)
         {
             grid = dateGrid;
-            this.siteData = siteData;
-            this.resData = resData;
+            this.retrieveData = retrieveData;
             this.availableSitesGrid = availableSitesGrid;
             grid.Background = Brushes.LightGray;
 
@@ -152,7 +150,7 @@ namespace camping.WPF
             grid.Children.Add(PetCheckBox);
             grid.Children.Add(PowerCheckBox);
 
-            availableCampsites = new AvailableCampsites(availableSitesGrid, siteData, resData);
+            availableCampsites = new AvailableCampsites(availableSitesGrid, retrieveData);
             availableCampsites.ReserveCampsite += ShowAddReservation;
             availableCampsites.AvailableCampsitesListRetrievedEventHandler += (sender, e) =>
             {

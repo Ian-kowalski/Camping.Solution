@@ -92,7 +92,7 @@ namespace camping.WPF
             ChangeReservation changeRes = new(retrieveData, SiteIDBox, StartDateDatePicker, EndDatedatePicker, FirstNameBox, PrepositionBox, LastNameBox, PhoneNumberBox, CityBox, AdressBox, HouseNumberBox, PostalCodeBox, SiteIDLabel, StartDateLabel, EndDateLabel, FirstNameLabel, LastNameLabel, PhoneNumberLabel, CityLabel, AdressLabel, HouseNumberLabel, PostalCodeLabel, EditReservationButton);
             changeReservation = changeRes;
 
-            SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, siteData, resData, AvailableCampsitesGridList);
+            SearchCampsites = new SearchAvailableCampsites(SearchCampsiteGrid, retrieveData, AvailableCampsitesGridList);
             AvailableCampSitesMap = new Map(retrieveData, AvailableCampsitesMap);
             SearchCampsites.AvailableCampsitesListEventHandler += (sender, e) =>
             {
