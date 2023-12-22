@@ -257,8 +257,7 @@ namespace camping.Database
             int result;
             string sql = "DELETE " +
                 "FROM reservation " +
-                "WHERE reservationID = @reservationID;\r\n" +
-                "declare @max int;\r\nselect @max = max(reservationID) from reservation;\r\ndbcc checkident(reservation,reseed,@max);";
+                "WHERE reservationID = @reservationID;\r\n";
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();

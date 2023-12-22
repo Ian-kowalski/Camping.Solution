@@ -2,6 +2,7 @@
 using Camping.Core;
 using System;
 using System.Collections.Generic;
+using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,10 +12,9 @@ namespace camping.WPF
 {
     public class AvailableCampsites
     {
-        private ISiteData siteData;
-        private IReservationData resData;
         private DateTime startDate;
         private DateTime endDate;
+        private RetrieveData retrieveData { get; set; }
 
         public Grid grid;
         RowDefinition rowDef1;
@@ -27,13 +27,13 @@ namespace camping.WPF
         Rectangle campFacilityOutlet;
         Button reserveButton;
         public List<Site> AvailableSitesList = new List<Site>();
+        public List<Street> AvailableStreetsList = new List<Street>();
         public event EventHandler<AvailableCampsitesEventArgs> AvailableCampsitesListRetrievedEventHandler; 
 
-        public AvailableCampsites(Grid grid, ISiteData siteData, IReservationData resData)
+        public AvailableCampsites(Grid grid, RetrieveData retrieveData)
         {
             this.grid = grid;
-            this.siteData = siteData;
-            this.resData = resData;
+            this.retrieveData = retrieveData;
         }
 
         public void ShowAvailableCampSites(DateTime startDate, DateTime endDate, bool hasShadow, bool hasWaterSupply, bool atWater, bool petAllowed, bool hasPower)
@@ -44,14 +44,23 @@ namespace camping.WPF
             grid.Children.Clear();
             grid.RowDefinitions.Clear();
             AvailableSitesList.Clear();
+            AvailableStreetsList.Clear();
 
             int rowNumber = 0;
-            foreach (Site site in siteData.GetSiteInfo())
+
+            foreach(Street street in retrieveData.Streets) 
             {
+                if (hasShadow && street.HasShadow % 2 == 0) continue;
+                if (hasWaterSupply && street.HasWaterSupply % 2 == 0) continue;
+                if (atWater && street.AtWater % 2 == 0) continue;
+                if (petAllowed && street.PetsAllowed % 2 == 0) continue;
+                if (hasPower && street.OutletPresent % 2 == 0) continue;
 
-                // if a spot isnt available on those selected dates, prevent it from showing up
-                if (!resData.GetAvailableReservation(site.LocationID, startDate.ToString("MM-dd-yyyy"), endDate.ToString("MM-dd-yyyy"))) continue;
-
+                AvailableStreetsList.Add(street);
+            }
+            
+            foreach (Site site in retrieveData.GetAvailableReservations(startDate, endDate))
+            {
 
                 if (hasShadow && site.HasShadow % 2 == 0) continue;
                 if (hasWaterSupply && site.HasWaterSupply % 2 == 0) continue;
@@ -152,7 +161,7 @@ namespace camping.WPF
                 rowNumber++;
             }
 
-            AvailableCampsitesListRetrievedEventHandler?.Invoke(this, new AvailableCampsitesEventArgs(AvailableSitesList));
+            AvailableCampsitesListRetrievedEventHandler?.Invoke(this, new AvailableCampsitesEventArgs(AvailableSitesList, AvailableStreetsList));
 
             grid.Visibility = Visibility.Visible;
         }
