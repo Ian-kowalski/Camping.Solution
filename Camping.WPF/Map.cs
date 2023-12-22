@@ -53,30 +53,17 @@ namespace camping.WPF
             {
                 //var ids = list1.Select(x => x.Id).Intersect(list2.Select(x => x.Id));
                 //var result = list1.Where(x => ids.Contains(x.Id));
-
-
-                List<Site> availableSites = new List<Site>();
-                foreach (Site site in sites) { 
-                    availableSites.Add(site);
+                foreach(var site in sites)
+                {
+                    if (availableSitesList.Contains(site))
+                    {
+                        drawSite(areaColor, angle, site, true);
+                    }
+                    else
+                    {
+                        drawSite(areaColor, angle, site, false);
+                    }
                 }
-
-                List<Site> unavailableSites = new List<Site>();
-                foreach (Site site in sites)
-                {
-                    unavailableSites.Add(site);
-                }
-
-                foreach (var site in sites.Where(s => sites.Select(s => s.LocationID).Intersect(availableSitesList.Select(s => s.LocationID)).Contains(s.LocationID)))
-                {
-                    drawSite(areaColor, angle, site, true);
-                };
-
-                foreach (var site in sites.Where(s => sites.Select(s => s.LocationID).Except(availableSitesList.Select(s => s.LocationID)).Contains(s.LocationID)))
-                {
-                    drawSite(areaColor, angle, site, false);
-                };
-
-
             }
         }
 
@@ -175,7 +162,7 @@ namespace camping.WPF
                          where site.StreetID == street.LocationID
                          select site).ToList();
 
-                    drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor));
+                    drawSites(sitesOnStreet, AreaColor, drawStreet(street, AreaColor, true));
 
                 }
             }
@@ -192,7 +179,7 @@ namespace camping.WPF
             }
         }
 
-        public void drawMap(List<Site> availableCampsites)
+        public void drawMap(List<Site> availableCampsites, List<Street> availableStreets)
         {
             clearMap();
             if (_retrieveData != null)
@@ -209,6 +196,8 @@ namespace camping.WPF
 
                 foreach (var street in streets)
                 {
+                    bool available = false;
+                    if (availableStreets .Contains(street)) { available = true; }
                     Brush AreaColor = (SolidColorBrush)new BrushConverter().ConvertFrom(string.Join(",", (from area in areas where area.LocationID == street.AreaID select area.AreaColor)));
 
                     availableSitesOnStreet =
@@ -216,7 +205,7 @@ namespace camping.WPF
                              where site.StreetID == street.LocationID
                              select site).ToList();
                     
-                    drawSites(availableSitesOnStreet, AreaColor, drawStreet(street, AreaColor), availableCampsites);
+                    drawSites(availableSitesOnStreet, AreaColor, drawStreet(street, AreaColor, available), availableCampsites);
 
                 }
 
@@ -236,7 +225,7 @@ namespace camping.WPF
             _campingmap.Children.Add(highlightedLine);
         }
 
-        private Double drawStreet(Street street, Brush brush)
+        private Double drawStreet(Street street, Brush brush, bool available)
         {
 
             Line line = new Line();
@@ -244,7 +233,16 @@ namespace camping.WPF
             line.Y1 = street.CoordinatesPairs._y1;
             line.X2 = street.CoordinatesPairs._x2;
             line.Y2 = street.CoordinatesPairs._y2;
-            line.Stroke = brush;
+            line.IsEnabled = available;
+            if (!available)
+            {
+                line.Stroke = Brushes.White;
+            }
+            else
+            {
+                line.Stroke = brush;
+            }
+            
             line.StrokeThickness = 8;
 
 
@@ -375,8 +373,8 @@ namespace camping.WPF
             return angle;
         }
 
-        public void ShowAvailableCampsites(List<Site> availableSites) {
-            drawMap(availableSites);
+        public void ShowAvailableCampsites(List<Site> availableSites, List<Street> availablestreets) {
+            drawMap(availableSites,availablestreets);
         }
 
         private void displayLocation(object sender, SiteSelectedOnMapEventArgs e)

@@ -154,7 +154,7 @@ namespace camping.WPF
             availableCampsites.ReserveCampsite += ShowAddReservation;
             availableCampsites.AvailableCampsitesListRetrievedEventHandler += (sender, e) =>
             {
-                AvailableCampsitesListEventHandler?.Invoke(sender, new AvailableCampsitesEventArgs(e.AvailableSites));
+                AvailableCampsitesListEventHandler?.Invoke(sender, new AvailableCampsitesEventArgs(e.AvailableSites,e.Availablestreets));
             };
 
             SearchSites?.Invoke(this, new EventArgs());

@@ -98,7 +98,7 @@ namespace camping.WPF
             {
                 AvailableCampsitesMap.Visibility = Visibility.Visible;
                 AddReservationInfoGrid.Visibility = Visibility.Collapsed;
-                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites);
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites ,e.Availablestreets);
             };
 
             AvailableCampSitesMap.SiteSelected += (sender, e) => {
