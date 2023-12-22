@@ -229,9 +229,21 @@ namespace camping.Core
             return isDeleted;
         }
 
-        public void UpdateLocations()
+        
+
+        public void UpdateSites()
         {
+            Sites = siteData.GetSiteInfo();
         }
+        public void UpdateStreets()
+        {
+            Streets = siteData.GetStreetInfo();
+        }
+        public void UpdateAreas()
+        {
+            Areas = siteData.GetAreaInfo();
+        }
+
 
         public List<Reservation> UpdateReservationsList()
         {
