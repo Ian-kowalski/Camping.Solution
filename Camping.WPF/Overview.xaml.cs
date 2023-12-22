@@ -229,7 +229,7 @@ namespace camping.WPF
 
             siteData.AddArea(color);
 
-            retrieveData.UpdateLocations();
+            retrieveData.UpdateAreas();
             displayAllLocations();
         }
 
@@ -357,7 +357,7 @@ namespace camping.WPF
             RemovePreview();
 
             int newSiteID = siteData.AddLocation(SelectedStreet, Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y), Convert.ToInt32(mousePosition.X)+30, Convert.ToInt32(mousePosition.Y)+30);            
-            retrieveData.UpdateLocations();
+            retrieveData.UpdateSites();
             Site site = retrieveData.GetSiteFromID(newSiteID);
             Street street = retrieveData.GetStreetFromID(site.StreetID);
             Area area = retrieveData.GetAreaFromID(street.AreaID);
@@ -380,7 +380,7 @@ namespace camping.WPF
 
 
                 int newStreetID = siteData.AddLocation(SelectedArea, Convert.ToInt32(streetPoint1.X), Convert.ToInt32(streetPoint1.Y), Convert.ToInt32(mousePosition.X), Convert.ToInt32(mousePosition.Y));
-                retrieveData.UpdateLocations();
+                retrieveData.UpdateStreets();
                 Street street = retrieveData.GetStreetFromID(newStreetID);
                 Area area = retrieveData.GetAreaFromID(street.AreaID);
 
