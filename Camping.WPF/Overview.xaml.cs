@@ -98,7 +98,7 @@ namespace camping.WPF
             {
                 AvailableCampsitesMap.Visibility = Visibility.Visible;
                 AddReservationInfoGrid.Visibility = Visibility.Collapsed;
-                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites ,e.Availablestreets);
+                AvailableCampSitesMap.ShowAvailableCampsites(e.AvailableSites , e.Availablestreets);
             };
 
             AvailableCampSitesMap.SiteSelected += (sender, e) => {
@@ -1091,7 +1091,7 @@ namespace camping.WPF
 
             if (!errorsFound)
             {
-                if (resData.addReservation(siteID, AddResStartDateDatePicker.Content.ToString(), AddResEndDateDatePicker.Content.ToString(),
+                if (retrieveData.addReservation(siteID, AddResStartDateDatePicker.Content.ToString(), AddResEndDateDatePicker.Content.ToString(),
                     AddResFirstNameBox.Text, AddResPrepositionBox.Text, AddResLastNameBox.Text,
                     AddResAdressBox.Text, AddResCityBox.Text, AddResPostalCodeBox.Text,
                     AddResHouseNumberBox.Text, phoneNumber))

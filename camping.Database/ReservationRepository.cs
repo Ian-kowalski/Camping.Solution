@@ -41,12 +41,12 @@ namespace camping.Database
 
 
         // adds a new reservation to the database
-        public bool addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
+        public int addReservation(int campSiteID, string startDate, string endDate, string firstName, string preposition, string lastName, string adress, string city, string postalcode, string houseNumber, int phoneNumber)
         {
             if (!GetAvailableReservation(campSiteID, startDate, endDate))
             {
                 Console.WriteLine("Spot is already reserved during these dates!");
-                return false;
+                return -1;
             }
             else
             {
@@ -62,7 +62,7 @@ namespace camping.Database
                 // gets the visitorID of the recently added visitor
                 int visitorID = visitor.getVisitorID(firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber);
 
-                if (visitorID == -1) { return false; }
+                if (visitorID == -1) { return -1; }
 
                 // adds a new reservation
                 string sql = "INSERT INTO reservation (visitorID, startDate, endDate) VALUES (@visitorID, @startDate, @endDate);";
@@ -89,7 +89,11 @@ namespace camping.Database
                 // addReservationLine(campSiteID, reservationID);
 
                 // will return true if both the reservation and reservation line gets added
-                return (linesInserted > 0 && addReservationLine(campSiteID, reservationID));
+                if (linesInserted > 0 && addReservationLine(campSiteID, reservationID))
+                {
+                    return visitorID;
+                }
+                else return -1;
             }
         }
 
