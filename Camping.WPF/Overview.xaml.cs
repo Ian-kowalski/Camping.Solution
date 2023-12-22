@@ -81,7 +81,7 @@ namespace camping.WPF
                 map.drawMap();
                 AvailableCampSitesMap.drawMap();
                 AddReservationInfoGrid.Visibility = Visibility.Hidden;
-                AvailableCampsitesScrollViewer.Visibility = Visibility.Hidden;
+                AvailableCampsitesMap.Visibility = Visibility.Visible;
 
 
             };
