@@ -121,7 +121,7 @@ namespace camping.WPF
             {
                 if (button.Tag == site)
                 {
-                    button.BorderThickness = new Thickness(2);
+                    button.BorderThickness = new Thickness(4);
                     button.BorderBrush = Brushes.White;
                 } else
                 {
