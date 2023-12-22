@@ -179,7 +179,9 @@ namespace camping.WPF
                 button.BorderBrush = Brushes.Black;
                 button.BorderThickness = new Thickness(2);
                 button.FontSize = 16;
-                button.MouseDoubleClick += (sender, e) => { onSitePress(area); };
+                button.MouseDoubleClick += (sender, e) => { 
+                    onSitePress(area);
+                };
                 button.Click += (sender, e) => 
                 {
                     onSiteSelect(area);
@@ -190,7 +192,7 @@ namespace camping.WPF
                 CampSiteList.Children.Add(button);
                 rowLength++;
 
-                displayStreets(area.LocationID);
+                displayStreets(area.LocationID, button);
             }
 
             Button newAreaButton = NewAreaButton(rowLength);
@@ -234,7 +236,7 @@ namespace camping.WPF
         }
 
         // laat de straten zien van de area
-        private void displayStreets(int areaID)
+        private void displayStreets(int areaID, Button parentButton)
         {
             bool visible = false;
             int streetCount = 0;
@@ -243,7 +245,7 @@ namespace camping.WPF
                 if (street.AreaID == areaID) { streetCount++; }
                 if (street.AreaID == areaID && street.Visible)
                 {
-
+                    parentButton.Content = $"Gebied {areaID} ▼";
                     addNewRowDefinition();
 
                     Button button = createLocationButton(street);
@@ -264,12 +266,13 @@ namespace camping.WPF
 
                     rowLength++;
 
-                    displaySites(street);
+                    displaySites(street, button);
                     visible = true;
                 }
             }
             if ((streetCount == 0 || visible) && SelectedArea is not null && SelectedArea.LocationID == areaID)
             {
+                parentButton.Content = $"Gebied {areaID} ▼";
                 addNewRowDefinition();
                 Button button = createLocationButton(streetButtonMarginSize);
                 button.Background = new SolidColorBrush(Color.FromRgb(210, 210, 210));
@@ -287,7 +290,7 @@ namespace camping.WPF
         }
 
         // laat de sites zien van de straat
-        private void displaySites(Street street)
+        private void displaySites(Street street, Button parentButton)
         {
             bool visible = false;
             int siteCount = 0;
@@ -296,6 +299,8 @@ namespace camping.WPF
                 if (site.StreetID == street.LocationID) { siteCount++; }
                 if (site.StreetID == street.LocationID && site.Visible)
                 {
+                    parentButton.Content = $"Straat {street.LocationID} ▼";
+
                     addNewRowDefinition();
 
 
@@ -323,6 +328,7 @@ namespace camping.WPF
             }
             if ( (siteCount == 0  || visible) && SelectedStreet is not null && SelectedStreet.LocationID == street.LocationID)
             {
+                parentButton.Content = $"Straat {street.LocationID} ▼";
                 addNewRowDefinition();
                 Button button = createLocationButton(siteButtonMarginSize);
                 button.Background = new SolidColorBrush(Color.FromRgb(240, 240, 240));
@@ -601,7 +607,7 @@ namespace camping.WPF
         private Button createLocationButton(Street street)  
         {
             Button button = new Button();
-            button.Content = $"Straat {street.LocationID}";
+            button.Content = $"Straat {street.LocationID} ▶";
             button.Margin = new Thickness(streetButtonMarginSize, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
@@ -614,7 +620,7 @@ namespace camping.WPF
         private Button createLocationButton(Area area)
         {
             Button button = new Button();
-            button.Content = $"Gebied {area.LocationID}";
+            button.Content = $"Gebied {area.LocationID} ▶";
             button.Margin = new Thickness(16, 4, 4, 4);
 
             // De volledige campsite wordt meegegeven aan de button.
