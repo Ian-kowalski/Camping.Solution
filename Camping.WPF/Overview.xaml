@@ -274,7 +274,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="AnnulerenButton" Content="Annuleren" Grid.Column="0" Grid.Row="0" Height="50" Margin="32,32,32,0" VerticalAlignment="Top" IsEnabled="False" BorderBrush="#000000" BorderThickness="2" FontSize="16" Click="CancelButtonClick"/>
+                    <Button x:Name="AnnulerenButton" Content="Verwijder" Grid.Column="0" Grid.Row="0" Height="50" Margin="32,32,32,0" VerticalAlignment="Top" IsEnabled="False" BorderBrush="#000000" BorderThickness="2" FontSize="16" Click="CancelButtonClick"/>
 
                 </Grid>
 
