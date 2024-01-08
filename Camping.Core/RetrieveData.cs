@@ -271,7 +271,7 @@ namespace camping.Core
             CultureInfo provider = new CultureInfo("en-US");
             int visitorID = reservationData.addReservation(campSiteID, startDate, endDate, firstName, preposition, lastName, adress, city, postalcode, houseNumber, phoneNumber);
             Reservations.Add(new Reservation(reservationData.getReservationID(visitorID, startDate, endDate), DateTime.ParseExact( startDate, "MM-dd-yyyy", provider), DateTime.ParseExact(endDate, "MM-dd-yyyy", provider), new Visitor(visitorID, firstName, lastName, preposition, adress, city, postalcode, houseNumber, phoneNumber), campSiteID));
-            return visitorID <= 0 ? true: false;
+            return visitorID >= 0 ? true: false;
             
         }
     }
