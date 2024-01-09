@@ -127,19 +127,6 @@ namespace camping.Core
                 reservationData.UpdateVisitor(visitor.VisitorID, visitor.FirstName, visitor.LastName, visitor.Preposition, visitor.Adress, visitor.City, visitor.PostalCode, visitor.HouseNumber, visitor.PhoneNumber));
         }
 
-        public bool GetDate(int siteID)
-        {
-            List<ReservationDates> reservations = siteData.GetAvailability(siteID);
-            foreach (ReservationDates dates in reservations)
-            {
-                if (dates.startDate <= DateTime.Today && dates.endDate >= DateTime.Today)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public bool DeleteReservation(int reservationID)
         {
             Reservations.Remove((from Reservation in Reservations where Reservation.ReservationID == reservationID select Reservation).Single());

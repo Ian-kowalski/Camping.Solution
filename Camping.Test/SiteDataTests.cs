@@ -7,13 +7,28 @@ namespace camping.Test
     public class SiteDataTests
     {
         SshConnection sshConnection;
+        private RetrieveData retrieveData;
+        private Reservation TestReservation;
+        private SiteData siteData;
+
         [OneTimeSetUp]
-        public void Setup()
+        public void OneTimeSetup()
         {
             sshConnection = new SshConnection();
-            siteData = new SiteData();
+
+            siteData = new();
+            ReservationRepository reservationData = new();
+            retrieveData = new(siteData, reservationData);
         }
-        private SiteData siteData;
+
+        [SetUp]
+        public void Setup()
+        {
+            retrieveData.addReservation(1, DateTime.Today.ToString("MM-dd-yyyy"), DateTime.Today.ToString("MM-dd-yyyy"), "Test", "Unit", "Setup", "database", "camping", "1234XX", "1a", 06123456);
+            TestReservation = retrieveData.Reservations[retrieveData.Reservations.Count - 1];
+        }
+
+        
 
 
         [Test]
@@ -55,15 +70,23 @@ namespace camping.Test
         [Test]
         public void GetAvailability_ReturnsListOfReservationDates()
         {
-            int siteID = 1;
-
-            List<ReservationDates> availability = siteData.GetAvailability(siteID);
+            List<ReservationDates> availability = siteData.GetAvailability(TestReservation.ReservationID);
 
             Assert.IsNotNull(availability);
             Assert.IsInstanceOf<List<ReservationDates>>(availability);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            if (retrieveData.Reservations.Contains(TestReservation))
+            {
+                retrieveData.DeleteReservation(TestReservation.ReservationID);
+            }
+
+        }
+
         [OneTimeTearDown]
-        public void TearDown() { sshConnection.BreakConnection(); }
+        public void OneTimeTearDown() { sshConnection.BreakConnection(); }
     }
 }

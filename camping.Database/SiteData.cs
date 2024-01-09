@@ -138,11 +138,10 @@ namespace camping.Database
 
                 using (var command = new SqlCommand(sql, connection))
                 {
+                    command.Parameters.AddWithValue("siteID", siteID);
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        command.Parameters.AddWithValue("@siteID", siteID);
-
                         result.Add(new ReservationDates(reader.GetDateTime(0), reader.GetDateTime(1)));
                     }
                 }

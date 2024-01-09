@@ -1,5 +1,6 @@
 ﻿using camping.Core;
 using camping.Database;
+using Camping.Core;
 
 namespace camping.Test
 {
@@ -7,18 +8,31 @@ namespace camping.Test
     public class RetrieveDataTests
     {
         SshConnection sshConnection;
+        private RetrieveData retrieveData;
+        private Reservation TestReservation;
+        private SiteData siteData;
+        ReservationRepository reservationData;
+
         [OneTimeSetUp]
-        public void Setup()
+        public void OneTimeSetup()
         {
             sshConnection = new SshConnection();
+
+            siteData = new();
+            reservationData = new();
+            retrieveData = new(siteData, reservationData);
         }
+
+        [SetUp]
+        public void Setup()
+        {
+            retrieveData.addReservation(1, DateTime.Today.ToString("MM-dd-yyyy"), DateTime.Today.ToString("MM-dd-yyyy"), "Test", "Unit", "Setup", "database", "camping", "1234XX", "1a", 06123456);
+            TestReservation = retrieveData.Reservations[retrieveData.Reservations.Count - 1];
+        }
+
         [Test]
         public void GetCampSiteID_ReturnsListOfIntegers()
         {
-            SiteData siteData = new();
-            ReservationRepository reservationData = new();
-            RetrieveData retrieveData = new(siteData, reservationData);
-
             List<int> campSiteIDs = retrieveData.GetCampSiteID();
 
             Assert.IsNotNull(campSiteIDs);
@@ -28,11 +42,6 @@ namespace camping.Test
         [Test]
         public void GetSurfaceArea_ReturnsListOfIntegers()
         {
-            SiteData siteData = new();
-            ReservationRepository reservationData = new();
-
-            RetrieveData retrieveData = new(siteData, reservationData);
-
             List<int> result = retrieveData.GetSurfaceArea();
 
             Assert.IsNotNull(result);
@@ -40,30 +49,23 @@ namespace camping.Test
         }
 
         [Test]
-        [TestCase(1, true)] // could fail due to changes in database
-        [TestCase(5, false)]
-        public void GetDate_ReturnsTrueWhenNoOverlappingReservations(int siteID, bool excpected)
+        [TestCase("12-15-2024", "12-26-2024")]
+        public void UpdateReservation_UpdatesReservationInfoInDatabase(DateTime startDate, DateTime endDate)
         {
-            var siteData = new SiteData();
-            var reservationData = new ReservationRepository();
-            var retrieveData = new RetrieveData(siteData, reservationData);
-
-            Assert.IsTrue(retrieveData.GetDate(siteID) == excpected);
+            Assert.IsTrue(retrieveData.UpdateReservation(TestReservation.ReservationID, startDate, new Visitor(6, "Jelle", "Bouman", string.Empty, "Bertram", "Mepple", "8269HM", "28", 28), endDate,TestReservation.SiteID));
         }
 
-
-        [Test]
-        [TestCase(4, "12-15-2024", "12-26-2024")]
-        public void UpdateReservation_UpdatesReservationInfoInDatabase(int reservationID, DateTime startDate, DateTime endDate)
+        [TearDown]
+        public void TearDown()
         {
-            SiteData siteData = new();
-            ReservationRepository reservationData = new();
+            if (retrieveData.Reservations.Contains(TestReservation))
+            {
+                retrieveData.DeleteReservation(TestReservation.ReservationID);
+            }
 
-            RetrieveData retrieveData = new(siteData, reservationData);
-
-            //Assert.IsTrue(retrieveData.UpdateReservation(reservationID, startDate, new Visitor(6, "Jelle", "Bouman", string.Empty, "Bertram", "Mepple", "8269HM", "28", 28), endDate,));
         }
+
         [OneTimeTearDown]
-        public void TearDown() { sshConnection.BreakConnection(); }
+        public void OneTimeTearDown() { sshConnection.BreakConnection(); }
     }
 }
